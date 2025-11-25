@@ -1,0 +1,359 @@
+\documentclass{beamer}
+
+\input{settings.tex}
+
+
+\title{Pseudoinverse}
+\subtitle{\mycoursetitle, Lecture 2}
+\author{by Sergei Savin}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+
+
+\begin{frame}{Dot product and vector norm}
+	\begin{flushleft}
+		
+		Given two vectors $\bo{x} = \begin{bmatrix}
+			x_1 \\ x_2 \\ ... \\ x_n
+		\end{bmatrix}$ and $\bo{y} = \begin{bmatrix}
+		y_1 \\ y_2 \\ ... \\ y_n
+		\end{bmatrix}$ their \emph{dot product} is:
+		
+		\begin{equation}
+			\bo{x} \cdot \bo{y} = x_1 y_1 + x_2 y_2 + ... + x_n y_n = \bo{x}\T \bo{y}
+		\end{equation}
+		
+		A \emph{2-norm} (also called Euclidean norm) of a vector is defined as:
+		
+		\begin{equation}
+			||\bo{x}||_2 = \sqrt{\bo{x}\T \bo{x}} =  \sqrt{x_1 x_1 + x_2 x_2 + ... + x_n x_n}
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Derivatives}
+	\begin{flushleft}
+		
+		Consider a bilinear function $f(\bo{x}, \bo{y}) = \bo{y}\T \bo{M} \bo{x}$, where $\bo{x} \in \R^n$,  $\bo{y} \in \R^m$. Its derivatives (gradients) are:
+		
+		\begin{align}
+			\frac{\partial f}{\partial \bo{x}} &= \bo{y}\T \bo{M} \in \R^{1 \times n}, 
+			\\
+			\frac{\partial f}{\partial \bo{y}} &= ( \bo{M} \bo{x})\T =  \bo{x}\T \bo{M}\T \in \R^{1 \times m}.
+		\end{align}
+		
+		For a quadratic form $g(\bo{x}) = \bo{x}\T \bo{M} \bo{x}$, the derivative is:
+		
+		\begin{align}
+			\frac{\partial g}{\partial \bo{x}} &= \bo{x}\T \bo{M} + \bo{x}\T \bo{M}\T = \bo{x}\T (\bo{M} + \bo{M}\T).
+		\end{align}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Derivatives - example}
+	\begin{flushleft}
+		
+		Let us find the partial derivatives of the function:
+		
+		\begin{align}
+			f(\bo{x}, \bo{y}) = \bo{y}\T \bo{M} \bo{x} = 
+			\begin{bmatrix}
+				y_1 \\ y_2
+			\end{bmatrix}\T
+			\begin{bmatrix}
+				m_{11} & m_{12} \\
+				m_{21} & m_{22}
+			\end{bmatrix}
+			\begin{bmatrix}
+				x_1 \\ x_2
+			\end{bmatrix} =
+			\\
+			= m_{11} x_1 y_1 +m_{12} x_2 y_1 +m_{21} x_1 y_2 +m_{22} x_2 y_2 .
+		\end{align}
+		%
+		\begin{align}
+			\frac{\partial f}{\partial x_1} = m_{11} y_1  +m_{21}  y_2,
+			\ \ \
+			\frac{\partial f}{\partial x_2} =  m_{12} y_1 +m_{22} y_2,
+			%
+			\\
+			%
+			\frac{\partial f}{\partial y_1} = m_{11} x_1 +m_{12} x_2,
+			\ \ \
+			\frac{\partial f}{\partial y_2} =  m_{21} x_1 +m_{22} x_2.
+		\end{align}
+		
+		With that we can construct the gradients:
+		%
+		\begin{align}
+			\frac{\partial f}{\partial \bo{x}} &= 
+			\begin{bmatrix}
+				m_{11} y_1  +m_{21}  y_2 & m_{12} y_1 +m_{22} y_2
+			\end{bmatrix}
+			=
+			\bo{y}\T \bo{M},
+			\\
+			\frac{\partial f}{\partial \bo{y}} &= 
+			\begin{bmatrix}
+				m_{11} x_1 +m_{12} x_2 & m_{21} x_1 +m_{22} x_2
+			\end{bmatrix}
+			=
+			\bo{x}\T \bo{M}\T.
+		\end{align}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Least squares}
+	\begin{flushleft}
+		
+		Consider the following problem: find $\bo{x}$ that minimizes $|| \bo{A}\bo{x} - \bo{y} ||_2^2$. This is the \emph{least squares problem}. 
+		
+		\bigskip
+		
+		\begin{itemize}
+			\item We assume that $\bo{A} \in \R^{m \times n}$ has independent columns, $m \geq n$.
+			
+			\item The value $\bo{e} = \bo{A}\bo{x} - \bo{y}$ is called residual.
+			
+			\item Least squares problem is about finding the \emph{least residual solution}.
+		\end{itemize}
+		
+		Note that $|| \bo{A}\bo{x} - \bo{y} ||_2^2 = (\bo{A}\bo{x} - \bo{y})\T(\bo{A}\bo{x} - \bo{y}) = \bo{x}\T\bo{A}\T\bo{A}\bo{x}
+		-\bo{x}\T\bo{A}\T\bo{y} -\bo{y}\T\bo{A}\bo{x} +  \bo{y}\T \bo{y}$.
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Least squares -> left inverse}
+	\begin{flushleft}
+		
+		Find extremum:
+		%
+		\begin{equation}
+			\frac{\partial}{\partial \bo{x}}  \left( 
+			\bo{x}\T\bo{A}\T\bo{A}\bo{x}
+			-\bo{x}\T\bo{A}\T\bo{y} -\bo{y}\T\bo{A}\bo{x} +  \bo{y}\T \bo{y}
+			\right) 
+			= 0
+		\end{equation}
+		\begin{equation}
+			 \bo{x}\T\bo{A}\T\bo{A} + \bo{x}\T\bo{A}\T\bo{A} - 2\bo{y}\T\bo{A}\T 
+			= 0
+		\end{equation}
+		\begin{equation}
+		2\bo{A}\T\bo{A}\bo{x} - 2\bo{A}\bo{y} 
+		= 0
+		\end{equation}
+		\begin{equation}
+			\bo{A}\T \bo{A}\bo{x} = \bo{A}\T\bo{y}
+		\end{equation}
+		\begin{equation}
+			\bo{x} = (\bo{A}\T \bo{A})^{-1} \bo{A}^\top\bo{y}
+		\end{equation}
+		
+		We define a \emph{left pseudoinverse}:
+		%
+		\begin{equation}
+			\bo{A}^+ = (\bo{A}\T \bo{A})^{-1} \bo{A}\T
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Left and right inverse}
+	\begin{flushleft}
+		
+		Notice that our derivation assumes that $\bo{A}\T \bo{A}$ is a full rank matrix, which means $\bo{A}$ is full-column rank.
+		
+		\bigskip
+		
+		The pseudoinverse $\bo{A}^+_l = (\bo{A}\T \bo{A})^{-1} \bo{A}\T$ is called "left inverse" because of the following identity:
+		%
+		\begin{align}
+			\bo{A}^+_l  \bo{A} =  \bo{I}
+			\\
+			(  \textcolor{myblue} {\bo{A}\T\bo{A}})^{-1} \textcolor{myblue} {\bo{A}\T\bo{A}} =  \bo{I}
+		\end{align}
+		
+		\bigskip
+		
+		Similarly, the right inverse is defined as $\bo{A}^+_r = \bo{A}\T (\bo{A}\bo{A}\T )^{-1}$:
+		%
+		\begin{align}
+			\bo{A} \bo{A}^+_r=  \bo{I}
+			\\
+			 \textcolor{myblue}{\bo{A}\bo{A}\T} (\textcolor{myblue}{\bo{A}\bo{A}\T} )^{-1} =  \bo{I}
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Orthonormal matrices}
+	\begin{flushleft}
+		
+		Let matrix $\bo{M}$ be orthonormal (not necessarily square), meaning $\bo{M}\T \bo{M} = \bo{I}$. Its  pseudoinverse can be simplified:
+		
+		\begin{align}
+			\bo{M}^+ = (\bo{M}^\top\bo{M})^{-1} \bo{M}^\top = \bo{M}\T
+		\end{align}
+	
+		\bigskip
+	
+		Then least squares solution to the equation $\bo{M} \bo{x} = \bo{y}$ can be found as:
+		%
+		\begin{align}
+			\bo{x}_{LS} = \bo{M}^\top \bo{y}
+		\end{align}
+	
+		If $\bo{M}$ is orthonormal and square, then $\bo{M}\T = \bo{M}^{-1} = \bo{M}^+$.
+	
+	
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Computing the residual}
+	\begin{flushleft}
+		
+		Given an equation $\bo{A}\bo{x} = \bo{y}$ and least squares solution $\bo{x}_{LS} = \bo{A}^+\bo{y}$, let us compute the residual $\bo{e} = \bo{y} - \bo{A}\bo{x}_{LS}$. We substitute the solution:
+		 
+		\begin{equation}
+			\bo{e} = \bo{y} - \bo{A}\bo{A}^+\bo{y}
+		\end{equation}
+		
+		We observe that:
+		
+		\begin{itemize}
+			\item The residual can be found as $\bo{e} = (\bo{I} - \bo{A}\bo{A}^+)\bo{y}$.
+			
+			\item The closest $\bo{A}\bo{x}$ can get to $\bo{y}$ is $\bo{y}^* = \bo{A}\bo{A}^+\bo{y}$.
+			
+			\item Later we will find that $\bo{A}\bo{A}^+\bo{y}$ is a \emph{projection} of $\bo{y}$ onto a \emph{column space} of $\bo{A}$.
+		\end{itemize}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Further reading}
+	\begin{flushleft}
+		
+		\begin{itemize}
+			
+			\item \bref{https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/0550c89b69c99e97dcbf52074e293308_MIT18_06SCF11_Ses3.8sum.pdf}{MIT, Left and right inverses; pseudoinverse.}
+			
+			
+			\item \bref{https://faculty.math.illinois.edu/~mlavrov/docs/484-spring-2019/ch4lec4.pdf}{Minimum Norm Solutions, Math 484: Nonlinear Programming, Mikhail Lavrov}
+			%https://faculty.math.illinois.edu/~mlavrov/courses/484-spring-2019.html
+			
+		\end{itemize}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Exercise}
+	\begin{flushleft}
+		
+		\begin{itemize}
+			\item Matrix $\bo{M}$ is orthonormal and square, prove that $\bo{M}\T = \bo{M}^{-1}$.
+			
+			\item Find minimum of $||\bo{A}\bo{x} - \bo{y}||_2$ when columns of $\bo{A}$ are not linearly independent.
+			
+			%\item Given an equation $\bo{A}\bo{x} = \bo{y}$ with a square matrix $\bo{A}$, prove that: either that equation has an exact solution for any $\bo{y}$ or a related homogeneous equation $\bo{A}\bo{x} = 0$ has a non-trivial solution.
+		\end{itemize}
+		
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\myqrframe
+
+
+
+\begin{frame}{Appendix A, 1}
+	\begin{flushleft}
+		
+		A Moore-Penrose psuedoinverse $\bo{M}^+$ needs to satisfy the following conditions:
+		
+		\begin{align}
+			\bo{M}\bo{M}^+\bo{M} &= \bo{M} \\
+			\bo{M}^+\bo{M} \bo{M}^+ &= \bo{M}^+ \\
+			(\bo{M}\bo{M}^+)\T &= \bo{M}\bo{M}^+ \\
+			(\bo{M}^+\bo{M})\T &= \bo{M}^+\bo{M}
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Appendix A, 2}
+	\begin{flushleft}
+		
+		The left inverse $\bo{A}^+ =\textcolor{myblue}{ (\bo{A}\T \bo{A})^{-1} \bo{A}\T}$ satisfies the Moore-Penrose conditions:
+		
+		\begin{align}
+			\bo{A}\textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T}\bo{A} &= \bo{A} 
+			\\
+			\textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \bo{A} \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} &= \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \\
+			(\bo{A} \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T})\T &= \bo{A} \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \\
+			( \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T}\bo{A})\T &= \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \bo{A}
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+
+\end{document}

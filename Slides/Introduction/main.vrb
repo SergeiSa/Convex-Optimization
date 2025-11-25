@@ -1,0 +1,22 @@
+\frametitle{Motivating example}
+\framesubtitle{CVX-based solution}
+\begin{flushleft}
+
+Finally, we can invoke one of the most powerful convex optimization tools with a user-friendly coding style - CVX:
+
+\begin{lstlisting}[language=Matlab]
+M = [1 0 1; 0 5 0; 1 0 3];
+C = [1 7 2];
+y = 1;
+
+cvx_begin
+variables x(3);
+minimize( x' * M * x );
+subject to
+    C*x == y;
+cvx_end
+\end{lstlisting}
+
+However, we will see that the overhead for the call to the solver for this task is excessive. Average solution time is \textbf{282} ms, which is $\sim 60$ times slower than \texttt{fmincon}.
+
+\end{flushleft}
