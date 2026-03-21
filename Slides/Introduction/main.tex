@@ -15,33 +15,32 @@
 \maketitle
 
 
-\begin{frame}{Content}
-
-\begin{itemize}
-\item Motivation
-\item Motivating example
-\begin{itemize}
-\item fmincon
-\item quadprog
-\item SVD-based solution
-\item CVX-based solution
-\end{itemize}
-\item Homework
-\end{itemize}
-
-\end{frame}
+%\begin{frame}{Content}
+%
+%\begin{itemize}
+%\item Motivation
+%\item Motivating example
+%\begin{itemize}
+%\item fmincon
+%\item quadprog
+%\item SVD-based solution
+%\item CVX-based solution
+%\end{itemize}
+%\item Homework
+%\end{itemize}
+%
+%\end{frame}
 
 
 
 \begin{frame}{Motivation}
-% \framesubtitle{Parameter estimation}
 \begin{flushleft}
 
 
-A lot of modern methods, computations and algorithms are backed by numerical optimization tools. In this course we will study numerical optimization with an emphasis on convex methods.
+A lot of modern methods (e.g. trajectory planning, state estimation, control design) are backed by numerical optimization tools. In this course, we will study numerical optimization with an emphasis on convex methods.
 
 \begin{block}{What we want?}
-  To go from "I hope it works" to a solid understanding of the mathematics and use-cases of those tools.
+  To go from "I hope it works" to a solid understanding of the mathematics and the use-cases of these tools.
 \end{block}
 
 \begin{block}{Why we want it?}
@@ -53,7 +52,6 @@ A lot of modern methods, computations and algorithms are backed by numerical opt
 
 
 \begin{frame}{Motivating example}
-% \framesubtitle{Parameter estimation}
 \begin{flushleft}
 
 We have the following problem: find such $\mathbf x$ that minimizes $\mathbf x^\top \mathbf M \mathbf x$, while $\mathbf C \mathbf x = \mathbf y$. In other words:
@@ -97,7 +95,7 @@ How do we solve it?
 \framesubtitle{fmincon}
 \begin{flushleft}
 
-One very popular way of doing it is by use of a general-purpose local optimization solver, such as \texttt{fmincon} provided by MATLAB. Here is one possible solution:
+One very popular solution is to use a general-purpose local optimization solver, such as \texttt{fmincon} provided by MATLAB. Here is one possible solution:
 
 \begin{lstlisting}[language=Matlab]
 M = [1 0 1; 0 5 0; 1 0 3]; 
@@ -109,7 +107,7 @@ con = @(x) deal([], C*x-y);
 x = fmincon(fnc, zeros(3, 1), [],[],[],[],[],[], con)
 \end{lstlisting}
 
-Average solution time is \textbf{4.8} ms (this depends on many factors, so treat it only as a relative information). 
+Average solution time is \textbf{2.5} ms (this depends on many factors, so treat it only as a relative information). 
 Solution is $\mathbf{x} = \begin{bmatrix} 0.0442 & 0.1239 & 0.0442 \end{bmatrix}$.
 
 \end{flushleft}
@@ -127,10 +125,10 @@ M = [1 0 1; 0 5 0; 1 0 3];
 C = [1 7 2]; 
 y = 1;
 
-x = quadprog(M,[],[],[],C,y)
+x = quadprog(2*M,[],[],[],C,y)
 \end{lstlisting}
 
-Average solution time is \textbf{0.56} ms, an order of magnitude less than with \texttt{fmincon}.
+Average solution time is \textbf{0.3} ms, an order of magnitude less than with \texttt{fmincon}.
 
 \end{flushleft}
 \end{frame}
@@ -141,7 +139,7 @@ Average solution time is \textbf{0.56} ms, an order of magnitude less than with 
 \framesubtitle{SVD-based solution}
 \begin{flushleft}
 
-We can use an algebraic solution, based on SVD decomposition (or its derivative methods - null space and pseudo-inverse), as follows:
+We can use an algebraic solution, based on SVD decomposition (via null space and pseudoinverse), as follows:
 
 \begin{lstlisting}[language=Matlab]
 M = [1 0 1; 0 5 0; 1 0 3]; 
@@ -155,11 +153,29 @@ x = ( eye(3) - N*((N'*M*N) \ (N'*M)) ) * P*y
 
 Where \texttt{pinv\_null} is a function combining \texttt{pinv} and \texttt{null}, obtained from a single SVD decomposition.
 
-Average solution time is \textbf{0.027} ms, $\sim 20$ times faster than \texttt{quadprog} and $\sim 200$ times faster than \texttt{fmincon}.
+Average solution time is \textbf{0.016} ms, $\sim 20$ times faster than \texttt{quadprog} and $\sim 150$ times faster than \texttt{fmincon}.
 
 \end{flushleft}
 \end{frame}
 
+
+
+\begin{frame}[fragile]{Motivating example}
+	\framesubtitle{Matrix Left Division}
+	\begin{flushleft}
+		
+		We can use a specialized tool for solving linear equations \texttt{mldivide}, which in our case will use LU factorization (the matrix size is less than 16-by-16). Here is the solution:
+		
+		\begin{lstlisting}[language=Matlab]
+			T1 = M \ C';
+			t2 = (C*T1) \ y;
+			x = T1*t2;
+		\end{lstlisting}
+		
+		Average solution time is \textbf{0.0065} ms, \textbf{380} times faster than \texttt{fmincon}, \textbf{45} times faster than \texttt{quadprog}, \textbf{2.5} times faster than SVD.
+		
+	\end{flushleft}
+\end{frame}
 
 
 \begin{frame}[fragile]{Motivating example}
@@ -181,7 +197,7 @@ subject to
 cvx_end
 \end{lstlisting}
 
-However, we will see that the overhead for the call to the solver for this task is excessive. Average solution time is \textbf{282} ms, which is $\sim 60$ times slower than \texttt{fmincon}.
+However, we will see that the overhead for the call to the solver for this task is excessive. Average solution time is \textbf{219} ms, which is $\sim 90$ times slower than \texttt{fmincon}.
 
 \end{flushleft}
 \end{frame}

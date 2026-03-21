@@ -1,0 +1,556 @@
+\documentclass{beamer}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\input{settings.tex}
+
+
+\title{Псевдообращение}
+\subtitle{Вычислительный интеллект, лекция 2}
+\author{Сергей Савин}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+
+
+
+\begin{frame}{Метод наименьших квадратов}
+	\begin{flushleft}
+		
+		Рассмотрим следующую задачу: найти $\bo{x}$, минимизирующий $|| \bo{A}\bo{x} - \bo{y} ||_2^2$. Это \emph{задача наименьших квадратов}. 
+		
+		\bigskip
+		
+		\begin{itemize}
+			\item Предполагаем, что $\bo{A} \in \R^{m \times n}$ имеет линейно независимые столбцы, $m \geq n$.
+			
+			\item Величина $\bo{e} = \bo{A}\bo{x} - \bo{y}$ называется невязкой.
+			
+			\item Задача наименьших квадратов заключается в поиске решения с \emph{наименьшей невязкой}.
+		\end{itemize}
+		
+		Заметим, что $|| \bo{A}\bo{x} - \bo{y} ||_2^2 = (\bo{A}\bo{x} - \bo{y})\T(\bo{A}\bo{x} - \bo{y}) = \bo{x}\T\bo{A}\T\bo{A}\bo{x}
+		-\bo{x}\T\bo{A}\T\bo{y} -\bo{y}\T\bo{A}\bo{x} +  \bo{y}\T \bo{y}$.
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Метод наименьших квадратов $\rightarrow$ левая обратная}
+	\begin{flushleft}
+		
+		Найдём экстремум:
+		%
+		\begin{equation}
+			\frac{\partial}{\partial \bo{x}}  \left( 
+			\bo{x}\T\bo{A}\T\bo{A}\bo{x}
+			-\bo{x}\T\bo{A}\T\bo{y} -\bo{y}\T\bo{A}\bo{x} +  \bo{y}\T \bo{y}
+			\right) 
+			= 0
+		\end{equation}
+		\begin{equation}
+			\bo{x}\T\bo{A}\T\bo{A} + \bo{x}\T\bo{A}\T\bo{A} - 2\bo{y}\T\bo{A} 
+			= 0
+		\end{equation}
+		\begin{equation}
+			2\bo{A}\T\bo{A}\bo{x} - 2\bo{A}\T\bo{y} 
+			= 0
+		\end{equation}
+		\begin{equation}
+			\bo{A}\T \bo{A}\bo{x} = \bo{A}\T\bo{y}
+		\end{equation}
+		\begin{equation}
+			\bo{x} = (\bo{A}\T \bo{A})^{-1} \bo{A}^\top\bo{y}
+		\end{equation}
+		
+		Определим \emph{левую обратную матрицу}:
+		%
+		\begin{equation}
+			\bo{A}^+_l = (\bo{A}\T \bo{A})^{-1} \bo{A}\T
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Левая и правая обратные матрицы}
+	\begin{flushleft}
+		
+		Заметим, что наш вывод предполагает, что $\bo{A}\T \bo{A}$ — матрица полного ранга, а значит $\bo{A}$ имеет полный столбцовый ранг.
+		
+		\bigskip
+		
+		Псевдообратная матрица $\bo{A}^+_l = (\bo{A}\T \bo{A})^{-1} \bo{A}\T$ называется "левой обратной" в силу следующего тождества:
+		%
+		\begin{align}
+			\bo{A}^+_l  \bo{A} =  \bo{I}
+			\\
+			(  \textcolor{myblue} {\bo{A}\T\bo{A}})^{-1} \textcolor{myblue} {\bo{A}\T\bo{A}} =  \bo{I}
+		\end{align}
+		
+		\bigskip
+		
+		Аналогично, правая обратная определяется как $\bo{A}^+_r = \bo{A}\T (\bo{A}\bo{A}\T )^{-1}$:
+		%
+		\begin{align}
+			\bo{A} \bo{A}^+_r=  \bo{I}
+			\\
+			\textcolor{myblue}{\bo{A}\bo{A}\T} (\textcolor{myblue}{\bo{A}\bo{A}\T} )^{-1} =  \bo{I}
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Псевдообратная матрица}
+	\begin{flushleft}
+		
+		{\small
+			\begin{itemize}
+				
+				\item Если матрица $\bo{A}$ имеет \emph{полный столбцовый} ранг, то её левая обратная равна её \emph{псевдообратной}: $\bo{A}^+_l = \bo{A}^+$.
+				
+				\item Если матрица $\bo{A}$ имеет \emph{полный строчный} ранг, то её правая обратная равна её псевдообратной: $\bo{A}^+_r = \bo{A}^+$.
+				
+			\end{itemize}
+			
+			Для матрицы $\bo{A}$ с SVD разложением $\bo{A} = \bo{U} \Sigma \bo{V}'$ псевдообратная матрица определяется как:
+			
+			\begin{equation}
+				\bo{A}^+ = \bo{V} \Sigma^i \bo{U}'
+			\end{equation}
+			
+			где
+			
+			\begin{align*}
+				\Sigma = \begin{bmatrix}
+					\sigma_1 & 0 & ... & 0 & 0 & .... \\
+					0 & \sigma_2 & ... & 0 & 0 & .... \\
+					... & ... &  ... & ... & ... & .... \\
+					0& 0& ...& 0 & 0& ... \\
+					0& 0& ...& 0 & 0& ... \\
+					... & ... &  ... & ... & ... & .... 
+				\end{bmatrix} 
+				\ \ \
+				\Sigma^i  = \begin{bmatrix}
+					1 /  \sigma_1 & 0 & ... & 0 & 0 & .... \\
+					0 & 1 /  \sigma_2 & ... & 0 & 0 & .... \\
+					... & ... &  ... & ... & ... & .... \\
+					0& 0& ...& 0 & 0& ... \\
+					0& 0& ...& 0 & 0& ... \\
+					... & ... &  ... & ... & ... & .... 
+				\end{bmatrix}
+			\end{align*}		
+		}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Вычисление псевдообратной матрицы}
+	\begin{flushleft}
+		
+		Псевдообратную матрицу легко вычислить. Мы можем вызвать функцию \texttt{pinv} в MATLAB или Python:
+		%
+		
+		\begin{align*}
+			\bo{A}^+ \texttt{= pinv}(\bo{A})
+		\end{align*}
+		
+		\bigskip
+		
+		Функция \texttt{pinv} вычисляет псевдообратную матрицу на основе SVD разложения. Вычисление левой (или правой) обратной матрицы на основе определения является вычислительно затратным и нестабильным.
+		
+		\bigskip
+		
+		Часто решение линейной системы $\bo{A}\bo{x} = \bo{y}$ напрямую происходит гораздо быстрее, чем вычисление $\bo{x} = \bo{A}^+\bo{y}$:
+		
+		%double-check
+		\begin{align*}
+			\texttt{x = A \textbackslash \  y}
+		\end{align*}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Ортонормированные матрицы}
+	\begin{flushleft}
+		
+		Пусть матрица $\bo{M}$ является ортонормированной (но не обязательно квадратной), то есть $\bo{M}\T \bo{M} = \bo{I}$. Её псевдообратная матрица может быть упрощена:
+		
+		\begin{align}
+			\bo{M}^+ = (\bo{M}^\top\bo{M})^{-1} \bo{M}^\top = \bo{M}\T
+		\end{align}
+		
+		\bigskip
+		
+		Тогда решение методом наименьших квадратов для уравнения $\bo{M} \bo{x} = \bo{y}$ может быть найдено как:
+		%
+		\begin{align}
+			\bo{x}_{LS} = \bo{M}^\top \bo{y}
+		\end{align}
+		
+		Если $\bo{M}$ ортонормирована и квадратна, то $\bo{M}\T = \bo{M}^{-1} = \bo{M}^+$.
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Вычисление невязки}
+	\begin{flushleft}
+		
+		Для уравнения $\bo{A}\bo{x} = \bo{y}$ и решения методом наименьших квадратов $\bo{x}_{LS} = \bo{A}^+\bo{y}$ вычислим невязку $\bo{e} = \bo{y} - \bo{A}\bo{x}_{LS}$. Подставим решение:
+		
+		\begin{equation}
+			\bo{e} = \bo{y} - \bo{A}\bo{A}^+\bo{y}
+		\end{equation}
+		
+		Заметим, что:
+		
+		\begin{itemize}
+			\item Невязка может быть найдена как $\bo{e} = (\bo{I} - \bo{A}\bo{A}^+)\bo{y}$.
+			
+			\item Ближайшее значение $\bo{A}\bo{x}$ к $\bo{y}$ равно $\bo{y}^* = \bo{A}\bo{A}^+\bo{y}$.
+			
+		\end{itemize}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Нулевое пространство, 1}
+	\begin{flushleft}
+		{\small
+		Псевдообратная матрица — это инструмент для нахождения решения системы $\bo{A}\bo{x} = \bo{y}$ с \emph{наименьшей нормой и наименьшей невязкой}. Чтобы найти все остальные решения, нам необходимо изучить \emph{нулевое пространство} (ядро) матрицы $\bo{A}$.
+		
+		Найдём все решения следующей задачи:
+		%
+		\begin{equation}
+			\begin{bmatrix}
+				1 & 2 & 0 \\ 0 & 3 & 0
+			\end{bmatrix}
+			\begin{bmatrix}
+				x_1 \\ x_2 \\ x_3
+			\end{bmatrix}
+			=
+			\begin{bmatrix}
+				0 \\ 0
+			\end{bmatrix}
+		\end{equation}
+		%
+		Любой $\bo{x}$, для которого $x_1 = 0$ и $x_2 = 0$, удовлетворяет этому уравнению. Таким образом, все решения этой задачи имеют вид:
+		%
+		\begin{equation}
+			\begin{bmatrix}
+				x_1 \\ x_2 \\ x_3
+			\end{bmatrix}
+			=
+			\begin{bmatrix}
+				0 \\ 0 \\ z
+			\end{bmatrix}
+			=
+			\begin{bmatrix}
+				0 \\ 0 \\ 1
+			\end{bmatrix}
+			z, \ \forall z
+		\end{equation}
+		
+		где $\begin{bmatrix}
+			0 & 0 & 1
+		\end{bmatrix}\T$ является \emph{базисом нулевого пространства} для матрицы $\bo{A}$ этой системы, а $z$ — координата в нулевом пространстве.
+		}
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Нулевое пространство, 2}
+	\begin{flushleft}
+		
+		\emph{Нулевое пространство} (ядро) матрицы $\bo{A}$ — это множество всех векторов, которые матрица отображает в ноль. Эквивалентно, это множество всех решений уравнения $\bo{A}\bo{x} = 0$.
+		
+		\bigskip
+		
+		Мы можем найти ортонормированный базис в нулевом пространстве $\bo{A}$, вызвав функцию \texttt{null}:
+		
+		\begin{align*}
+			\texttt{N = null(A)}
+		\end{align*} 
+		
+		По определению, $\bo{A}\bo{N} = 0$.
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Все решения}
+	\begin{flushleft}
+		
+		Если система уравнений $\bo{A}\bo{x} = \bo{y}$ имеет точные решения, все они могут быть описаны как:
+		
+		\begin{equation}
+			\bo{x} = \bo{A}^+\bo{y} + \bo{N}\bo{z}
+		\end{equation}
+		
+		где $\bo{N}$ — базис в нулевом пространстве $\bo{A}$. Действительно, если $\bo{x}_p = \bo{A}^+\bo{y}$ является решением, то $\bo{x} = \bo{x}_p + \bo{N}\bo{z}$ тоже является решением, потому что $\bo{A}\bo{N}\bo{z} = 0$.
+		
+		\bigskip
+		
+		Однако нет гарантии, что $\bo{x}_p = \bo{A}^+\bo{y}$ является решением с \emph{нулевой невязкой}. Чтобы это проверить, убедимся, что невязка равна нулю:
+		%
+		\begin{align}
+			\bo{y} - \bo{A}\bo{x}_p = 0, \ \ \text{или}
+			\\
+			(\bo{I} - \bo{A}\bo{A}^+)\bo{y} = 0
+		\end{align}
+		
+		\bigskip
+		
+		Частное решение $\bo{x}_p = \bo{A}^+\bo{y}$ всегда \emph{ортогонально} решению из нулевого пространства $\bo{x}_n = \bo{N}\bo{z}$
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Литература}
+	\begin{flushleft}
+		
+		\begin{itemize}
+			
+			\item \bref{https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/0550c89b69c99e97dcbf52074e293308_MIT18_06SCF11_Ses3.8sum.pdf}{MIT, Left and right inverses; pseudoinverse.}
+			
+			
+			\item \bref{https://faculty.math.illinois.edu/~mlavrov/docs/484-spring-2019/ch4lec4.pdf}{Minimum Norm Solutions, Math 484: Nonlinear Programming, Mikhail Lavrov}
+			%https://faculty.math.illinois.edu/~mlavrov/courses/484-spring-2019.html
+			
+		\end{itemize}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Упражнение}
+	\begin{flushleft}
+		
+		\begin{itemize}
+			\item Матрица $\bo{M}$ ортонормирована и квадратна, докажите, что $\bo{M}\T = \bo{M}^{-1}$.
+			
+			\item Найдите минимум $||\bo{A}\bo{x} - \bo{y}||_2$, когда столбцы $\bo{A}$ не являются линейно независимыми.
+			
+		\end{itemize}
+		
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\myqrframe
+
+
+
+\begin{frame}{Скалярное произведение и норма вектора}
+	\begin{flushleft}
+		
+		Для двух векторов $\bo{x} = \begin{bmatrix}
+			x_1 \\ x_2 \\ ... \\ x_n
+		\end{bmatrix}$ и $\bo{y} = \begin{bmatrix}
+			y_1 \\ y_2 \\ ... \\ y_n
+		\end{bmatrix}$ их \emph{скалярное произведение} равно:
+		
+		\begin{equation}
+			\bo{x} \cdot \bo{y} = x_1 y_1 + x_2 y_2 + ... + x_n y_n = \bo{x}\T \bo{y}
+		\end{equation}
+		
+		\emph{2-норма} (также называемая евклидовой нормой) вектора определяется как:
+		
+		\begin{equation}
+			||\bo{x}||_2 = \sqrt{\bo{x}\T \bo{x}} =  \sqrt{x_1 x_1 + x_2 x_2 + ... + x_n x_n}
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Производные}
+	\begin{flushleft}
+		
+		Рассмотрим билинейную функцию $f(\bo{x}, \bo{y}) = \bo{y}\T \bo{M} \bo{x}$, где $\bo{x} \in \R^n$,  $\bo{y} \in \R^m$. Её производные (градиенты) равны:
+		
+		\begin{align}
+			\frac{\partial f}{\partial \bo{x}} &= \bo{y}\T \bo{M} \in \R^{1 \times n}, 
+			\\
+			\frac{\partial f}{\partial \bo{y}} &= ( \bo{M} \bo{x})\T =  \bo{x}\T \bo{M}\T \in \R^{1 \times m}.
+		\end{align}
+		
+		Для квадратичной формы $g(\bo{x}) = \bo{x}\T \bo{M} \bo{x}$ производная равна:
+		
+		\begin{align}
+			\frac{\partial g}{\partial \bo{x}} &= \bo{x}\T \bo{M} + \bo{x}\T \bo{M}\T = \bo{x}\T (\bo{M} + \bo{M}\T).
+		\end{align}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Производные - пример}
+	\begin{flushleft}
+		
+		Найдём частные производные функции:
+		
+		\begin{align}
+			f(\bo{x}, \bo{y}) = \bo{y}\T \bo{M} \bo{x} = 
+			\begin{bmatrix}
+				y_1 \\ y_2
+			\end{bmatrix}\T
+			\begin{bmatrix}
+				m_{11} & m_{12} \\
+				m_{21} & m_{22}
+			\end{bmatrix}
+			\begin{bmatrix}
+				x_1 \\ x_2
+			\end{bmatrix} =
+			\\
+			= m_{11} x_1 y_1 + m_{12} x_2 y_1 + m_{21} x_1 y_2 + m_{22} x_2 y_2 .
+		\end{align}
+		%
+		\begin{align}
+			\frac{\partial f}{\partial x_1} = m_{11} y_1  + m_{21}  y_2,
+			\ \ \
+			\frac{\partial f}{\partial x_2} =  m_{12} y_1 + m_{22} y_2,
+			%
+			\\
+			%
+			\frac{\partial f}{\partial y_1} = m_{11} x_1 + m_{12} x_2,
+			\ \ \
+			\frac{\partial f}{\partial y_2} =  m_{21} x_1 + m_{22} x_2.
+		\end{align}
+		
+		Используя это, мы можем составить градиенты:
+		%
+		\begin{align}
+			\frac{\partial f}{\partial \bo{x}} &= 
+			\begin{bmatrix}
+				m_{11} y_1  + m_{21}  y_2 & m_{12} y_1 + m_{22} y_2
+			\end{bmatrix}
+			=
+			\bo{y}\T \bo{M},
+			\\
+			\frac{\partial f}{\partial \bo{y}} &= 
+			\begin{bmatrix}
+				m_{11} x_1 + m_{12} x_2 & m_{21} x_1 + m_{22} x_2
+			\end{bmatrix}
+			=
+			\bo{x}\T \bo{M}\T.
+		\end{align}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Приложение A, 1}
+	\begin{flushleft}
+		
+		Псевдообратная матрица Мура-Пенроуза $\bo{M}^+$ должна удовлетворять следующим условиям:
+		
+		\begin{align}
+			\bo{M}\bo{M}^+\bo{M} &= \bo{M} \\
+			\bo{M}^+\bo{M} \bo{M}^+ &= \bo{M}^+ \\
+			(\bo{M}\bo{M}^+)\T &= \bo{M}\bo{M}^+ \\
+			(\bo{M}^+\bo{M})\T &= \bo{M}^+\bo{M}
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Приложение A, 2}
+	\begin{flushleft}
+		
+		Левая обратная матрица $\bo{A}^+ =\textcolor{myblue}{ (\bo{A}\T \bo{A})^{-1} \bo{A}\T}$ удовлетворяет условиям Мура-Пенроуза:
+		
+		\begin{align}
+			\bo{A}\textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T}\bo{A} &= \bo{A} 
+			\\
+			\textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \bo{A} \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} &= \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \\
+			(\bo{A} \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T})\T &= \bo{A} \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \\
+			( \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T}\bo{A})\T &= \textcolor{myblue}{(\bo{A}\T \bo{A})^{-1} \bo{A}\T} \bo{A}
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Приложение B}
+	\begin{flushleft}
+		
+		Мы можем сделать дополнительные наблюдения относительно формулы невязки $\bo{e} = \bo{y} - \bo{A}\bo{A}^+\bo{y} = (\bo{I} - \bo{A}\bo{A}^+)\bo{y} $:
+		
+		\begin{itemize}
+			
+			\item $\bo{A}\bo{A}^+\bo{y}$ является \emph{ортогональной проекцией} $\bo{y}$ на \emph{пространство столбцов} матрицы $\bo{A}$.
+		
+		\item $\bo{I} - \bo{A}\bo{A}^+$ является ортогональной проекцией $\bo{y}$ на \emph{левое нулевое пространство} матрицы $\bo{A}$.
+	\end{itemize}
+	
+	Пространство столбцов — это "пространство всех возможных результатов" умножения на матрицу. Левое нулевое пространство — это пространство "всех результатов, которые матрица не может произвести". Оба пространства ортогональны: если $\bo{y}_1 \in \text{col}(\bo{A})$ и $\bo{y}_2 \in \text{left}(\bo{A})$, то $\bo{y}_1\T \bo{y}_2  = 0$.
+	
+\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+
+\end{document}
+

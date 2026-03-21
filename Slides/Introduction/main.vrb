@@ -17,6 +17,6 @@ subject to
 cvx_end
 \end{lstlisting}
 
-However, we will see that the overhead for the call to the solver for this task is excessive. Average solution time is \textbf{282} ms, which is $\sim 60$ times slower than \texttt{fmincon}.
+However, we will see that the overhead for the call to the solver for this task is excessive. Average solution time is \textbf{219} ms, which is $\sim 90$ times slower than \texttt{fmincon}.
 
 \end{flushleft}

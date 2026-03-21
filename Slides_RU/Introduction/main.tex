@@ -1,0 +1,212 @@
+\documentclass{beamer}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\input{settings.tex}
+
+
+\title{Введение}
+\subtitle{Вычислительный интеллект, лекция 1}
+\author{Сергей Савин}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+%\begin{frame}{Content}
+%
+%\begin{itemize}
+%\item Motivation
+%\item Motivating example
+%\begin{itemize}
+%\item fmincon
+%\item quadprog
+%\item SVD-based solution
+%\item CVX-based solution
+%\end{itemize}
+%\item Homework
+%\end{itemize}
+%
+%\end{frame}
+
+\begin{frame}{Мотивация}
+	\begin{flushleft}
+		
+		Многие современные методы (например, планирование траекторий, оценка состояния, синтез управления) опираются на инструменты численной оптимизации. В этом курсе мы изучим численную оптимизацию с акцентом на выпуклые методы.
+		
+		\begin{block}{Чего мы хотим?}
+			Перейти от принципа "надеюсь, это сработает" к глубокому пониманию математики и сценариев использования этих инструментов.
+		\end{block}
+		
+		\begin{block}{Зачем нам это?}
+			Это должно позволить нам решать гораздо более широкий круг задач, причем более эффективно.
+		\end{block}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Мотивирующий пример}
+	\begin{flushleft}
+		
+		У нас есть следующая задача: найти такой $\mathbf x$, который минимизирует $\mathbf x^\top \mathbf M \mathbf x$, при условии $\mathbf C \mathbf x = \mathbf y$. Другими словами:
+		
+		\begin{equation} \label{eq:Example1:1}
+			\begin{aligned}
+				& \underset{\mathbf x}{\text{minimize}}
+				& & \mathbf x^\top \mathbf M \mathbf x, \\
+				& \text{subject to:}
+				& & \mathbf C \mathbf x = \mathbf y.
+			\end{aligned}
+		\end{equation}
+		
+		Более конкретно:
+		
+		\begin{equation} \label{eq:Example1:2}
+			\begin{aligned}
+				& \underset{\mathbf x}{\text{minimize}}
+				& & \begin{bmatrix} x_1 & x_2 & x_3 \end{bmatrix}
+				\begin{bmatrix}
+					1 & 0 & 1 \\
+					0 & 5 & 0 \\
+					1 & 0 & 3 \\
+				\end{bmatrix}
+				\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}, \\
+				& \text{subject to:}
+				& & \begin{bmatrix} 1 & 7 & 2 \end{bmatrix}
+				\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+				= 1.
+			\end{aligned}
+		\end{equation}
+		
+		Как нам ее решить?
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}[fragile]{Мотивирующий пример}
+	\framesubtitle{fmincon}
+	\begin{flushleft}
+		
+		Очень популярное решение — использовать солвер локальной оптимизации общего назначения, например \texttt{fmincon} из MATLAB. Вот одно из возможных решений:
+		
+		\begin{lstlisting}[language=Matlab]
+			M = [1 0 1; 0 5 0; 1 0 3];
+			C = [1 7 2];
+			y = 1;
+			fnc = @(x) x'Mx;
+			con = @(x) deal([], C*x-y);
+			x = fmincon(fnc, zeros(3, 1), [],[],[],[],[],[], con)
+		\end{lstlisting}
+		%
+		Среднее время решения составляет \textbf{2.5} мс (это зависит от многих факторов, поэтому рассматривайте это только как относительную информацию).
+		Решение: $\mathbf{x} = \begin{bmatrix} 0.0442 & 0.1239 & 0.0442 \end{bmatrix}$.
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}[fragile]{Мотивирующий пример}
+	\framesubtitle{quadprog}
+	\begin{flushleft}
+		
+		Более изощренный, но все еще очень прямолинейный подход — использовать специализированный решатель для данного класса задач — \texttt{quadprog} из MATLAB. Вот решение:
+		
+		\begin{lstlisting}[language=Matlab]
+			M = [1 0 1; 0 5 0; 1 0 3];
+			C = [1 7 2];
+			y = 1;
+			
+			x = quadprog(2*M,[],[],[],C,y)
+		\end{lstlisting}
+		
+		Среднее время решения составляет \textbf{0.3} мс, что на порядок меньше, чем с \texttt{fmincon}.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}[fragile]{Мотивирующий пример}
+	\framesubtitle{Решение на основе SVD}
+	\begin{flushleft}
+		
+		Мы можем использовать алгебраическое решение, основанное на SVD-разложении (через ядро и псевдообратную матрицу), следующим образом:
+		
+		\begin{lstlisting}[language=Matlab]
+			M = [1 0 1; 0 5 0; 1 0 3];
+			C = [1 7 2];
+			y = 1;
+			
+			tol = 10^(-5);
+			[P, N] = pinv_null(C, tol);
+			x = ( eye(3) - N((N'MN) \ (N'M)) ) * P*y
+		\end{lstlisting}
+		
+		Где \texttt{pinv\_null} — это функция, объединяющая \texttt{pinv} и \texttt{null}, полученная из одного SVD-разложения.
+		
+		Среднее время решения составляет \textbf{0.016} мс, что $\sim$ в 20 раз быстрее, чем \texttt{quadprog}, и $\sim$ в 150 раз быстрее, чем \texttt{fmincon}.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}[fragile]{Мотивирующий пример}
+	\framesubtitle{Левое матричное деление}
+	\begin{flushleft}
+		
+		Мы можем использовать специализированный инструмент для решения линейных уравнений — \texttt{mldivide}, который в нашем случае применит LU-разложение (размер матрицы меньше 16x16). Вот решение:
+		
+		\begin{lstlisting}[language=Matlab]
+			T1 = M \ C';
+			t2 = (C*T1) \ y;
+			x = T1*t2;
+		\end{lstlisting}
+		
+		Среднее время решения составляет \textbf{0.0065} мс, что в \textbf{380} раз быстрее, чем \texttt{fmincon}, в \textbf{45} раз быстрее, чем \texttt{quadprog}, и в \textbf{2.5} раза быстрее, чем SVD.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}[fragile]{Мотивирующий пример}
+	\framesubtitle{Решение на основе CVX}
+	\begin{flushleft}
+		
+		{\small 
+		
+		Наконец, мы можем задействовать один из самых мощных инструментов выпуклой оптимизации с удобным для пользователя стилем кодирования — CVX:
+		
+		\begin{lstlisting}[language=Matlab]
+			M = [1 0 1; 0 5 0; 1 0 3];
+			C = [1 7 2];
+			y = 1;
+			cvx_begin
+			variables x(3);
+			minimize( x' * M * x );
+			subject to
+			C*x == y;
+			cvx_end
+		\end{lstlisting}
+		
+		Однако мы увидим, что накладные расходы на вызов решателя для этой задачи чрезмерны. Среднее время решения составляет \textbf{219} мс, что $\sim$ в 90 раз медленнее, чем \texttt{fmincon}.
+		
+	}
+	\end{flushleft}
+\end{frame}
+
+
+
+
+%\begin{frame}{Homework}
+%% \framesubtitle{Parameter estimation}
+%\begin{flushleft}
+%
+%Solve problem \eqref{eq:Example1:2} by the method you know and understand.
+%
+%\end{flushleft}
+%\end{frame}
+
+\myqrframe
+
+\end{document}

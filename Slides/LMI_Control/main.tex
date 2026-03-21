@@ -353,15 +353,20 @@
 
 
 
+
 \begin{frame}{S-procedure}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
-		There is a way to enforce constraint $\bo{z}^\top \bo{M}\bo{z} \leq 0$ for such $\bo{z}$ that $\bo{z}^\top \bo{N}\bo{z} \geq 0$. This is called \emph{s-procedure}.
+		There is a way to enforce constraint $\bo{z}^\top \bo{M}\bo{z} < 0$ for such $\bo{z}$ that $\bo{z}^\top \bo{N}\bo{z} > 0$. This is called \emph{S-procedure}.
 		
 		\begin{theorem}[S-procedure]
-			If $\gamma > 0$ and $\bo{M} + \gamma \bo{N} \prec 0$ then $\bo{z}^\top \bo{N}\bo{z} \geq 0 \implies \bo{z}^\top \bo{M}\bo{z} \leq 0$ 
+			If $\exists \gamma > 0$ such that $\bo{M} + \gamma \bo{N} \prec 0$ then $\bo{z}^\top \bo{N}\bo{z} > 0 \implies \bo{z}^\top \bo{M}\bo{z} < 0$ 
 		\end{theorem}
+		
+		\bigskip
+		
+		Proof of sufficiency. Let us choose such $\bo{z}$ that $\bo{z}^\top \bo{N}\bo{z} > 0$. Then $0 > \bo{z}^\top (\bo{M} + \gamma \bo{N}) \bo{z} > \bo{z}^\top \bo{M}\bo{z}$. \textcolor{mygray}{(See more in the Appendix)}.
+		
 		
 	\end{flushleft}
 \end{frame}
@@ -753,6 +758,7 @@
 
 
 
+\myqrframe
 
 
 
@@ -777,7 +783,57 @@
 \end{frame}
 
 
-\myqrframe
+
+\begin{frame}{Appendix B}
+	\framesubtitle{S-procedure}
+	\begin{flushleft}
+		
+There are two distinct results. The first, S-lemma, is non-conservative (necessary and sufficient condition):
+
+\begin{theorem}[S-lemma]
+	The following statements are equivalent. 
+	
+	\begin{enumerate}
+		\item $\underset{\bo{z} \neq 0}{\text{sup}}\left\{ \bo{z}^\top \bo{M}\bo{z}  \ : \  \bo{z}^\top \bo{N}\bo{z} > 0 \right \} < 0$
+		
+		\item $\exists \gamma > 0$ such that $\bo{M} + \gamma \bo{N} \prec 0$
+	\end{enumerate}
+\end{theorem}
+
+The second, conservative S-procedure, is a conservative (sufficient condition-only):
+
+\begin{theorem}[Conservative S-procedure]
+	If $\exists \gamma_i > 0$ such that $\bo{M} + \sum_{i} \gamma_i \bo{N}_i \preceq 0$, then $ \bo{z}^\top \bo{N}\bo{z} \geq 0 \implies \bo{z}^\top \bo{M}\bo{z}  \leq 0$
+\end{theorem}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Appendix B}
+	\framesubtitle{S-procedure}
+	\begin{flushleft}
+		
+		{\small 
+		Earlier we proved the sufficiency of S-lemma. To prove the necessity, we consider the set of outputs of two quadratic forms: $f(\bo{z}) = \bo{z}^\top \bo{M}\bo{z}$ and $g(\bo{z}) = \bo{z}^\top \bo{N}\bo{z}$ defined as $\mathcal{C} = \{(g, f) \ : \ f = f(\bo{z}), \ g = g(\bo{z}), \ \forall \bo{z}\}$. $\mathcal{C}$ is a convex cone (joint range of two quadratic forms). 
+		
+		\bigskip
+		
+		Note that for the statement (1) of S-lemma implies that $\mathcal{C}$ intersects the positive cone $\mathcal{S} = \R^2_+$ only at the origin. Because both are convex cones, $\mathcal{C}$ and $\mathcal{S}$ can be separated by a hyperplane, for instance, a hyperplane with a normal vector $\bo{n} = (\mu, 1)$, where $\mu > 0$. For large $\mu$ the hyperplane aligns with the horizontal axis, for small - with the vertical one.
+		
+		\bigskip
+		
+		We can represent this separation as a condition on $\mathcal{C}$: $f + \mu g < 0$, which implies $\bo{z}^\top (\bo{M} + \gamma \bo{N})\bo{z} < 0$. This recovers the statement (2) of the lemma.
+	}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
 
 
 
