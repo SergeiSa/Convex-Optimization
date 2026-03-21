@@ -1,7 +1,9 @@
-# Slides:
-* Lecture 1 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides/Introduction.pdf
-* Lecture 2 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides/Subspaces.pdf
-* Lecture 3 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides/OptimizationProblems_AnalyticSolutions.pdf
+# Slides (RU):
+* Lecture 1 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides_RU/Introduction.pdf
+* Lecture 2 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides_RU/Pseudoinverse.pdf
+* Lecture 3 - https://github.com/SergeiSa/Convex-Optimization/tree/main/Slides_RU/AnalyticSolutions
+
+  
 * Lecture 4 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides/ConvexProgramming_Domain.pdf
 * Lecture 5 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides/Polytopes.pdf
 * Lecture 6 - https://github.com/SergeiSa/Convex-Optimization/blob/main/Slides/Linear_Programming.pdf
