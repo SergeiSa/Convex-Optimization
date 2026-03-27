@@ -7,7 +7,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
 \title{Домен, Выпуклость}
-\subtitle{\mycoursetitle, Лекция 4}
+\subtitle{Вычислительный интеллект, Лекция 4}
 \author{Сергей Савин}
 \centering
 \date{\mydate}
@@ -241,7 +241,7 @@
 		Эквивалентно, выпуклая комбинация (отрезок) двух точек $\bo{x}_1$ и $\bo{x}_2$ задается как:
 		
 		\begin{equation}
-			\mathcal{L} = \{ \bo{x}: \ \beta_1 \bo{x}_1 + \beta_2 \bo{x}_2, \ \beta_1+\beta_2 = 1, \ \beta_{1, 2} \in [0 \; 1] \}
+			\mathcal{L} = \{ \bo{x}: \ \beta_1 \bo{x}_1 + \beta_2 \bo{x}_2, \ \beta_1+\beta_2 = 1, \ \beta_{1, 2} \geq 0 \}
 		\end{equation}
 		
 		Чтобы показать эквивалентность, заметим, что $\beta_1 = 1 - \beta_2$. Определяя $\alpha = \beta_1$, получаем $\beta_2 = 1 - \alpha$, где $\alpha \in [0 \; 1]$, что и доказывает эквивалентность.
@@ -249,14 +249,14 @@
 	\end{flushleft}
 \end{frame}
 
-\begin{frame}{Примеры выпуклых областей, 1}
+\begin{frame}{Примеры выпуклых множеств, 1}
 	\begin{flushleft}
 		
-		$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \mathbb{R}^n$ выпукла.
+		$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \mathbb{R}^n$ - выпуклое множество.
 		
 		\bigskip
 		
-		$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^n: \ \mathbf{x} \leq \mathbf{h} \}$ выпукла.
+		$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^n: \ \mathbf{x} \leq \mathbf{h} \}$ - выпуклое множество.
 		
 		\bigskip
 		
@@ -265,7 +265,7 @@
 		
 		\bigskip
 		
-		$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^2: \ x_1^2+x_2^2 \leq h^2 \}$ выпукла.
+		$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^2: \ x_1^2+x_2^2 \leq h^2 \}$  - выпуклое множество.
 		
 		\bigskip
 		
@@ -425,7 +425,9 @@
 			\begin{cases}
 				f(\alpha_1 \mathbf{x}_1 + \alpha_2 \mathbf{x}_2) \leq \alpha_1 f(\mathbf{x}_1) + \alpha_2 f(\mathbf{x}_2)
 				\\
-				\alpha_1 + \alpha_2 = 1
+				\alpha_1 + \alpha_2 = 1 
+				\\
+				\alpha_1 \geq 0, \ \alpha_1 \geq 0
 			\end{cases}
 		\end{align}
 		

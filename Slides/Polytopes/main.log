@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.14)  9 APR 2025 02:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.14)  26 MAR 2026 20:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -744,7 +744,7 @@ y)
 (/usr/local/texlive/2023/texmf-dist/tex/latex/beamer/beamercolorthemeseahorse.s
 ty)
 (/usr/local/texlive/2023/texmf-dist/tex/latex/beamer/beamerfontthemeserif.sty)
-Package hyperref Info: Option `colorlinks' set `false' on input line 83.
+Package hyperref Info: Option `colorlinks' set `false' on input line 89.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/mathtools/mathtools.sty
 Package: mathtools 2022/06/29 v1.29 mathematical typesetting tools
@@ -1025,8 +1025,8 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 )
 (./main.aux (./fig1.aux) (./fig2.aux) (./fig3.aux) (./fig4.aux) (./fig5.aux)
 (./fig6.aux)
-<Reading QR code for "https://github.com/SergeiSa/Computational-Intelligence-20
-25" at level 4-M from aux file.>
+<Reading QR code for "https://github.com/SergeiSa/Convex-Optimization" at level
+ 4-M from aux file.>
 )
 \openout1 = `main.aux'.
 
@@ -1170,7 +1170,7 @@ Overfull \hbox (24.05254pt too wide) in paragraph at lines 64--65
  []
 
 )
-Overfull \vbox (17.13312pt too high) detected at line 41
+Overfull \vbox (17.13312pt too high) detected at line 40
  []
 
 [3
@@ -1183,11 +1183,7 @@ Overfull \vbox (17.13312pt too high) detected at line 41
 ]
 \openout2 = `fig2.aux'.
 
- (./fig2.tex)
-Overfull \vbox (4.56454pt too high) detected at line 69
- []
-
-[5
+ (./fig2.tex) [5
 
 
 
@@ -1195,11 +1191,7 @@ Overfull \vbox (4.56454pt too high) detected at line 69
 ]
 \openout2 = `fig3.aux'.
 
- (./fig3.tex)
-Overfull \vbox (7.79648pt too high) detected at line 84
- []
-
-[6
+ (./fig3.tex) [6
 
 
 
@@ -1216,9 +1208,6 @@ Overfull \vbox (7.79648pt too high) detected at line 84
 \openout2 = `fig5.aux'.
 
  (./fig5.tex)
-Overfull \vbox (5.63797pt too high) detected at line 116
- []
-
 [8
 
 
@@ -1237,12 +1226,12 @@ Overfull \vbox (5.63797pt too high) detected at line 116
 ] [14
 
 ]
-Overfull \hbox (8.79405pt too wide) detected at line 309
+Overfull \hbox (8.79405pt too wide) detected at line 308
 [][][]
  []
 
 
-Overfull \vbox (1.00272pt too high) detected at line 309
+Overfull \vbox (1.00272pt too high) detected at line 308
  []
 
 [15
@@ -1276,11 +1265,11 @@ Overfull \vbox (12.84262pt too high) detected at line 353
 ]
 
 
-<QR code requested for "https://github.com/SergeiSa/Computational-Intelligence-
-2025" in version 0-M.>
+<QR code requested for "https://github.com/SergeiSa/Convex-Optimization" in ver
+sion 0-M.>
 
-<Copying the QR code for "https://github.com/SergeiSa/Computational-Intelligenc
-e-2025" in version 4-M as previously calculated.>
+<Copying the QR code for "https://github.com/SergeiSa/Convex-Optimization" in v
+ersion 4-M as previously calculated.>
 [21
 
 ] (./figure_convhull_0.tex) [22
@@ -1302,20 +1291,20 @@ e-2025" in version 4-M as previously calculated.>
 
  (./main.aux
 (./fig1.aux) (./fig2.aux) (./fig3.aux) (./fig4.aux) (./fig5.aux) (./fig6.aux)
-<Reading QR code for "https://github.com/SergeiSa/Computational-Intelligence-20
-25" at level 4-M from aux file.>
+<Reading QR code for "https://github.com/SergeiSa/Convex-Optimization" at level
+ 4-M from aux file.>
 )
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 30826 strings out of 476025
- 605854 string characters out of 5790017
+ 30825 strings out of 476025
+ 605725 string characters out of 5790017
  1926388 words of memory out of 5000000
- 50608 multiletter control sequences out of 15000+600000
- 519696 words of font info for 59 fonts, out of 8000000 for 9000
+ 50607 multiletter control sequences out of 15000+600000
+ 519395 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,20n,122p,1285b,1100s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,20n,122p,1261b,1100s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb><
 /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><
@@ -1330,7 +1319,7 @@ live/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
 ive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texliv
 e/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive
 /2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on main.pdf (24 pages, 224308 bytes).
+Output written on main.pdf (24 pages, 226050 bytes).
 PDF statistics:
  334 PDF objects out of 1000 (max. 8388607)
  230 compressed objects within 3 object streams

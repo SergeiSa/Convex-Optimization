@@ -5,7 +5,7 @@
 
 
 \title{Linear inequalities and polytopes}
-\subtitle{\mycoursetitle, Lecture 6}
+\subtitle{\mycoursetitle, Lecture 5}
 \author{by Sergei Savin}
 \centering
 \date{\mydate}
@@ -29,8 +29,7 @@
 
 
 
-\begin{frame}{Convex polytopes}
-% \framesubtitle{Parameter estimation}
+\begin{frame}{Convex polytopes, 1}
 \begin{flushleft}
 
 Before defining what a convex polytope is, let us look at examples:
@@ -41,24 +40,26 @@ Before defining what a convex polytope is, let us look at examples:
 \end{frame}
 
 
-\begin{frame}{Convex polytopes}
-% \framesubtitle{Parameter estimation}
+\begin{frame}{Convex polytopes, 2}
 \begin{flushleft}
 
-You can think of polytopes as geometric figures (or continuous sets of points) with linear edges, faces and higher-dimensional analogues.
+You can think of polytopes as geometric figures (continuous sets of points) with flat (linear) edges, faces, and their higher-dimensional analogues.
 
 \bigskip
 
 \begin{definition}
- Convex polytopes are polytopes whose every two points can be connected with a line that would lie in the polytope. They can be bounded or unbounded.
+	A convex polytope is a bounded convex set that can be represented as the intersection of a finite number of half-spaces.
 \end{definition}
+
+\bigskip
+ 
+ If a set is unbounded, we call it a \emph{polyhedron}.
  
 \end{flushleft}
 \end{frame}
 
 
-\begin{frame}{Half-spaces}
-\framesubtitle{Definition}
+\begin{frame}{Half-spaces, Definition}
 \begin{flushleft}
 
 We can define half-space as a set of all points $\mathbf{x}$, such that $\mathbf{a}^\top \mathbf{x} \leq b$. It has a very clear geometric interpretation. In the following image, the filled space is \textbf{not} in the half space.
@@ -70,15 +71,14 @@ We can define half-space as a set of all points $\mathbf{x}$, such that $\mathbf
 
 
 
-\begin{frame}{Half-spaces}
-\framesubtitle{Construction. Simple case}
+\begin{frame}{Half-space passing through the origin}
 \begin{flushleft}
 
 Consider a half-space that passes through the origin, and defined by its normal vector $\mathbf{n}$:
 
 \include{fig3}
 
-This half-space can be defined as "all vectors $\mathbf{x}$, such that $\mathbf{n} \cdot \mathbf{x} \leq 0$", which is the same as using $\mathbf{n}$ instead of $\mathbf{a}$ in our original definition, setting $b = 0$.
+This half-space can be defined as ``all vectors $\mathbf{x}$, such that $\mathbf{n} \cdot \mathbf{x} \leq 0$'', which is the same as using $\mathbf{n}$ instead of $\mathbf{a}$ in our original definition, setting $b = 0$.
  
 \end{flushleft}
 \end{frame}
@@ -86,26 +86,24 @@ This half-space can be defined as "all vectors $\mathbf{x}$, such that $\mathbf{
 
 
 
-\begin{frame}{Half-spaces}
-\framesubtitle{Construction. General case}
+\begin{frame}{Half-space, general case}
 \begin{flushleft}
 
 In the general case there is some distance between the boundary of the half-space and the origin, let's say $d$.
 
 \include{fig4}
 %
-Here the half space can be defined as "all vectors $\mathbf{x}$, such that $\mathbf{x}^\top \frac{\mathbf{n}}{|| \mathbf{n} ||}  \leq d$". This is the same as making $\mathbf{a} = \mathbf{n}$ and $b = d ||\mathbf{n}||$.
+Here the half space can be defined as ``all vectors $\mathbf{x}$, such that $\mathbf{x}^\top \frac{\mathbf{n}}{|| \mathbf{n} ||}  \leq d$''. This is the same as making $\mathbf{a} = \mathbf{n}$ and $b = d ||\mathbf{n}||$.
  
 \end{flushleft}
 \end{frame}
 
 
 
-\begin{frame}{Half-spaces}
-\framesubtitle{Combination}
+\begin{frame}{Combination of half-spaces}
 \begin{flushleft}
 
-We can define a region of space as an \emph{intersection} of half-spaces $\mathbf{a}_i^\top \mathbf{x} \leq b_i$:
+We can define a convex set as an \emph{intersection} of half-spaces $\mathbf{a}_i^\top \mathbf{x} \leq b_i$:
 
 \include{fig5}
 
@@ -127,12 +125,12 @@ The last result allows us to write any convex polytope as a matrix inequality:
     \mathbf{A} \mathbf{x} \leq  \mathbf{b} 
 \end{equation}
 
-And conversely, any matrix inequality \eqref{eq:ineq} represents either an empty set or a convex polytope.
+And conversely, any matrix inequality \eqref{eq:ineq} represents either an empty set, a convex polytope (bounded) or a convex polyhedron (inbounded).
 
 \bigskip
 
 \begin{definition}
- $\mathbf{A} \mathbf{x} \leq  \mathbf{b}$ is called \emph{H-representation} (half-space representation) of a polytope.
+ $\mathbf{A} \mathbf{x} \leq  \mathbf{b}$ is called \emph{H-representation} (half-space representation) of a polyhedron.
 \end{definition}
  
 \end{flushleft}
@@ -141,10 +139,9 @@ And conversely, any matrix inequality \eqref{eq:ineq} represents either an empty
 
 
 \begin{frame}{H-representation in COP}
-	%\framesubtitle{}
 	\begin{flushleft}
 		
-		We can use containment in an H-polytope as a part of convex optimation problem. For example, the following QP includes such constraint:
+		We can use H-polytope (polyhedron) constraints as a part of convex optimization problem. For example, the following QP includes such constraint:
 		
 		\begin{equation}
 			\begin{aligned}
@@ -161,10 +158,9 @@ And conversely, any matrix inequality \eqref{eq:ineq} represents either an empty
 
 
 \begin{frame}{Example}
-	%\framesubtitle{}
 	\begin{flushleft}
 		
-		Find robot's position $\bo{r} = [x, \ y]\T$ in a room of length $l$ and width $w$, closest to the desired point $\bo{r}_d= [x_d, \ y_d]\T$; the coordinate system is aligned with axes of the room, the center of the room is the point (0, 0).
+		Find the robot position $\bo{r} = [x, \ y]\T$ in a room of length $l$ and width $w$, closest to the desired point $\bo{r}_d= [x_d, \ y_d]\T$; the coordinate system is aligned with axes of the room, the center of the room is the point (0, 0).
 		
 		\bigskip
 		
@@ -202,7 +198,6 @@ And conversely, any matrix inequality \eqref{eq:ineq} represents either an empty
 
 
 \begin{frame}{V-representation}
-% \framesubtitle{}
 \begin{flushleft}
 
 Convex polytopes have alternative representations, such as \emph{V-representation}. It amounts to representing polytope as a set of its vertices.
@@ -223,14 +218,20 @@ is an H-representation of the same square.
 
 
 \begin{frame}{Convex hull}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
-		Given points $\bo{x}_1$, $\bo{x}_2$, ..., $\bo{x}_N$ their convex hull is represented as:
+		Given points $\bo{x}_1$, $\bo{x}_2$, ..., $\bo{x}_N$ their convex hull is given by:
 		
 		\begin{equation}
-			\mathcal{P} = \left \{  \bo{x} = \sum_{i=1}^{N} \alpha_i\bo{x}_i: \   \sum_{i=1}^{N} \alpha_i = 1, \  \alpha_i  \in [0 \ 1] \right \}
+			\mathcal{P} = \left \{  \bo{x} = \sum_{i=1}^{N} \alpha_i\bo{x}_i: \   \sum_{i=1}^{N} \alpha_i = 1, \  \alpha_i \geq 0 \right \}
 		\end{equation}
+		
+		
+		\bigskip
+		
+		Note that the constraints $\sum_{i=1}^{N} \alpha_i = 1$ and $\alpha_i \geq 0$ automatically restrict $\alpha_i$ to lie in the interval $[0, \ 1]$.
+		
+		\bigskip
 		
 		See Appendix for an illustration of this formula.
 		
@@ -240,10 +241,9 @@ is an H-representation of the same square.
 
 
 \begin{frame}{V-representation in COP}
-	%\framesubtitle{}
 	\begin{flushleft}
 		
-		We can use containment in an V-polytope as a part of convex optimation problem. For example, the following QP includes such constraint:
+		We can use V-polytope constraints as a part of a convex optimization problem. For example, the following QP includes such constraint:
 		
 		\begin{equation}
 			\begin{aligned}
@@ -268,7 +268,6 @@ is an H-representation of the same square.
 
 
 \begin{frame}{Example}
-	%\framesubtitle{}
 	\begin{flushleft}
 		
 		Find robot's position $\bo{r} = [x, \ y]\T$  closest to the desired point $\bo{r}_d= [x_d, \ y_d]\T$ in a fenced-off area. The fence connects point $(-10, 0)$ to $(0, 10)$ to $(7, 7)$ to $(0, -10)$.
@@ -312,14 +311,17 @@ is an H-representation of the same square.
 
 
 \begin{frame}{H and V-representations}
-% \framesubtitle{}
 \begin{flushleft}
 
-To transfer from H-representation to V-representation, you need to solve \emph{vertex enumeration} problem, which is computationally expensive. 
+Converting between H- and V-representations is generally computationally challenging.
 
 \bigskip
 
-It is also possible to recover H-representation from V-representation. 
+\begin{itemize}
+	\item H $\rightarrow$ V: vertex enumeration (finding all extreme points)
+	\item V $\rightarrow$ H: facet enumeration (finding all defining inequalities)
+\end{itemize}
+
  
 \end{flushleft}
 \end{frame}
@@ -328,10 +330,9 @@ It is also possible to recover H-representation from V-representation.
 
 
 \begin{frame}{Zonotopes: G-representation}
-	% \framesubtitle{}
 	\begin{flushleft}
 		
-		A zonotope $\mathcal{Z}$ is a symmetric polytope defined by its \emph{center} $\bo{c}$ and \emph{generator} $\bo{G}$:
+		A zonotope $\mathcal{Z}$ is a centrally symmetric convex polytope defined by its \emph{center} $\bo{c}$ and \emph{generator matrix} $\bo{G}$:
 		
 		\begin{equation}
 			\mathcal{Z} = \{ \bo{x}: \ \bo{x}=\bo{G}\beta+\bo{c}, \ ||\beta||_\infty \leq 1  \}
@@ -339,7 +340,6 @@ It is also possible to recover H-representation from V-representation.
 	
 		The set $\{ \beta: \ ||\beta||_\infty \leq 1  \}$ is a hypercube and zonotope $\mathcal{Z}$ is a projection (shadow) of this hypercube onto a lower-dimensional space; the projection is defined by the matrix $\bo{G}$.
 		
-		% TODO: \usepackage{graphicx} required
 		\begin{figure}
 			\centering
 			\includegraphics[width=0.4\linewidth]{zonotope_example}
@@ -356,10 +356,9 @@ It is also possible to recover H-representation from V-representation.
 
 
 \begin{frame}{G-representation in COP}
-	%\framesubtitle{}
 	\begin{flushleft}
 		
-		We can use containment in an G-polytope as a part of convex optimation problem. For example, the following QP includes such constraint:
+		We can use zonotope constraint as a part of a convex optimization problem. For example, the following QP includes such constraint:
 		
 		\begin{equation}
 			\begin{aligned}
@@ -380,7 +379,6 @@ It is also possible to recover H-representation from V-representation.
 
 
 \begin{frame}{Linear approximation of convex regions}
-% \framesubtitle{Parameter estimation}
 \begin{flushleft}
 Some convex regions can be easily approximated using polytopes.
 
@@ -394,7 +392,6 @@ This allows us to represent constraints on $\mathbf{x}$ to belong in such a regi
 
 
 \begin{frame}{Exercise}
-% \framesubtitle{Parameter estimation}
 \begin{flushleft}
 
 Write H-representation of the following polytopes:
@@ -410,16 +407,7 @@ Write H-representation of the following polytopes:
 \end{frame}
 
 
-% \begin{frame}{Self-study}
-% % \framesubtitle{Part 3}
-% \begin{flushleft}
 
-% \begin{itemize}
-%     \item \href{https://www.youtube.com/watch?v=kcOodzDGV4c}{Convex Optimization, lecture 3, S. Boyd. Stanford. Convex functions}.
-% \end{itemize}
-
-% \end{flushleft}
-% \end{frame}
 
 \myqrframe
 
@@ -428,7 +416,6 @@ Write H-representation of the following polytopes:
 
 
 \begin{frame}{Appendix A - convex hull, 1}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		
@@ -443,7 +430,7 @@ Write H-representation of the following polytopes:
 		
 		
 		\begin{equation}
-			\mathcal{P} = \left \{  \bo{x} = \sum_{i=1}^{3} \alpha_i\bo{x}_i: \   \sum_{i=1}^{3} \alpha_i = 1, \  \alpha_i  \in [0 \ 1] \right \}
+			\mathcal{P} = \left \{  \bo{x} = \sum_{i=1}^{3} \alpha_i\bo{x}_i: \   \sum_{i=1}^{3} \alpha_i = 1, \  \alpha_i \geq 0 \right \}
 		\end{equation}
 		
 		Let $\bo{z}$ be a convex combination of $\bo{x}_1$ and $\bo{x}_3$: $\bo{z} = \beta_1 \bo{x}_1 + \beta_3 \bo{x}_3 $. Any point $\bo{p} \in \mathcal{P}$ can be defined as a convex combination of correctly chosen $\bo{z}$ and $\bo{x}_2$: $\bo{p} = \gamma_1 \bo{z} + \gamma_2 \bo{x}_2$.
@@ -454,7 +441,6 @@ Write H-representation of the following polytopes:
 
 
 \begin{frame}{Appendix A - convex hull, 2}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		
@@ -472,14 +458,14 @@ Write H-representation of the following polytopes:
 			           = \gamma_1 (\beta_1 \bo{x}_1 + \beta_3 \bo{x}_3 )+ \gamma_2 \bo{x}_2
 		\end{align}
 		%
-		We can define $\alpha_1 = \gamma_1 \beta_1$, $\alpha_2= \gamma_2 \bo{x}_2$ and $\alpha_3 = \gamma_1 \beta_3$. Since $\gamma_i \geq 0$ and $\beta_i \geq 0$, we conclude that $\alpha_i \geq 0$.
+		We can define $\alpha_1 = \gamma_1 \beta_1$, $\alpha_2= \gamma_2$ and $\alpha_3 = \gamma_1 \beta_3$. Since $\gamma_i \geq 0$ and $\beta_i \geq 0$, we conclude that $\alpha_i \geq 0$.
 		
 		\bigskip
 		
-		We can show that $e = \alpha_1 + \alpha_2+\alpha_3 = 1$:
+		We can show that:
 		%
 		\begin{align}
-			e =  \gamma_1(\beta_1 +\beta_3) + \gamma_2 = \gamma_1 + \gamma_2 = 1
+			\alpha_1 + \alpha_2+\alpha_3 =  \gamma_1(\beta_1 +\beta_3) + \gamma_2 = \gamma_1 + \gamma_2 = 1
 		\end{align}
 		
 		
@@ -490,7 +476,6 @@ Write H-representation of the following polytopes:
 
 
 \begin{frame}{Appendix A - convex hull, 3}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		
@@ -515,7 +500,7 @@ Write H-representation of the following polytopes:
 		
 		\bigskip
 		
-		Dropping requirement $\alpha_i \leq 1$, and/or $\alpha_i \geq 0$ and/or $\sum\limits_{i=1}^{3} \alpha_i = 1,$ leads to inclusion of points out the convex hull, as illustrated on the figures.
+		Dropping requirement $\alpha_i \geq 0$ and/or $\sum\limits_{i=1}^{3} \alpha_i = 1,$ leads to inclusion of points out the convex hull, as illustrated on the figures.
 		
 		
 	\end{flushleft}
