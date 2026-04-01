@@ -1,11 +1,14 @@
 \documentclass{beamer}
 
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
 \input{settings.tex}
 
 
-\title{Quadratic programming}
-\subtitle{\mycoursetitle, Lecture 6}
-\author{by Sergei Savin}
+\title{Квадратичное программирование}
+\subtitle{Вычислительный интеллект, лекция 6}
+\author{Сергей Савин}
 \centering
 \date{\mydate}
 
@@ -26,44 +29,39 @@
 %\end{frame}
 
 
-
-
-
-
-
-\begin{frame}{Quadratic programming}
-\begin{flushleft}
-
-General form of a quadratic program:
-
-%
-\begin{equation}
-	\begin{aligned}
-		& \underset{\bo{x}}{\text{minimize}}
-		& & \bo{x}^\top \bo{H} \bo{x} + \bo{f}^\top\bo{x}, \\
-		& \text{subject to}
-		& & \begin{cases}
-			\bo{A}\bo{x} \leq \bo{b}, \\
-			\bo{F}\bo{x} = \bo{g}.
-		\end{cases}
-	\end{aligned}
-\end{equation}
-
-where $\bo{H}$ is positive-semidefinite.
- 
-\end{flushleft}
+\begin{frame}{Квадратичное программирование}
+	\begin{flushleft}
+		
+		Общая форма квадратичной программы:
+		
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & \bo{x}^\top \bo{H} \bo{x} + \bo{f}^\top\bo{x}, \\
+				& \text{subject to}
+				& & \begin{cases}
+					\bo{A}\bo{x} \leq \bo{b}, \\
+					\bo{F}\bo{x} = \bo{g}.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		где $\bo{H}$ — положительно полуопределенная матрица.
+		
+	\end{flushleft}
 \end{frame}
 
 
 
 
-\begin{frame}{Geometry of a QP}
+\begin{frame}{Геометрия задачи КП}
 	\begin{flushleft}
 		
 		\begin{figure}
 			\centering
 			\includegraphics[width=0.5\linewidth]{qpcontour}
-			\caption{Geometry of a QP. \bref{https://docs.mosek.com/modeling-cookbook/qcqo.html}{Source}}
+			\caption{Геометрия задачи КП. \bref{https://docs.mosek.com/modeling-cookbook/qcqo.html}{Источник}}
 			\label{fig:qpcontour}
 		\end{figure}
 		
@@ -75,10 +73,10 @@ where $\bo{H}$ is positive-semidefinite.
 
 
 
-\begin{frame}{Slack variables}
+\begin{frame}{Дополнительные переменные (слэки)}
 	\begin{flushleft}
 		
-		We can replace inequality constraints $\bo{A}\bo{x} \leq \bo{b}$ with equality constraints, by introducing positive slack varibles:
+		Мы можем заменить неравенства $\bo{A}\bo{x} \leq \bo{b}$ равенствами, введя неотрицательные дополнительные переменные:
 		%
 		\begin{align}
 			\begin{cases}
@@ -87,7 +85,7 @@ where $\bo{H}$ is positive-semidefinite.
 			\end{cases}
 		\end{align}
 		%
-		With that, we get a QP with two groups of variables: $\bo{x}$ constrained only by equalities and slack $\bo{s}$ constrained to lie in the positive cone:
+		Благодаря этому мы получаем задачу КП с двумя группами переменных: $\bo{x}$, ограниченными только равенствами, и дополнительными переменными $\bo{s}$, которые должны лежать в неотрицательном конусе:
 		%
 		\begin{equation}
 			\begin{aligned}
@@ -109,11 +107,10 @@ where $\bo{H}$ is positive-semidefinite.
 
 
 
-
-\begin{frame}{Degenerate QP}
+\begin{frame}{Вырожденная задача КП}
 	\begin{flushleft}
 		
-		Let us consider a QP with degenerate (not full rank) matrix $\bo{H} = \bo{R} \Sigma \bo{R}\T$ (without a loss of generality $\bo{H}$ can be assumed to be symmetric), where $\bo{R} \in \R^{n \times k}$.
+		Рассмотрим задачу КП с вырожденной (не имеющей полного ранга) матрицей $\bo{H} = \bo{R} \Sigma \bo{R}\T$ (без потери общности можно считать $\bo{H}$ симметричной), где $\bo{R} \in \R^{n \times k}$.
 		%
 		\begin{equation}
 			\begin{aligned}
@@ -127,7 +124,7 @@ where $\bo{H}$ is positive-semidefinite.
 			\end{aligned}
 		\end{equation}
 		%
-		Matrix $\bo{R}$ is a row-space basis of $\bo{H}$, and $\bo{N}$ is its orthogonal compliment. Then we can decompose $\bo{x}$ as $\bo{x} = \bo{R}\zeta+\bo{N}\bo{z}$:
+		Матрица $\bo{R}$ является базисом пространства строк $\bo{H}$, а $\bo{N}$ — ее ортогональным дополнением. Тогда мы можем разложить $\bo{x}$ как $\bo{x} = \bo{R}\zeta+\bo{N}\bo{z}$:
 		%
 		\begin{equation}
 			\begin{aligned}
@@ -164,7 +161,7 @@ where $\bo{H}$ is positive-semidefinite.
 
 
 
-\begin{frame}{Further reading}
+\begin{frame}{Литература}
 	\begin{flushleft}
 		
 		\begin{itemize}

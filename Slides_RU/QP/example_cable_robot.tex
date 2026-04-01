@@ -1,0 +1,73 @@
+\begin{frame}{Пример — тросовый робот, 1}
+	\begin{flushleft}
+		
+		Рассмотрим тросового параллельного робота.
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.5\linewidth]{"cable robot"}
+		\end{figure}
+		
+		
+		Точки крепления тросов: $O_1$, ..., $O_n$ с координатами $\bo{r}_1$, ..., $\bo{r}_n$. Центр масс робота имеет координаты $\bo{r}_0$. Направления тросов заданы как $\bo{p}_1$, ..., $\bo{p}_n$, а сила тяжести равна $\bo{f}_0$. Масса робота — $m$, момент инерции — $\bo{I}$.
+		
+		\bigskip
+		
+		Требуется найти силы, которые должны прилагать тросы, чтобы достичь ускорения, максимально близкого к $\bo{a}^*$, без углового ускорения.
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Пример — тросовый робот, 2}
+	\begin{flushleft}
+		
+		Определим силу, действующую со стороны $i$-го троса, как $ \bo{f}_i  = \bo{p}_i \alpha_i$, где $\alpha_i$ — величина силы (предполагается $||\bo{p}_i|| = 1$). Запишем уравнение Ньютона:
+		
+		\begin{align}
+			m \bo{a} = \bo{f}_0 + \sum_{i = 1}^{n} \bo{p}_i \alpha_i
+		\end{align}
+		
+		Аналогично запишем уравнение Эйлера:
+		
+		\begin{align}
+			\bo{I}\varepsilon = [\bo{r}_0]_\times \bo{f}_0 + \sum_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i
+		\end{align}
+		
+		где $[\bo{r}]_\times$ — кососимметричное представление вектора; $[\bo{r}]_\times \bo{x} = \bo{r} \times \bo{x}$.
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Пример — тросовый робот, 3}
+	\begin{flushleft}
+		
+		Таким образом, задача принимает вид:
+		
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\alpha_i, \bo{a}, \varepsilon}{\text{minimize}}
+				& & (\bo{a}^* - \bo{a})\T (\bo{a}^* - \bo{a}) + \varepsilon\T \varepsilon, 
+				\\
+				& \text{subject to}
+				& & \begin{cases}
+					m \bo{a} = \bo{f}_0 + \sum_{i = 1}^{n} \bo{p}_i \alpha_i,
+					\\
+					\bo{I} \varepsilon = [\bo{r}_0]_\times \bo{f}_0 + \sum_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		\bigskip
+		
+		После решения задачи находим силы:
+		
+		\begin{align}
+			\bo{f}_i  = \bo{p}_i \alpha_i
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
