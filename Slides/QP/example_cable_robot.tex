@@ -1,12 +1,10 @@
 
 
 \begin{frame}{Example - cable robot, 1}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		Consider a cable-driven parallel robot.
 		
-		% TODO: \usepackage{graphicx} required
 		\begin{figure}
 			\centering
 			\includegraphics[width=0.5\linewidth]{"cable robot"}
@@ -28,19 +26,20 @@
 	% \framesubtitle{General form}
 	\begin{flushleft}
 		
-		We define the force acting from the $i$-th cable as $ \bo{f}_i  = \bo{p}_i \alpha_i$, where $\alpha_i$ is the magnitude of the force (assuming $||\bo{p}_i|| = 1$). We can write newton equation:
-		
+		We define the force acting from the $i$-th cable as $ \bo{f}_i  = \bo{p}_i \alpha_i$, where $\alpha_i$ is the magnitude of the force (assuming $||\bo{p}_i|| = 1$), which has to be positive for $ \bo{f}_i$ to face in the same direction as $ \bo{p}_i$. We can write Newton equation:
+		%
 		\begin{align}
-			m \bo{a} = \bo{f}_0 + \sum_{i = 1}^{n} \bo{p}_i \alpha_i
+			m \bo{a} = \bo{f}_0 + \sum_{i = 1}^{n} \bo{p}_i \alpha_i, \ \ \alpha_i \geq 0
 		\end{align}
-		
+		%
 		Similar, we write Euler equation:
-		
+		%
 		\begin{align}
 			\bo{I}\varepsilon = [\bo{r}_0]_\times \bo{f}_0 + \sum_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i
 		\end{align}
-		
-		where $[\bo{r}]_\times$ is a skew-symmetric representation of a vector; $[\bo{r}]_\times \bo{x} = \bo{r} \times \bo{x}$.
+		%
+		where $[\bo{r}]_\times = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0  \end{bmatrix}$ 
+		is a skew-symmetric representation of a vector; $[\bo{r}]_\times \bo{x} = \bo{r} \times \bo{x}$.
 		
 	\end{flushleft}
 \end{frame}
@@ -50,8 +49,7 @@
 	% \framesubtitle{General form}
 	\begin{flushleft}
 		
-		Thus, we the problem takes form:
-		
+		If we accept soft constraints on $\varepsilon$, we the problem takes form:
 		%
 		\begin{equation}
 			\begin{aligned}
@@ -62,18 +60,33 @@
 				& & \begin{cases}
 					m \bo{a} = \bo{f}_0 + \sum_{i = 1}^{n} \bo{p}_i \alpha_i,
 					\\
-					\bo{I} \varepsilon = [\bo{r}_0]_\times \bo{f}_0 + \sum_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i.
+					\bo{I} \varepsilon = [\bo{r}_0]_\times \bo{f}_0 + \sum_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i,
+					\\
+					\alpha_i \geq 0.
 				\end{cases}
 			\end{aligned}
 		\end{equation}
+		%
+		If we require hard constraints on $\varepsilon$, we get:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\alpha_i, \bo{a}}{\text{minimize}}
+				& & (\bo{a}^* - \bo{a})\T (\bo{a}^* - \bo{a}), 
+				\\
+				& \text{subject to}
+				& & \begin{cases}
+					m \bo{a} = \bo{f}_0 + \sum_{i = 1}^{n} \bo{p}_i \alpha_i,
+					\\
+					0 = [\bo{r}_0]_\times \bo{f}_0 + \sum_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i,
+					\\
+					\alpha_i \geq 0.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		%
+		After solving the problem, we find the forces $\bo{f}_i  = \bo{p}_i \alpha_i$. 
 		
-		\bigskip
-		
-		After solving the problem, we find the forces:
-		
-		\begin{align}
-			\bo{f}_i  = \bo{p}_i \alpha_i
-		\end{align}
 		
 	\end{flushleft}
 \end{frame}

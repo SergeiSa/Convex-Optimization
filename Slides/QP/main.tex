@@ -86,7 +86,7 @@ General form of a quadratic program:
 		& \text{subject to}
 		& & \begin{cases}
 			\bo{A}\bo{x} \leq \bo{b}, \\
-			\bo{F}\bo{x} = \bo{g}.
+			\bo{C}\bo{x} = \bo{d}.
 		\end{cases}
 	\end{aligned}
 \end{equation}
@@ -137,8 +137,8 @@ where $\bo{H}$ is positive-semidefinite.
 				& & \bo{x}^\top \bo{H} \bo{x} + \bo{f}^\top\bo{x}, \\
 				& \text{subject to}
 				& & \begin{cases}
-					\bo{A}\bo{x} - \bo{b} =  -\bo{s}, \\
-					\bo{F}\bo{x} = \bo{g},\\
+					\bo{A}\bo{x} + \bo{s}  =  \bo{b}, \\
+					\bo{C}\bo{x} = \bo{d},\\
 					\bo{s} \geq 0.
 				\end{cases}
 			\end{aligned}

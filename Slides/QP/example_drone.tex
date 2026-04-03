@@ -24,10 +24,9 @@
 		
 		Let $\bo{B} = [\bo{b}_1 \ \bo{b}_2 \ \bo{b}_3]$ be a rotation matrix, describing the orientation of the quadrotor in the world frame.
 		
-		% TODO: \usepackage{graphicx} required
 		\begin{figure}
 			\centering
-			\includegraphics[width=0.7\linewidth]{drone}
+			\includegraphics[width=0.6\linewidth]{quadrotor_planning}
 			%\caption{Quadrotor body frame}
 			\label{fig:drone}
 		\end{figure}
@@ -42,7 +41,7 @@
 \begin{frame}{Example - drone trajectory, 3}
 	\begin{flushleft}
 		
-		We know that gravity in the world frame is expressed as $\bo{f}_g = mg \bo{e}_3$, where $\bo{e}_3 = [0 \ 0 \ 1 ]\T$ and $g \approx 9.81$.
+		We know that gravity in the world frame is expressed as $\bo{f}_g = mg \bo{e}_3$, where $\bo{e}_3 = [0 \ 0 \ 1 ]\T$ (also "points down") and $g \approx 9.81$.
 		
 		\bigskip
 		
@@ -51,13 +50,13 @@
 		\begin{align}
 			m \bo{a} = \bo{f}_g + \bo{f}_t 
 			\\
-			m \bo{a} = mg \bo{e}_3 - f \bo{b}_3 
+			\bo{f}_t = m (\bo{a} - g \bo{e}_3)
 		\end{align}
 		%
-		With that, we can compute $\bo{b}_3$:
+		$\bo{b}_3$ is the opposite direction to $\bo{f}_t$ and unit length:
 		%
 		\begin{align}
-			 \bo{b}_3 = \frac{\bo{f}_t}{||\bo{f}_t||} =  \frac{g \bo{e}_3 - \bo{a}}{||g \bo{e}_3 - \bo{a}||}
+			 \bo{b}_3 = -\frac{\bo{f}_t}{||\bo{f}_t||} =  \frac{g \bo{e}_3 - \bo{a}}{||g \bo{e}_3 - \bo{a}||}
 		\end{align}
 		%
 		
@@ -90,12 +89,11 @@
 \begin{frame}{Example - drone trajectory, 5}
 	\begin{flushleft}
 		
+		{\small 
 		We can add constraints; for example, we can require a certain pitch-roll at the time step $k$. To do that, we describe the desired pitch-roll pair via desired normal direction $\bo{b}_3^\text{des}$ (the desired orientation of the quadrotor's vertical axis). 
 		
-		\bigskip
-		
 		The constraint then can be written as "the cross product between $\bo{b}_3$ and $\bo{b}_3^\text{des}$ should be zero":
-		
+		%
 		\begin{align}
 			\bo{b}_3^\text{des} \times \bo{b}_3 = 0
 			\\
@@ -105,8 +103,18 @@
 			\bo{b}_3^\text{des} \times (g \bo{e}_3 - \bo{a}) = 0
 		}
 		\end{align} 
+		%
+		To avoid the scenaro where $\bo{b}_3$ is facing teh opposite direction to $\bo{b}_3^\text{des}$, we can add a constraint:
+		%
+		\begin{align}
+			(\bo{b}_3^\text{des} )\T  \bo{b}_3 \geq 0
+			\\
+			\boxed{
+				(\bo{b}_3^\text{des} )\T (g \bo{e}_3 - \bo{a}) \geq 0
+			}
+		\end{align} 
 		
-		
+	}
 	\end{flushleft}
 \end{frame}
 
@@ -124,6 +132,8 @@
 				& \text{subject to}
 				& & \begin{cases}
 					\bo{b}_3^\text{des}(k) \times (g \bo{e}_3 - \bo{a}_k) = 0
+					\\
+					(\bo{b}_3^\text{des} )\T (g \bo{e}_3 - \bo{a}) \geq 0,
 					\\
 					\bo{p}_{i+1} = \bo{p}_i + h \bo{v}_i \\
 					\bo{v}_{i+1} = \bo{v}_i + h \bo{a}_i \\
@@ -177,7 +187,7 @@
 		
 		\begin{enumerate}
 			
-			\item Compute $\dot{ \bo{b}}_3 =  -\frac{1}{||\bo{f}_t||}(\bo{I} - \bo{b}_3 \bo{b}_3\T) \bo{j}$. \textcolor{mygray}{ We use the fact that $\bo{b}_3 = -\frac{\bo{f}_t}{||\bo{f}_t||}$ is a unit vector.}
+			\item Compute $\dot{ \bo{b}}_3 =  -\frac{1}{||g \bo{e}_3 - \bo{a}||}(\bo{I} - \bo{b}_3 \bo{b}_3\T) \bo{j}$. \textcolor{mygray}{ We use the fact that $\bo{b}_3 = -\frac{\bo{f}_t}{||\bo{f}_t||}$ is a unit vector.}
 			
 			\item Compute $\omega_x = - \bo{b}_2\T \dot{ \bo{b}}_3$ and $\omega_y = \bo{b}_1\T \dot{ \bo{b}}_3$.
 			
