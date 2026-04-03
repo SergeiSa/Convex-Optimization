@@ -1,2 +1,4 @@
-\beamer@slide {fig:qpcontour}{3}
-\beamer@slide {fig:drone}{10}
+\beamer@slide {LP}{2}
+\beamer@slide {fig:lpdomain}{3}
+\beamer@slide {fig:qpcontour}{5}
+\beamer@slide {fig:drone}{12}

@@ -6,7 +6,7 @@
 \input{settings.tex}
 
 
-\title{Квадратичное программирование}
+\title{Линейное и квадратичное программирование}
 \subtitle{Вычислительный интеллект, лекция 6}
 \author{Сергей Савин}
 \centering
@@ -28,6 +28,49 @@
 %
 %\end{frame}
 
+
+\begin{frame}{Линейное программирование}
+	\begin{flushleft}
+		
+		Линейная программа (ЛП) — это задача оптимизации вида:
+		
+		\begin{equation} \label{LP}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & \bo{f}^\top \bo{x} , \\
+				& \text{subject to}
+				& & \begin{cases} 
+					\bo{A}\bo{x} \leq \bo{b}, \\
+					\bo{C}\bo{x} = \bo{d}.
+				\end{cases}
+				%
+			\end{aligned}
+		\end{equation}
+		
+		Это один из старейших и широко используемых классов задач выпуклой оптимизации. 
+		
+		\bigskip
+		
+		Заметим, что решение такой задачи всегда будет лежать на границе ее области определения.
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Геометрия задачи ЛП}
+	\begin{flushleft}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.70\linewidth]{LP_domain}
+			\caption{Геометрия задачи ЛП — пример.  \bref{https://people.richland.edu/james/lecture/m116/systems/linear.html}{Источник} }
+			\label{fig:lpdomain}
+		\end{figure}
+		
+		
+	\end{flushleft}
+\end{frame}
 
 \begin{frame}{Квадратичное программирование}
 	\begin{flushleft}
