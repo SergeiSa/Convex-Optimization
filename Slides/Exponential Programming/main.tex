@@ -1,0 +1,198 @@
+\documentclass{beamer}
+
+\input{settings.tex}
+
+
+\title{Exponential Programming}
+\subtitle{\mycoursetitle, Extra Lecture}
+\author{by Sergei Savin}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item How to describe an ellipsoid
+\item Volume of an ellipsoid
+\item Inscribed ellipsoid algorithms
+\end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}{How to describe an ellipsoid}
+\framesubtitle{Unit sphere transformation}
+\begin{flushleft}
+
+Let us first remember how we describe a unit sphere:
+
+\begin{equation}
+    \mathcal{S} = \{ \mathbf{x}: \ || \mathbf{x} || \leq 1 \}
+\end{equation}
+
+An ellipsoid can be seen as a linear transformation of a unit sphere: 
+
+\begin{equation}
+    \mathcal{E} = \{ \mathbf{A}\mathbf{x} + \mathbf{b}: \ || \mathbf{x} || \leq 1 \}
+\end{equation}
+ 
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{How to describe an ellipsoid}
+\framesubtitle{A dual description}
+\begin{flushleft}
+
+Let us introduce a change of variables $\mathbf{z} = \mathbf{A}\mathbf{x} + \mathbf{b}$. Assuming $\mathbf{A}$ is invertible, we get:
+
+\begin{equation}
+    \mathbf{x} = \mathbf{A}^{-1}(\mathbf{z} - \mathbf{b})
+\end{equation}
+
+So, we can describe the exact same ellipsoid using an alternative formula: 
+
+\begin{equation}
+    \mathcal{E} = \{ \mathbf{z}: \ || \mathbf{B}\mathbf{z} + \mathbf{c} || \leq 1 \}
+\end{equation}
+ 
+ where $\mathbf{B} = \mathbf{A}^{-1}$ and $\mathbf{c} = -\mathbf{A}^{-1}\mathbf{b}$.
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Volume of an ellipsoid (1)}
+\begin{flushleft}
+
+For an ellipsoid of the form
+
+\begin{equation}
+    \mathcal{E} = \{ \mathbf{A}\mathbf{x} + \mathbf{b}: \ || \mathbf{x} || \leq 1 \}
+\end{equation}
+
+the "bigger" the $\mathbf{A}$, the bigger the ellipsoid. This concept can be made concrete by talking about the determinant of $\mathbf{A}$.
+
+\bigskip
+
+Thus, maximizing the volume of this ellipsoid is the same as maximizing $\text{det}(\mathbf{A})$. Or, it is the same as \emph{minimizing} the $\text{det}(\mathbf{A}^{-1})$, since $\text{det}(\mathbf{A}^{-1}) = 1 / \text{det}(\mathbf{A})$.
+
+\bigskip
+
+Finally, note that $\text{log} \ \text{det}(\mathbf{A})$ is a concave function and $\text{log} \ \text{det}(\mathbf{A}^{-1})$  is a convex function.
+
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Volume of an ellipsoid (2)}
+\begin{flushleft}
+
+For an ellipsoid of the form
+
+\begin{equation}
+    \mathcal{E} = \{ \mathbf{z}: \ || \mathbf{B}\mathbf{z} + \mathbf{c} || \leq 1 \}
+\end{equation}
+
+the "bigger" the $\mathbf{B}$, the \emph{smaller} the ellipsoid. We can make it obvious by thinking that increasing $\mathbf{B}$ leaves less room for valid $\mathbf{z}$, and it is the volume of valid $\mathbf{z}$ that makes the volume of the ellipsoid in this case.
+
+\bigskip
+
+This concept can be made concrete by talking about the determinant of $\mathbf{B}$. Thus, maximizing the volume of this ellipsoid is the same as \emph{minimizing} $\text{det}(\mathbf{B})$. Or, it is the same as \emph{maximizing} the $\text{det}(\mathbf{B}^{-1})$.
+ 
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Min volume bounding ellipsoid}
+	\begin{flushleft}
+		
+		Consider the problem: given V-polytope, defined by its vertices $\bo{v}_i$, find minimum-volume ellipsoid $\mathcal{E}$ containing the polytope. We will start with defining the ellipsoid as $\mathcal{E} = \{ \mathbf{z}: \ || \mathbf{B}\mathbf{z} + \mathbf{c} || \leq 1 \}$. The ellipsoid is smaller when $|| \mathbf{B} ||$ is bigger, and thus we can write the minimization as minimizing $\text{det} (\mathbf{B}^{-1}) $.
+		
+\begin{equation}
+	\begin{aligned}
+		& \underset{\mathbf{B}, \bo{c}}{\text{minimize}}
+		& & \text{log} (\text{det} (\mathbf{B}^{-1}) ), \\
+		& \text{subject to}
+		& & \begin{cases}
+			\mathbf{B} \succeq 0, \\
+			|| \mathbf{B} \bo{v}_i + \mathbf{c} || \leq 1.
+		\end{cases}
+	\end{aligned}
+\end{equation}
+
+The solution gives us L\"owner-John ellipsoid.
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Max volume inscribed ellipsoid (1)}
+	\begin{flushleft}
+		
+		Consider the problem: given H-polytope, defined by its half-spaces $\bo{a}_i^\top \bo{x} \leq b_i$, find maximum-volume ellipsoid $\mathcal{E}$ contained in the polytope. We will start with defining the ellipsoid as $\mathcal{E} = \{ \bo{C}\bo{x} + \bo{d}: \ || \bo{x} || \leq 1 \}$. The ellipsoid is larger when $|| \mathbf{C} ||$ is bigger, and thus we can write the minimization as minimizing $\text{det} (\mathbf{C}^{-1}) $.
+		
+		\bigskip
+		
+		Let us write down the constraint requiring that $\mathcal{E}$ lies in the polytope. We know that $\bo{a}_i^\top (\bo{C}\bo{x} + \bo{d}) \leq b_i$ holds for all $|| \bo{x} || \leq 1$. The worst-case scenario is when $\bo{x}$ aligned with $\bo{a}_i^\top \bo{C}$ and has length 1:
+		%
+		\begin{equation}
+			\bo{x} = \frac{\bo{a}_i^\top \bo{C}}{|| \bo{a}_i^\top \bo{C} ||}
+		\end{equation}
+	%
+		Thus the constraint becomes
+		%
+		\begin{equation}
+			 || \bo{a}_i^\top \bo{C} || + \bo{a}_i^\top\bo{d} \leq b_i
+		\end{equation}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Max volume inscribed ellipsoid (2)}
+	\begin{flushleft}
+		
+		Here is the resulting problem:
+		
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\mathbf{C}, \bo{d}}{\text{minimize}}
+				& & \text{log} (\text{det} (\mathbf{C}^{-1}) ), \\
+				& \text{subject to}
+				& & \begin{cases}
+					\mathbf{C} \succeq 0, \\
+					|| \bo{a}_i^\top \bo{C} || + \bo{a}_i^\top\bo{d} \leq b_i.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		The solution gives us inscribed (inner) L\"owner-John ellipsoid.
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\myqrframe
+
+
+
+
+\end{document}

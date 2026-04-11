@@ -4,7 +4,7 @@
 
 
 \title{LMI, Control design, Robustness}
-\subtitle{\mycoursetitle, Lecture 10}
+\subtitle{\mycoursetitle, Lecture 9}
 \author{by Sergei Savin}
 \centering
 \date{\mydate}
@@ -33,32 +33,8 @@
 
 
 
-\begin{frame}{Linear matrix inequalities (LMI)}
-	%\framesubtitle{How do we know the state?}
-	\begin{flushleft}
-		
-		A linear matrix inequality (LMI) is a semidefinite constraint placed on a matrix:
-		
-		\begin{equation}
-			\bo{S} \succ 0
-		\end{equation}
-		
-		We assume (and this is true!) that there exist \emph{solvers} that can solve problems with such constraints. 
-		
-		
-		\begin{example}
-			Given $\bo{A}$, find such $\bo{S}\succ 0$ that $\bo{A}^\top\bo{S} + \bo{S}\bo{A} \prec 0$.
-		\end{example}
-		
-		Notice that the last example is continious-time Lyapunov eq. for LTI system $\dot{\bo{x}} = \bo{A}\bo{x}$, and if such $\bo{S}$ exists the system is stable. 
-		
-	\end{flushleft}
-\end{frame}
-
-
 
 \begin{frame}{Control design (continuous-time), 1}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Consider a system $\dot{\bo{x}} = \bo{A}\bo{x} + \bo{B}\bo{u}$, control $\bo{u} = \bo{K}\bo{x}$ and a Lyapunov function $V = \bo{x}^\top\bo{S}\bo{x}$, $\bo{S} \succ 0$.
@@ -87,7 +63,6 @@
 
 
 \begin{frame}{Control design (continuous-time), 2}
-	%	\framesubtitle{Part 2}
 	\begin{flushleft}
 		
 		Introducing new variable $\bo{P} = \bo{S}^{-1}$ and multiplying \eqref{eq:vdot} by $\bo{P}$ on both sides (we can do it, as both $\bo{P}$ and $\bo{S}$ are full rank, and thus it is a congruence transformation which preserves definiteness, see appendix) we get:
@@ -114,7 +89,6 @@
 
 
 \begin{frame}{Discrete Lyapunov equation}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		A discrete dynamical system $\bo{x}_{i+1} = \bo{f}(\bo{x}_i)$ is stable if there exists a Lyapunov function $V(\bo{x}_i)$, such that:
@@ -130,7 +104,6 @@
 
 
 \begin{frame}{Control design (discrete-time), 1}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Consider a system $\bo{x}_{i+1} = \bo{A}\bo{x}_i + \bo{B}\bo{u}_i$, control $\bo{u}_i = \bo{K}\bo{x}_i$ and a Lyapunov function $V(\bo{x}_i) = \bo{x}_i\T \bo{S} \bo{x}_i$, $\bo{S} \succ 0$.
@@ -163,7 +136,6 @@
 
 
 \begin{frame}{Control design (discrete-time), 2}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Semidefinite inequality $(\bo{A} + \bo{B}\bo{K})\T \bo{S} (\bo{A} + \bo{B}\bo{K}) - \bo{S} \prec 0$ can be re-written:
@@ -193,7 +165,6 @@
 
 
 \begin{frame}{Schur complement}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		\begin{theorem}[Schur complement]
@@ -216,7 +187,6 @@
 
 
 \begin{frame}{Control design (discrete-time), 3}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Semidefinite inequality $-\bo{P} - (\bo{A}\bo{P} + \bo{B}\bo{L})\T (-\bo{P}^{-1}) (\bo{A}\bo{P} + \bo{B}\bo{L})  \prec 0$ can transformed with Schur inequality:
@@ -237,7 +207,6 @@
 
 
 \begin{frame}{Robustness, 1}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Consider a system $\dot{\bo{x}} = \bo{A}\bo{x}$, but when you don't know $\bo{A}$ exactly. In other words, you don't know the model exactly. This is not to say that we know nothing about the model, but there is an uncertainty in our knowledge.
@@ -263,7 +232,6 @@
 
 
 \begin{frame}{Robustness, 2}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Lets write the Lyapunov equation for the system \eqref{eq:uncertain}:
@@ -301,7 +269,6 @@
 
 
 \begin{frame}{Robustness, 3}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		With $\bo{w}^\top \bo{w} 
@@ -374,7 +341,6 @@
 
 
 \begin{frame}{Robustness, 4}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		
@@ -415,7 +381,6 @@
 
 
 \begin{frame}{Robust Control Design, 1}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Consider a system: 
@@ -452,7 +417,6 @@
 
 
 \begin{frame}{Robust Control Design, 2}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		We introduce new variable $\bo{w} = \Delta \bo{E} \bo{x}$:
@@ -492,7 +456,6 @@
 
 
 \begin{frame}{Robust Control Design, 3}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		
@@ -540,7 +503,6 @@
 
 
 \begin{frame}{Robust Control Design, 4}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		The expression:
@@ -589,7 +551,6 @@
 
 
 \begin{frame}{Robust Control Design, 5}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		We can introduce a new variable $\bo{P} = \bo{S}^{-1}_\gamma$ and multiply both sides (congruence transformation) of the previously found inequality by $\begin{bmatrix}
@@ -629,7 +590,6 @@
 
 
 \begin{frame}{Quadratic stability, 1}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Let us consider the following system:
@@ -650,7 +610,6 @@
 
 
 \begin{frame}{Quadratic stability, 2}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		\begin{theorem}[Quadratic stability]
@@ -696,7 +655,6 @@
 
 
 \begin{frame}{Quadratic stability - Control design, 2}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Let us write Lyapunov eq. for the system:
@@ -733,7 +691,6 @@
 
 
 \begin{frame}{Quadratic stability - Control design, 3}
-	%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		From $(\bo{A}_i + \bo{B}\bo{K})^\top \bo{S} +
@@ -766,7 +723,7 @@
 	\framesubtitle{Congruence transformation and definiteness}
 	\begin{flushleft}
 		
-		Consider matrices $\bo{P} \succ 0$, and $\bo{V} \in \R^{n, n}$ is full rank. We can prove that:
+		Consider matrices $\bo{P} \succeq 0$, and $\bo{V} \in \R^{n, n}$ is full rank. We can prove that:
 		
 		\begin{equation}
 			\bo{P} \succ 0 \implies \bo{V}^\top\bo{P}\bo{V} \succ 0
@@ -833,7 +790,110 @@ The second, conservative S-procedure, is a conservative (sufficient condition-on
 
 
 
+\begin{frame}{Schur Complement (Congruence Proof), 1}
+	\begin{flushleft}
+		
+		Let 
+		\[
+		\bo{M} = 
+		\begin{bmatrix}
+			\bo{A} & \bo{B} \\
+			\bo{B}^\top & \bo{C}
+		\end{bmatrix},
+		\quad \bo{C} = \bo{C}^\top \succ 0.
+		\]
+		
+		We prove:
+		\[
+		\bo{M} \succeq 0 
+		\quad \Longleftrightarrow \quad
+		\bo{A} - \bo{B}\bo{C}^{-1}\bo{B}^\top \succeq 0.
+		\]
+		
+		Define the congruence transformation:
+		\[
+		\bo{T} =
+		\begin{bmatrix}
+			\bo{I} & -\bo{B}\bo{C}^{-1} \\
+			\bo{0} & \bo{I}
+		\end{bmatrix}.
+		\]
+		
+		Compute:
+		\begin{align}
+			\bo{T}^\top \bo{M} \bo{T}
+			&=
+			\begin{bmatrix}
+				\bo{I} & \bo{0} \\
+				-\bo{C}^{-1}\bo{B}^\top & \bo{I}
+			\end{bmatrix}
+			\begin{bmatrix}
+				\bo{A} & \bo{B} \\
+				\bo{B}^\top & \bo{C}
+			\end{bmatrix}
+			\begin{bmatrix}
+				\bo{I} & -\bo{B}\bo{C}^{-1} \\
+				\bo{0} & \bo{I}
+			\end{bmatrix} \\
+			&=
+			\begin{bmatrix}
+				\bo{A} - \bo{B}\bo{C}^{-1}\bo{B}^\top & \bo{0} \\
+				\bo{0} & \bo{C}
+			\end{bmatrix}.
+		\end{align}
+		
+	\end{flushleft}
+\end{frame}
 
+
+
+
+\begin{frame}{Schur Complement (Congruence Proof), 2}
+	\begin{flushleft}
+		
+		
+		Congruence preserves semidefiniteness:
+		\[
+		\bo{M} \succeq 0 
+		\;\Longleftrightarrow\;
+		\bo{T}^\top \bo{M} \bo{T} \succeq 0
+		\quad (\bo{T} \text{ invertible}).
+		\]
+		
+		\bigskip
+		
+		Thus:
+		\[
+		\bo{M} \succeq 0
+		\;\Longleftrightarrow\;
+		\begin{bmatrix}
+			\bo{A} - \bo{B}\bo{C}^{-1}\bo{B}^\top & 0 \\
+			0 & \bo{C}
+		\end{bmatrix} \succeq 0.
+		\]
+		
+		\bigskip
+		
+		A block diagonal matrix is PSD iff each block is PSD:
+		\[
+		\Longleftrightarrow
+		\begin{cases}
+			\bo{A} - \bo{B}\bo{C}^{-1}\bo{B}^\top \succeq 0 \\
+			\bo{C} \succeq 0
+		\end{cases}
+		\]
+		
+		\bigskip
+		
+		Since $\bo{C} \succ 0$, we conclude:
+		\[
+		\bo{M} \succeq 0 
+		\;\Longleftrightarrow\;
+		\bo{A} - \bo{B}\bo{C}^{-1}\bo{B}^\top \succeq 0. \ \ \ \qed
+		\]
+		
+	\end{flushleft}
+\end{frame}
 
 
 

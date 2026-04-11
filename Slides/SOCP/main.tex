@@ -4,7 +4,7 @@
 
 
 \title{Second-order cone programming}
-\subtitle{\mycoursetitle, Lecture 9}
+\subtitle{\mycoursetitle, Lecture 7}
 \author{by Sergei Savin}
 \centering
 \date{\mydate}
@@ -35,10 +35,9 @@
 
 
 \begin{frame}{Quadratically constrained quadratic programming}
-	%\framesubtitle{General form}
 	\begin{flushleft}
 		
-		General form of a quadratically constrained quadratic program (QCQP) is given below:
+		General form of a convex quadratically constrained quadratic program (QCQP) is given below:
 		
 		%
 		\begin{equation}
@@ -61,10 +60,9 @@
 
 
 \begin{frame}{QCQP - Domain}
-	%\framesubtitle{Domain}
 	\begin{flushleft}
 		
-		Domain of a QCQP without equality constraints and with no degenerate inequality constraints is an intersection of ellipses:
+		Domain of a convex QCQP without equality constraints and with no degenerate inequality constraints is an intersection of ellipses:
 		
 		\begin{figure} [h!]
 			\begin{center}
@@ -79,7 +77,6 @@
 
 
 \begin{frame}{QCQP to QP and LP}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		Set $\mathbf{P}_i = \mathbf{0}$ and you get a QP.
@@ -118,7 +115,6 @@
 
 
 \begin{frame}{2-norm, 1}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		Let us consider a 2-norm as a function $f(\bo{x}): \ \R^n \rightarrow \R$:
@@ -134,7 +130,6 @@
 
 
 \begin{frame}{2-norm, 2}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		We can describe 2-norm as a surface in the $\mathcal S \subset \R^{n+1}$ space:
@@ -143,7 +138,6 @@
 			\mathcal S = \{  (J, \bo{x}): \ J = || \bo{x} ||_2 \}
 		\end{align}		
 		
-		% TODO: \usepackage{graphicx} required
 		\begin{figure}
 			\centering
 			\includegraphics[width=0.7\linewidth]{norm}
@@ -157,28 +151,18 @@
 
 
 \begin{frame}{Cone}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
-		The shape of the surface $\mathcal S = \{  (J, \bo{x}): \ J = || \bo{x} ||_2 \}$ is a \emph{cone}. We observe the following properties of a cone:
+		The shape of the surface $\mathcal S = \{  (J, \bo{x}): \ J = || \bo{x} ||_2 \}$ is a \emph{cone} boundary. We observe the following properties of a cone:
 		
 		\begin{itemize}
-			\item There is a single tip point $\tau$ and a normal direction.
+			\item A cone has an apex (tip).
 			
-			\item  Slicing cone with planes orthogonal to the normal direction, we produce ellipsoids (we can call it tangent sets).
+			\item  A cone  is closed under positive scaling: if $( \bo{x}, \| \bo{x}\| )$ is in a cone, then $( \alpha \bo{x}, \|  \alpha\bo{x}\| )$ is also in that cone.
 			
-			\item For any point $p$ on the cone, the half-line from the tip point $\tau$ through $p$ lies on the cone. The angle between this line and the normal is called \emph{vertex angle}.
+			\item  Cross-sections perpendicular to the axis are spheres.
 		\end{itemize}
 		
-		%\bigskip
-		
-		%The tip point for $\mathcal S$ is $(0, \bo{0})$. Normal direction is $(n, \bo{0})$. Tangent sets are circles $|| \bo{x} ||_2 = h$, parameterized by $h$. 
-		
-		%For any point $(J(\bo{p}), \bo{p})$ we can write half-line as $\mathcal L = \{ ( J(\gamma \bo{p}), \gamma \bo{p}): \ \gamma > 0 \}$.
-		
-		%\begin{align}
-			%J(\gamma \bo{p}) = ||\gamma \bo{p}|| = \gamma ||\bo{p}|| = \gamma J(\bo{p})
-		%\end{align}
 		
 	\end{flushleft}
 \end{frame}
@@ -187,30 +171,43 @@
 
 
 
-
-
-\begin{frame}{Second-order cone}
-	% \framesubtitle{Parameter estimation}
+\begin{frame}{Second-order cone, 1}
 	\begin{flushleft}
 		
 		A second-order cone constraint has the following form:
 		
 		\begin{equation}
+			||\bo{z}|| \leq t
+		\end{equation}
+		%
+		where $\bo{z}$ and $t$ are variables. Under affine transformations (affine change of variables)  we can rewrite it in a more general form:
+		
+		\begin{equation}
 			||\bo{A}\bo{x}+\bo{b}|| \leq \bo{c}\T \bo{x} + d
 		\end{equation}
 		%
-		where $\bo{A} \in \R^{n, n}$, $\bo{b}, \bo{c} \in \R^{n}$ and $d \in \R$.
+		where $\bo{A} \in \R^{m, n}$, $\bo{b}\in \R^{m}$, $\bo{c} \in \R^{n}$ and $d \in \R$.
 		
 		\bigskip
 		
-		This constraint describes interior of a cone. The surface of the cone is an intersection of two surfaces: 
+		For it to be feasible, the r.h.s. has to be non-negative: $\bo{c}\T \bo{x} + d \geq 0$.
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Second-order cone, 2}
+	\begin{flushleft}
+		
+		The constraint $||\bo{A}\bo{x}+\bo{b}|| \leq \bo{c}\T \bo{x} + d$ describes an affine transformation of a cone. Its surface is an intersection of two surfaces in $\R^{n+1}$: 
 		
 		\begin{align}
-			J = ||\bo{A}\bo{x}+\bo{b}|| \\
-			P = \bo{c}\T \bo{x} + d
+			y = ||\bo{A}\bo{x}+\bo{b}|| \\
+			y = \bo{c}\T \bo{x} + d
 		\end{align}
 		
-		First is a cone and second is a plane. Their intersection is called a \emph{conic section}. 
+		First is a cone and second is a plane. 
 		
 		
 	\end{flushleft}
@@ -222,12 +219,10 @@
 
 
 \begin{frame}{The role of the free constant, 1}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
-		Typical conic sections are shown below:
+		A conic section is an intersection of a plane and a double-napped cone. Typical conic sections are shown below:
 		
-		% TODO: \usepackage{graphicx} required
 		\begin{figure}
 			\centering
 			\includegraphics[width=0.7\linewidth]{cones}
@@ -242,7 +237,6 @@
 
 
 \begin{frame}{The role of the free constant, 2}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		The surface of a second-order cone (SOC) is:
@@ -297,7 +291,7 @@ The general form of a Second-order cone program (SOCP) is:
 \end{aligned}
 \end{equation}
 
-LP, QP and QCQP are subsets of SOCP.
+LP, QP and convex QCQP are subsets of SOCP.
  
 \end{flushleft}
 \end{frame}
@@ -320,7 +314,7 @@ We can write problem where our domain is a ball as SOCP:
 & \underset{\mathbf{x}}{\text{minimize}}
 & & \mathbf{f}^\top\mathbf{x}, \\
 & \text{subject to}
-& & ||\mathbf{x}||_2 \leq d_i
+& & ||\mathbf{x}||_2 \leq d
 \end{aligned}
 \end{equation}
 
@@ -346,7 +340,7 @@ Same for ellipsoidal constraints:
 \begin{frame}{Example - path planning}
 	\begin{flushleft}
 		
-		Consider a path planning problem: find a sequence of points $\bo{x}_i$ starting at $\bo{x}_0$, making a shortest path to the goal point $\bo{x}_g$, such that neightbouring points are no further than $h$ from one another.
+		Consider a path planning problem: find a sequence of points $\bo{x}_i$ starting at $\bo{x}_s$, making a shortest path to the goal point $\bo{x}_g$, such that neightbouring points are no further than $h$ from one another.
 		
 		\bigskip
 		
@@ -358,9 +352,14 @@ Same for ellipsoidal constraints:
 		\begin{equation}
 			\begin{aligned}
 				& \underset{\bo{x}_1, ..., \bo{x}_n}{\text{minimize}}
-				& & \sum_{i = 1}^{n} (\bo{x}_i - \bo{x}_g)\T (\bo{x}_i - \bo{x}_g), \\
+				& & \sum_{i = 1}^{n-1} (\bo{x}_i - \bo{x}_{i+1})\T (\bo{x}_i - \bo{x}_{i+1}), \\
 				& \text{subject to}
-				& &||\bo{x}_i - \bo{x}_{i+1} || < h, \ \ i \in {0, 1, 2, ...., n}
+				& &
+				\begin{cases}
+					||\bo{x}_i - \bo{x}_{i+1} || \leq h, \ \ i \in {1, 2, ...., n} \\
+					\bo{x}_1 = \bo{x}_s, \\
+					\bo{x}_n = \bo{x}_g.
+				\end{cases}
 			\end{aligned}
 		\end{equation}
 		
@@ -371,7 +370,6 @@ Same for ellipsoidal constraints:
 
 
 \begin{frame}{SOCP to QCQP, 1}
-% \framesubtitle{Part 1}
 \begin{flushleft}
 
 Set $\mathbf{c}_i = 0$ and recognize that $||\mathbf{A}_i\mathbf{x} + \mathbf{b}_i||_2 \leq d_i$ is the same as $(\mathbf{A}_i\mathbf{x} + \mathbf{b}_i)^\top (\mathbf{A}_i\mathbf{x} + \mathbf{b}_i) \leq d_i^2$ (since the first implies that $d_i$ is non-negative).
@@ -399,7 +397,6 @@ Set $\mathbf{c}_i = 0$ and recognize that $||\mathbf{A}_i\mathbf{x} + \mathbf{b}
 
 
 \begin{frame}{SOCP to QCQP, 2}
-%\framesubtitle{Part 2}
 \begin{flushleft}
 
 
@@ -453,7 +450,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Friction in 3D, 1}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		Friction force $\bo{f}_\tau$ together with normal reaction force $\bo{f}_n$ together form contact reaction force $\bo{f}_R$:
@@ -488,7 +484,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Friction in 3D, 2}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		We can prove that $f_n = \bo{n}\T \bo{f}_R$:
@@ -557,7 +552,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Friction cone representations, 1}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		We can write friction cone constraint as follows:
@@ -578,7 +572,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Friction cone representations, 2}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		It is possible to re-write the same constraint as:
@@ -610,7 +603,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Friction cone representations, 3}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		We can do the same with projectors:
@@ -630,7 +622,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Homework}
-% \framesubtitle{Parameter estimation}
 \begin{flushleft}
 
 \begin{itemize}
@@ -659,7 +650,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Canonical form, degenerate cone marix, 1}
-	%	\framesubtitle{General form}
 	\begin{flushleft}
 		
 		Consider the following SOC constraint:
@@ -701,7 +691,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Canonical form, degenerate cone marix, 2}
-	%	\framesubtitle{General form}
 	\begin{flushleft}
 		
 		Notice that $||\mathbf{E}\xi||_2 \leq 
@@ -736,7 +725,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Plotting level sets, 1}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		To plot a cone it is convenient to first use change of coordinates $\bo{y} = \bo{A}\bo{x}+\bo{b}$, meaning $\bo{x} =\bo{A}^{-1} (\bo{y} - \bo{b})$, giving us SOC:
@@ -764,7 +752,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Plotting level sets, 2}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		Since  SOC becomes:
@@ -798,7 +785,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Plotting level sets, 3}
-	% \framesubtitle{Parameter estimation}
 	\begin{flushleft}
 		
 		
@@ -834,7 +820,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Turning ellipsoid to the canonical form (1)}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		Can we re-write the expression $\mathbf{x}^\top \mathbf{P} \mathbf{x} + \mathbf{q}^\top\mathbf{x} + r \leq 0$ as a canonical form ellipsoid:
@@ -863,7 +848,6 @@ As long as $\bo{A}_0 = \sqrt{\bo{H}}$, and $\bo{b}_0 = 0.5 \bo{A}_0^{-1} \mathbf
 
 
 \begin{frame}{Turning ellipsoid to the canonical form (2)}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		Thus our original expression became:

@@ -1,0 +1,427 @@
+\documentclass{beamer}
+
+\input{settings.tex}
+
+
+\title{H infinity, Young}
+\subtitle{\mycoursetitle, Lecture 10}
+\author{by Sergei Savin}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+
+\begin{frame}{\texorpdfstring{$\mathcal{H}_\infty$}{} Control, Storage Functions, and KYP}
+	\begin{flushleft}
+		
+		{\small
+		\textbf{System:}
+		\[
+		\dot{x} = Ax + Bw, \quad y = Cx + Dw
+		\]
+		
+		
+		\textbf{$\mathcal{H}_\infty$ objective:} ensure
+		\[
+		\|y\|_2 \le \gamma \|w\|_2 \quad \text{for all } w \in \mathcal{L}_2
+		\]
+		
+		
+		\textbf{Storage function (dissipation inequality):} \\
+		Find $V(x) = x^\top P x$, $P \succ 0$, such that
+		\[
+		\dot{V}(x) + y^\top y - \gamma^2 w^\top w \le 0
+		\]
+		
+		\textbf{KYP (Bounded Real Lemma):} \\
+		The above holds iff $\exists P \succ 0$ such that
+		\[
+		\begin{bmatrix}
+			A^\top P + PA & PB & C^\top \\
+			B^\top P & -\gamma^2 I & D^\top \\
+			C & D & -I
+		\end{bmatrix} \prec 0
+		\]
+		
+		
+		\textbf{Conclusion:} $\Rightarrow \|G(s)\|_\infty < \gamma$}
+		
+	\end{flushleft}
+	
+\end{frame}
+
+
+\begin{frame}{H infinity}
+	\begin{flushleft}
+		
+Consider the uncertain system:
+\begin{align*}
+	\dot{x} &= (A + \Delta A)x + Bu + Dw, \\
+	y &= Cx,
+\end{align*}
+with structured uncertainty
+\[
+\Delta A = N \Delta M, \quad \|\Delta\| < 1.
+\]
+
+We apply state feedback:
+\[
+u = Kx,
+\]
+yielding the closed-loop system:
+\[
+\dot{x} = (A + BK + \Delta A)x + Dw.
+\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Step 1: KYP Lemma}
+	\begin{flushleft}
+		
+	The $\mathcal{H}_\infty$ condition is satisfied if there exists $P \succ 0$ such that:
+	\[
+	\begin{bmatrix}
+		(A + BK + \Delta A)^\top P + P(A + BK + \Delta A) & PD & C^\top \\
+		D^\top P & -\gamma I & 0 \\
+		C & 0 & -\gamma I
+	\end{bmatrix} \prec 0.
+	\]
+	
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Step 2: Separate nominal and uncertain parts}
+	\begin{flushleft}
+		
+		
+		Let:
+		\[
+		W_1 =
+		\begin{bmatrix}
+			(A + BK)^\top P + P(A + BK) & PD & C^\top \\
+			D^\top P & -\gamma I & 0 \\
+			C & 0 & -\gamma I
+		\end{bmatrix},
+		\]
+		\[
+		W_2 =
+		\begin{bmatrix}
+			(\Delta A)^\top P + P(\Delta A) & 0 & 0 \\
+			0 & 0 & 0 \\
+			0 & 0 & 0
+		\end{bmatrix}.
+		\]
+		
+		Using $\Delta A = N \Delta M$, we obtain:
+		\[
+		W_2 =
+		\begin{bmatrix}
+			M^\top \Delta^\top N^\top P + PN \Delta M & 0 & 0 \\
+			0 & 0 & 0 \\
+			0 & 0 & 0
+		\end{bmatrix}.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Young's Inequality (Matrix Form)}
+	
+	\begin{flushleft}
+		
+		\textbf{Statement:} For any matrices $X, Y$ of compatible dimensions and any $\varepsilon > 0$,
+		\[
+		X^\top Y + Y^\top X \;\preceq\; \varepsilon X^\top X + \varepsilon^{-1} Y^\top Y
+		\]
+		
+		
+		\medskip
+		
+		\textbf{Equivalent form (used in robust control):}
+		\[
+		X \Delta Y + (X \Delta Y)^\top
+		\;\preceq\;
+		\varepsilon XX^\top + \varepsilon^{-1} Y^\top Y,
+		\quad \|\Delta\| \le 1
+		\]
+		
+		\medskip
+		
+		\textbf{Role in LMIs:}
+		\begin{itemize}
+			\item Replaces uncertain terms with \emph{convex bounds}
+			\item Introduces scalar multiplier $\varepsilon$
+		\end{itemize}
+		
+	\end{flushleft}
+	
+\end{frame}
+
+
+
+\begin{frame}{Factorization of Uncertain Term}
+	\begin{flushleft}
+		
+		
+		
+		\textbf{Uncertain block:}
+		\[
+		W_2 =
+		\begin{bmatrix}
+			M^\top \Delta^\top N^\top P + PN \Delta M & 0 & 0 \\
+			0 & 0 & 0 \\
+			0 & 0 & 0
+		\end{bmatrix}
+		\]
+		
+		\medskip
+		
+		\textbf{Define:}
+		\[
+		V_1 =
+		\begin{bmatrix}
+			PN \\ 0 \\ 0
+		\end{bmatrix},
+		\quad
+		V_2 =
+		\begin{bmatrix}
+			M^\top \\ 0 \\ 0
+		\end{bmatrix}
+		\]
+		
+		\medskip
+		
+		\textbf{Compact factorization:}
+		\[
+		W_2 = V_1 \Delta V_2^\top + V_2 \Delta^\top V_1^\top
+		\]
+		
+		\medskip
+		
+		\textbf{Expanded form:}
+		\[
+		W_2 =
+		\begin{bmatrix}
+			PN \\ 0 \\ 0
+		\end{bmatrix}
+		\Delta
+		\begin{bmatrix}
+			M & 0 & 0
+		\end{bmatrix}
+		+
+		\begin{bmatrix}
+			M^\top \\ 0 \\ 0
+		\end{bmatrix}
+		\Delta^\top
+		\begin{bmatrix}
+			N^\top P & 0 & 0
+		\end{bmatrix}
+		\]
+	
+	\end{flushleft}
+	
+\end{frame}
+
+
+
+\begin{frame}{Step 3: Young's inequality}
+	\begin{flushleft}
+
+		
+		Using Young's inequality:
+		\[
+		W_2 = V_1 \Delta V_2^\top + V_2 \Delta^\top V_1^\top \preceq \frac{1}{\varepsilon} V_1 V_1^\top + \varepsilon V_2 V_2^\top,
+		\]
+		we replace the condition by:
+		\[
+		W_1 + \frac{1}{\varepsilon} V_1 V_1^\top + \varepsilon V_2 V_2^\top \prec 0.
+		\]
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Step 4: First Schur complement}
+\begin{flushleft}
+	
+	Applying Schur complement to $\frac{1}{\varepsilon} V_1 V_1^\top$:
+	\[
+	\begin{bmatrix}
+		W_1 + \varepsilon V_2 V_2^\top & V_1 \\
+		V_1^\top & -\varepsilon I
+	\end{bmatrix}
+	\prec 0.
+	\]
+	
+	Expanding:
+	\[
+	\begin{bmatrix}
+		(A + BK)^\top P + P(A + BK) + \varepsilon M^\top M & PD & C^\top & PN \\
+		D^\top P & -\gamma I & 0 & 0 \\
+		C & 0 & -\gamma I & 0 \\
+		N^\top P & 0 & 0 & -\varepsilon I
+	\end{bmatrix}
+	\prec 0.
+	\]
+	
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Step 5: Change of variables}
+\begin{flushleft}
+	
+	Let:
+	\[
+	Q = P^{-1}, \quad U = KQ.
+	\]
+	
+	Apply the congruence transformation $\mathrm{diag}(Q, I, I, I)$:
+	\[
+	\begin{bmatrix}
+		QA^\top + AQ + BU + U^\top B^\top + \varepsilon Q M^\top M Q
+		& D & QC^\top & N \\
+		D^\top & -\gamma I & 0 & 0 \\
+		CQ & 0 & -\gamma I & 0 \\
+		N^\top & 0 & 0 & -\varepsilon I
+	\end{bmatrix}
+	\prec 0.
+	\]
+	
+	
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Step 6: Second Schur complement}
+	\begin{flushleft}
+		
+		\[
+		\varepsilon Q M^\top M Q
+		=
+		(Q M^\top)(\varepsilon I)(M Q).
+		\]
+		
+		We now apply the Schur complement:
+		\[
+		\begin{bmatrix}
+			QA^\top + AQ + BU + U^\top B^\top
+			& D
+			& QC^\top
+			& N
+			& Q M^\top \\
+			D^\top
+			& -\gamma I
+			& 0
+			& 0
+			& 0 \\
+			CQ
+			& 0
+			& -\gamma I
+			& 0
+			& 0 \\
+			N^\top
+			& 0
+			& 0
+			& -\varepsilon I
+			& 0 \\
+			M Q
+			& 0
+			& 0
+			& 0
+			& -\varepsilon^{-1} I
+		\end{bmatrix}
+		\prec 0.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Step 7: Change of variables}
+	\begin{flushleft}
+		
+		Define:
+		\[
+		\alpha = \varepsilon^{-1}.
+		\]
+		
+		Then multiply the LMI by the congruence transformation:
+		\[
+		\mathrm{diag}(I, I, I, \alpha I, I),
+		\]
+		to obtain:
+		
+		\[
+		\begin{bmatrix}
+			QA^\top + AQ + BU + U^\top B^\top
+			& D
+			& QC^\top
+			& \alpha N
+			& Q M^\top \\
+			D^\top
+			& -\gamma I
+			& 0
+			& 0
+			& 0 \\
+			CQ
+			& 0
+			& -\gamma I
+			& 0
+			& 0 \\
+			\alpha N^\top
+			& 0
+			& 0
+			& -\alpha I
+			& 0 \\
+			M Q
+			& 0
+			& 0
+			& 0
+			& -\alpha I
+		\end{bmatrix}
+		\prec 0.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Conclusion}
+	\begin{flushleft}
+		
+		The condition is linear in decision variables:
+		\[
+		Q \succ 0, \quad U, \quad \alpha  > 0, \quad \gamma>0,
+		\]
+		with controller recovered as:
+		\[
+		K = U Q^{-1}.
+		\]
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\myqrframe
+
+
+\end{document}

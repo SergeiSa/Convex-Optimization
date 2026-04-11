@@ -1,0 +1,495 @@
+\documentclass{beamer}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\input{settings.tex}
+
+
+\title{Полуопределенное программирование}
+\subtitle{Вычислительный интеллект, Лекция 8}
+\author{Сргей Савин}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+%\begin{frame}{Content}
+%
+%\begin{itemize}
+%\item  Semidefinite Programming (SDP)
+%\item  Schur compliment
+%\item  SOCP as SDP
+%\item  Eigenvalues
+%\item  Continuous Lyapunov equation as an SDP/LMI
+%\item  Discrete Lyapunov equation as an SDP/LMI
+%%\item  Example 3:  LMI Controller design for continuous LTI
+%\end{itemize}
+%\end{frame}
+
+
+\begin{frame}{Полуопределённое программирование (SDP)}
+	\begin{flushleft}
+		
+		Общая форма задачи полуопределённого программирования:
+		
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\mathbf{x}}{\text{minimize}}
+				& & \mathbf{c}^\top\mathbf{x}, \\
+				& \text{subject to}
+				& & \begin{cases}
+					\mathbf{G} + \sum\limits_{i=1}^n \mathbf{F}_i x_i \succeq 0, \\
+					\mathbf{A}\mathbf{x} = \mathbf{b}.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		где $\mathbf{F}_i $ и $\mathbf{G}$ симметричны, а $\succeq 0$ означает положительную полуопределённость.
+		
+		\bigskip
+		
+		Ограничение $\mathbf{G} + \sum\limits_{i=1}^n \mathbf{F}_i x_i \succeq 0$ называется \emph{линейным матричным неравенством} или \emph{ЛМН}.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{SDP — несколько ЛМН}
+	\begin{flushleft}
+		
+		SDP может содержать несколько ЛМН. Предположим, у вас есть:
+		
+		\begin{equation}
+			\begin{cases}
+				\mathbf{G} +  \mathbf{F} x_1 \succeq 0 \\
+				\mathbf{H} x_2 \succeq 0
+			\end{cases}
+		\end{equation}
+		
+		Это эквивалентно:
+		
+		\begin{equation}
+			\begin{bmatrix} 
+				\mathbf{G} +  \mathbf{F} x_1 & \mathbf{0} \\
+				\mathbf{0} & \mathbf{H} x_2 
+			\end{bmatrix} 
+			\succeq 0
+		\end{equation}
+		
+		Симметричная блочно-диагональная матрица является положительно полуопределённой тогда и только тогда, когда каждый её блок является положительно полуопределённым.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{След произведения матриц}
+	\begin{flushleft}
+		
+		Рассмотрим матрицы $\bo{E} = \begin{bmatrix}
+			\bo{e}_1 & ... & \bo{e}_n
+		\end{bmatrix}$ и 
+		$\bo{X} = \begin{bmatrix}
+			\bo{x}_1 & ... & \bo{x}_n
+		\end{bmatrix}$. Их произведение можно записать как:
+		
+		\begin{equation}
+			\mathbf{E}^\top \mathbf{X} = 
+			\begin{bmatrix}
+				\bo{e}_1^\top \bo{x}_1 & \bo{e}_1^\top \bo{x}_2 & ... \\
+				\bo{e}_2^\top \bo{x}_1 & \bo{e}_2^\top \bo{x}_2 & ... \\
+				... & ... & ... 
+			\end{bmatrix}
+		\end{equation}
+		
+		Таким образом, след этого произведения задаётся формулой:
+		
+		%
+		\begin{equation}
+			\text{tr}(\mathbf{E}^\top\mathbf{X}) =  \bo{e}_1^\top \bo{x}_1 + ... + \bo{e}_n^\top \bo{x}_n
+		\end{equation}
+		
+		Видно, что это эквивалентно поэлементному скалярному произведению. Это представляет собой \emph{матричное скалярное произведение} (скалярное произведение Фробениуса):
+		
+		%
+		\begin{equation}
+			\text{tr}(\mathbf{E}^\top\mathbf{X}) =  \sum_{i,j} E_{ij} X_{ij}
+		\end{equation}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{SDP-матрица как переменная решения}
+	\begin{flushleft}
+		
+		Иногда удобнее использовать полуопределённые матрицы непосредственно в качестве переменных решения:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\mathbf{X}}{\text{minimize}}
+				& & \text{tr}(\mathbf{E}^\top \mathbf{X}), \\
+				& \text{subject to}
+				& & \begin{cases}
+					\text{tr}(\mathbf{A}_i^\top\mathbf{X}) = b_i, \\
+					\mathcal{L}(\mathbf{X}) \succeq \mathbf{D}, \\
+					\mathbf{X} \succeq 0
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		где $ \mathcal{L}(\mathbf{X})$ — линейная функция от $\mathbf{X}$.
+		
+		\bigskip
+		
+		В целевой функции матрица $\bo{E}$ играет роль весов, аналогично вектору $\bo{f}$ в линейном функционале $\bo{f}^\top \bo{x}$. 
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Непрерывное неравенство Ляпунова как SDP/ЛМН (1)}
+	\begin{flushleft}
+		
+		В теории управления достаточным условием асимптотической устойчивости непрерывной ЛТИ-системы $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$ является существование такой $\mathbf{P} \succ 0$, что:
+		
+		\begin{equation}
+			\mathbf{A}^\top\mathbf{P} + \mathbf{P}\mathbf{A}  \preceq -\mathbf{Q}
+		\end{equation}
+		%
+		где $\mathbf{Q} \succ 0$ — константа. Это называется \emph{критерием Ляпунова}. Его можно представить в виде SDP:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\mathbf{P}}{\text{minimize}}
+				& & 0, \\
+				& \text{subject to}
+				& & \begin{cases}
+					\mathbf{P} \succeq \epsilon \mathbf{I}, \\
+					\mathbf{A}^\top\mathbf{P} + \mathbf{P}\mathbf{A} + \mathbf{Q} \preceq 0.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		%
+		где $\epsilon$ — малая положительная константа.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Непрерывное уравнение Ляпунова как SDP/ЛМН (2)}
+	\begin{flushleft}
+		
+		\input{code1}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Дискретное уравнение Ляпунова как SDP/ЛМН (1)}
+	\begin{flushleft}
+		
+		Дискретная ЛТИ-система $\mathbf{x}_{i+1} = \mathbf{A}\mathbf{x}_i$ является асимптотически устойчивой, если существует такое $\mathbf{P} \succ 0$, что: 
+		
+		\begin{equation}
+			\mathbf{A}^\top \mathbf{P}\mathbf{A} - \mathbf{P}  \preceq - \mathbf{Q}
+		\end{equation}
+		%
+		где $\mathbf{Q} \succ 0$ — константа. Это можно представить в виде SDP:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\mathbf{P}}{\text{minimize}}
+				& & 0, \\
+				& \text{subject to}
+				& & \begin{cases}
+					\mathbf{P} \succeq 0, \\
+					\mathbf{A}^\top \mathbf{P}\mathbf{A} - \mathbf{P} + \mathbf{Q} \preceq 0.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Дискретное уравнение Ляпунова как SDP/ЛМН (2)}
+	\begin{flushleft}
+		
+		\input{code2}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Дополнение Шура}
+	\begin{flushleft}
+		
+		Дополнение Шура. Дана матрица $\bo{M}$
+		
+		\begin{equation}
+			\bo{M} = 
+			\begin{bmatrix}
+				\bo{A} & \bo{B} \\
+				\bo{B}^\top & \bo{C}
+			\end{bmatrix}
+		\end{equation}
+		
+		с $\bo{A} \succ 0$. Можно сделать следующее утверждение:
+		
+		\begin{itemize}
+			\item $\bo{M} \succ 0$ тогда и только тогда, когда $\bo{C} - \bo{B}^\top\bo{A}^{-1}\bo{B} \succ 0$
+		\end{itemize}
+		
+		\bigskip
+		
+		Если $\bo{C}$ имеет полный ранг, можно сделать следующее утверждение:
+		
+		\begin{itemize}
+			\item $\bo{M} \succ 0$ тогда и только тогда, когда $\bo{C} \succ 0$ и $\bo{A} - \bo{B}\bo{C}^{-1}\bo{B}^\top \succ 0$
+		\end{itemize}		
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{SOCP как SDP}
+	\begin{flushleft}
+		
+		Докажем, что SOCP является подмножеством SDP. Аффинное коническое ограничение второго порядка (SOC) имеет вид:
+		
+		\begin{equation}
+			||\bo{A}\bo{x} + \bo{b}|| \leq \bo{c}^\top \bo{x} + d
+		\end{equation}
+		%
+		где $\bo{c}^\top \bo{x} + d \geq 0$. Перепишем SOC как: $(\bo{A}\bo{x} + \bo{b})^\top (\bo{A}\bo{x} + \bo{b}) = (\bo{c}^\top \bo{x} + d)^2$, и, предполагая $\bo{c}^\top \bo{x} + d > 0$, получим:
+		
+		\begin{equation}
+			\frac{(\bo{A}\bo{x} + \bo{b})^\top (\bo{A}\bo{x} + \bo{b})}{\bo{c}^\top \bo{x} + d} \leq \bo{c}^\top \bo{x} + d
+		\end{equation}
+		
+		что эквивалентно:
+		
+		\begin{equation}
+			-\frac{(\bo{A}\bo{x} + \bo{b})^\top (\bo{A}\bo{x} + \bo{b})}{-(\bo{c}^\top \bo{x} + d)} \leq \bo{c}^\top \bo{x} + d
+		\end{equation}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{SOCP как SDP}
+	\begin{flushleft}
+		
+		Заметим, что $-\frac{(\bo{A}\bo{x} + \bo{b})^\top (\bo{A}\bo{x} + \bo{b})}{-(\bo{c}^\top \bo{x} + d)} \leq \bo{c}^\top \bo{x} + d$ эквивалентно:
+		
+		\begin{equation}
+			-\frac{(\bo{A}\bo{x} + \bo{b})^\top (\bo{A}\bo{x} + \bo{b})}{(\bo{c}^\top \bo{x} + d)} + (\bo{c}^\top \bo{x} + d) \geq 0
+		\end{equation}
+		
+		Используя дополнение Шура, перепишем это как:
+		
+		\begin{equation}
+			\begin{bmatrix}
+				(\bo{c}^\top \bo{x} + d) & (\bo{A}\bo{x} + \bo{b}) \\
+				(\bo{A}\bo{x} + \bo{b})^\top & (\bo{c}^\top \bo{x} + d)
+			\end{bmatrix} \succeq 0
+		\end{equation}
+		
+		что является ЛМН-ограничением.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Норма и SDP}
+	\begin{flushleft}
+		
+		Рассмотрим следующее ограничение, где $\bo{X} \succeq 0$:
+		
+		\begin{equation}
+			\label{eq:norm_LMI}
+			||\bo{X}\bo{v} + \bo{b}|| \leq \bo{c}^\top \bo{y} + d
+		\end{equation}
+		
+		Можем ли мы переписать его как ЛМН? Используя тот же процесс, что и ранее, получаем:
+		
+		\begin{align}
+			\begin{bmatrix}
+				(\bo{c}^\top \bo{y} + d) & (\bo{X}\bo{v} + \bo{b}) \\
+				(\bo{X}\bo{v} + \bo{b})^\top & (\bo{c}^\top \bo{y} + d)
+			\end{bmatrix} \succeq 0
+		\end{align}
+		
+		Итак, \eqref{eq:norm_LMI} является допустимым ограничением в SDP.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{SDP и собственные значения}
+	\begin{flushleft}
+		
+		Рассмотрим задачу: минимизировать наибольшее собственное значение $A$. Решение:
+		
+		\begin{equation}
+			\begin{aligned}
+				& \underset{t}{\text{minimize}}
+				& & t, \\
+				& \text{subject to}
+				& & \bo{A} \preceq t\bo{I}
+			\end{aligned}
+		\end{equation}
+		
+		Доказательство. Если $\lambda$ — собственное значение $\bo{A}$, то $\bo{A} \bo{v} = \lambda\bo{v}$, следовательно $(\bo{A} - t\bo{I}) \bo{v} = (\lambda - t)\bo{v}$, то есть $\lambda - t$ является собственным значением $(\bo{A} - t\bo{I})$. Таким образом, если $(\bo{A} - t\bo{I})$ отрицательно полуопределена, то $\lambda - t \leq 0$ и $\lambda \leq t$. \qed
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Homework}
+\begin{flushleft}
+
+
+
+Implement both examples from page 2 of the LMI CVX documents: \bref{http://stanford.edu/class/ee363/notes/lmi-cvx.pdf}{stanford.edu/class/ee363/notes/lmi-cvx.pdf}.
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Literature}
+	\begin{flushleft}
+		
+		\begin{itemize}
+			\item Introduction to Semidefinite Programming (SDP), Robert M. Freund \bref{https://ocw.mit.edu/courses/15-084j-nonlinear-programming-spring-2004/a632b565602fd2eb3be574c537eea095\_lec23\_semidef\_opt.pdf}{https://ocw.mit.edu/courses/15-084j-nonlinear-programming-spring-2004/}
+			
+			\item Semidefinite Programming, L. Vandenberghe and S. Boyd: \bref{https://stanford.edu/~boyd/papers/pdf/semidef\_prog.pdf}{https://stanford.edu/~boyd/papers/pdf/semidef\_prog.pdf}. Main page: \bref{https://stanford.edu/~boyd/papers/sdp.html}{https://stanford.edu/~boyd/papers/sdp.html}
+		\end{itemize}
+		
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+\myqrframe
+
+
+
+
+\begin{frame}{Schur Complement (Quadratic Form Proof), 1}
+	\begin{flushleft}
+		
+		Let 
+		\[
+		\bo{M} = 
+		\begin{bmatrix}
+			\bo{A} & \bo{B} \\
+			\bo{B}^\top & \bo{C}
+		\end{bmatrix},
+		\quad \bo{A} = \bo{A}^\top \succ 0.
+		\]
+		
+		We prove:
+		\[
+		\bo{M} \succ 0 
+		\quad \Longleftrightarrow \quad
+		\bo{C} - \bo{B}^\top \bo{A}^{-1} \bo{B} \succ 0.
+		\]
+		
+		\bigskip
+		
+		Consider the quadratic form:
+		\begin{align}
+			f &= 
+			\begin{bmatrix}
+				\bo{x}^\top & \bo{y}^\top
+			\end{bmatrix}
+			\begin{bmatrix}
+				\bo{A} & \bo{B} \\
+				\bo{B}^\top & \bo{C}
+			\end{bmatrix}
+			\begin{bmatrix}
+				\bo{x} \\ \bo{y}
+			\end{bmatrix} \\
+			&= \bo{x}^\top \bo{A} \bo{x} + 2 \bo{x}^\top \bo{B} \bo{y} + \bo{y}^\top \bo{C} \bo{y}.
+		\end{align}
+		
+		\bigskip
+		
+		Complete the square:
+		\begin{align*}
+			f &= 
+			(\bo{x} + \bo{A}^{-1}\bo{B}\bo{y})^\top 
+			\bo{A} 
+			(\bo{x} + \bo{A}^{-1}\bo{B}\bo{y})
+			+ \bo{y}^\top (\bo{C} - \bo{B}^\top \bo{A}^{-1}\bo{B}) \bo{y}.
+		\end{align*}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Schur Complement (Quadratic Form Proof), 2}
+	\begin{flushleft}
+		%
+		{\small
+			\textcolor{mygray}{
+				\[
+				f = 
+				(\bo{x} + \bo{A}^{-1}\bo{B}\bo{y})^\top 
+				\bo{A} 
+				(\bo{x} + \bo{A}^{-1}\bo{B}\bo{y})
+				+ \bo{y}^\top (\bo{C} - \bo{B}^\top \bo{A}^{-1}\bo{B}) \bo{y}.
+				\]
+			}
+			%
+			\textbf{($\Rightarrow$)} Suppose $\bo{M} \succ 0$.
+			%
+			\begin{itemize}
+				\item Let $\bo{y} = 0$:
+				\[
+				f = \bo{x}^\top \bo{A} \bo{x} > 0 \;\Rightarrow\; \bo{A} \succ 0.
+				\]
+				
+				\item Let $\bo{x} = -\bo{A}^{-1}\bo{B}\bo{y}$:
+				\[
+				f = \bo{y}^\top (\bo{C} - \bo{B}^\top \bo{A}^{-1}\bo{B}) \bo{y} > 0
+				\]
+				\[
+				\Rightarrow\; \bo{C} - \bo{B}^\top \bo{A}^{-1}\bo{B} \succ 0.
+				\]
+			\end{itemize}
+			%
+			\textbf{($\Leftarrow$)} Suppose 
+			\[
+			\bo{A} \succ 0, \quad 
+			\bo{C} - \bo{B}^\top \bo{A}^{-1}\bo{B} \succ 0.
+			\]
+			
+			Then both terms in $f$ are positive for all $(\bo{x},\bo{y}) \neq 0$, hence:
+			\[
+			f > 0 \;\Rightarrow\; \bo{M} \succ 0.
+			\]
+			%
+			\textbf{Conclusion:}
+			\[
+			\bo{M} \succ 0 
+			\;\Longleftrightarrow\;
+			\bo{A} \succ 0 \;\text{and}\;
+			\bo{C} - \bo{B}^\top \bo{A}^{-1}\bo{B} \succ 0.
+			\]}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+\end{document}

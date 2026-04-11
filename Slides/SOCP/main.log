@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.14)  10 FEB 2026 01:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.14)  10 APR 2026 17:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -744,7 +744,7 @@ y)
 (/usr/local/texlive/2023/texmf-dist/tex/latex/beamer/beamercolorthemeseahorse.s
 ty)
 (/usr/local/texlive/2023/texmf-dist/tex/latex/beamer/beamerfontthemeserif.sty)
-Package hyperref Info: Option `colorlinks' set `false' on input line 83.
+Package hyperref Info: Option `colorlinks' set `false' on input line 89.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/mathtools/mathtools.sty
 Package: mathtools 2022/06/29 v1.29 mathematical typesetting tools
@@ -1075,13 +1075,13 @@ Package caption Info: End \AtBeginDocument code.
 ] [2
 
 ]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 59.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 58.
 
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 59.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 58.
 
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1101,7 +1101,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <norm.png, id=93, 411.33675pt x 312.56775pt>
 File: norm.png Graphic file (type png)
 <use norm.png>
-Package pdftex.def Info: norm.png  used on input line 155.
+Package pdftex.def Info: norm.png  used on input line 149.
 (pdftex.def)             Requested size: 215.10196pt x 163.45187pt.
  [8
 
@@ -1109,18 +1109,17 @@ Package pdftex.def Info: norm.png  used on input line 155.
 
 ] [10
 
+] [11
+
 ]
-<cones.png, id=117, 308.95425pt x 150.5625pt>
+<cones.png, id=123, 308.95425pt x 150.5625pt>
 File: cones.png Graphic file (type png)
 <use cones.png>
-Package pdftex.def Info: cones.png  used on input line 240.
+Package pdftex.def Info: cones.png  used on input line 235.
 (pdftex.def)             Requested size: 215.10196pt x 104.82556pt.
- [11
+ [12
 
- <./cones.png>]
-[12
-
-] [13
+ <./cones.png>] [13
 
 ] [14
 
@@ -1144,6 +1143,8 @@ Package pdftex.def Info: cones.png  used on input line 240.
 
 ] [24
 
+] [25
+
 ]
 
 
@@ -1152,9 +1153,7 @@ sion 0-M.>
 
 <Copying the QR code for "https://github.com/SergeiSa/Convex-Optimization" in v
 ersion 4-M as previously calculated.>
-[25
-
-] [26
+[26
 
 ] [27
 
@@ -1166,25 +1165,27 @@ ersion 4-M as previously calculated.>
 
 ] [31
 
+] [32
+
 ]
-<plotted1.png, id=257, 296.60812pt x 288.57813pt>
+<plotted1.png, id=263, 296.60812pt x 288.57813pt>
 File: plotted1.png Graphic file (type png)
 <use plotted1.png>
-Package pdftex.def Info: plotted1.png  used on input line 820.
+Package pdftex.def Info: plotted1.png  used on input line 806.
 (pdftex.def)             Requested size: 138.2795pt x 134.5397pt.
-<plotted2.png, id=258, 365.86688pt x 396.98312pt>
+<plotted2.png, id=264, 365.86688pt x 396.98312pt>
 File: plotted2.png Graphic file (type png)
 <use plotted2.png>
-Package pdftex.def Info: plotted2.png  used on input line 820.
+Package pdftex.def Info: plotted2.png  used on input line 806.
 (pdftex.def)             Requested size: 138.2795pt x 150.03738pt.
- [32
+ [33
 
  <./plotted1.png> <./plotted2.png>]
-[33
-
-] [34
+[34
 
 ] [35
+
+] [36
 
 ]
 \tf@nav=\write6
@@ -1204,10 +1205,10 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 30381 strings out of 476025
- 594988 string characters out of 5790017
+ 30391 strings out of 476025
+ 595109 string characters out of 5790017
  1926388 words of memory out of 5000000
- 50192 multiletter control sequences out of 15000+600000
+ 50200 multiletter control sequences out of 15000+600000
  519995 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,20n,122p,1261b,834s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1229,10 +1230,10 @@ ive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2023/
 texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2
 023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (35 pages, 756434 bytes).
+Output written on main.pdf (36 pages, 757620 bytes).
 PDF statistics:
- 378 PDF objects out of 1000 (max. 8388607)
- 277 compressed objects within 3 object streams
- 74 named destinations out of 1000 (max. 500000)
+ 384 PDF objects out of 1000 (max. 8388607)
+ 282 compressed objects within 3 object streams
+ 76 named destinations out of 1000 (max. 500000)
  123 words of extra memory for PDF output out of 10000 (max. 10000000)
 
