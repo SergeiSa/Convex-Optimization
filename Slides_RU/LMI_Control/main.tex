@@ -1,11 +1,14 @@
 \documentclass{beamer}
 
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
 \input{settings.tex}
 
 
-\title{LMI, Control design, Robustness}
-\subtitle{\mycoursetitle, Lecture 9}
-\author{by Sergei Savin}
+\title{Матричные неравества, Оптимальное управление, Робастность}
+\subtitle{Вычислительный интеллект, Лекция 9}
+\author{Сергей Савин}
 \centering
 \date{\mydate}
 
@@ -15,63 +18,59 @@
 \maketitle
 
 
-\begin{frame}{Content}
-	
-	\begin{itemize}
-		\item LMI
-		\item Control design
-		\item Robustness check
-		\item S-procedure
-		\item Robust Control Design
-		\item Quadratic stability
-		\item Appendix A
-	\end{itemize}
-	
-	
-\end{frame}
+%\begin{frame}{Content}
+%	
+%	\begin{itemize}
+%		\item LMI
+%		\item Control design
+%		\item Robustness check
+%		\item S-procedure
+%		\item Robust Control Design
+%		\item Quadratic stability
+%		\item Appendix A
+%	\end{itemize}
+%	
+%	
+%\end{frame}
 
 
 
 
-
-\begin{frame}{Control design (continuous-time), 1}
+\begin{frame}{Синтез управления (непрерывное время), 1}
 	\begin{flushleft}
 		
-		Consider a system $\dot{\bo{x}} = \bo{A}\bo{x} + \bo{B}\bo{u}$, control $\bo{u} = \bo{K}\bo{x}$ and a Lyapunov function $V = \bo{x}^\top\bo{S}\bo{x}$, $\bo{S} \succ 0$.
+		Рассмотрим систему $\dot{\bo{x}} = \bo{A}\bo{x} + \bo{B}\bo{u}$, управление $\bo{u} = \bo{K}\bo{x}$ и функцию Ляпунова $V = \bo{x}^\top\bo{S}\bo{x}$, $\bo{S} \succ 0$.
 		
 		\bigskip
 		
-		Closed-loop system is $\dot{\bo{x}} = (\bo{A} + \bo{B}\bo{K})\bo{x}$, and full derivative of the Lyapunov function:
+		Замкнутая система имеет вид $\dot{\bo{x}} = (\bo{A} + \bo{B}\bo{K})\bo{x}$, а полная производная функции Ляпунова:
 		
 		\begin{equation}
 			\dot V = \bo{x}^\top (\bo{A} + \bo{B}\bo{K})^\top\bo{S}\bo{x} + \bo{x}^\top\bo{S} (\bo{A} + \bo{B}\bo{K}) \bo{x} < 0
 		\end{equation}
 		
-		This can be re-written as an LMI:
+		Это можно переписать как ЛМН:
 		
 		\begin{equation}
 			\label{eq:vdot}
 			(\bo{A} + \bo{B}\bo{K})^\top\bo{S} + \bo{S} (\bo{A} + \bo{B}\bo{K}) \prec 0
 		\end{equation}
 		
-		This is \emph{not linear} in decision variables ($\bo{S}$ and $\bo{K}$), and can't be solved directly using popular solvers.
+		Это \emph{не линейно} относительно переменных решения ($\bo{S}$ и $\bo{K}$) и не может быть решено напрямую с помощью популярных решателей.
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-
-\begin{frame}{Control design (continuous-time), 2}
+\begin{frame}{Синтез управления (непрерывное время), 2}
 	\begin{flushleft}
 		
-		Introducing new variable $\bo{P} = \bo{S}^{-1} \succ 0$ and multiplying \eqref{eq:vdot} by $\bo{P}$ on both sides (we can do it, as both $\bo{P}$ and $\bo{S}$ are full rank, and thus it is a congruence transformation which preserves definiteness, see appendix) we get:
+		Вводя новую переменную $\bo{P} = \bo{S}^{-1} \succ 0$ и умножая \eqref{eq:vdot} на $\bo{P}$ с обеих сторон (это можно сделать, так как $\bo{P}$ и $\bo{S}$ имеют полный ранг, и это конгруэнтное преобразование, сохраняющее определённость, см. приложение), получаем:
 		
 		\begin{equation}
 			\bo{P}(\bo{A} + \bo{B}\bo{K})^\top + (\bo{A} + \bo{B}\bo{K})\bo{P} \prec 0
 		\end{equation}
 		
-		Now we introduce one more variable $\bo{L} = \bo{K}\bo{P}$ and get an LMI constraint $\bo{P}\bo{A}^\top + \bo{A}\bo{P} + \bo{L}^\top\bo{B}^\top + \bo{B}\bo{L} \prec 0$. Then the control design becomes an SDP:
+		Теперь введём ещё одну переменную $\bo{L} = \bo{K}\bo{P}$ и получим ЛМН ограничение $\bo{P}\bo{A}^\top + \bo{A}\bo{P} + \bo{L}^\top\bo{B}^\top + \bo{B}\bo{L} \prec 0$. Тогда синтез управления сводится к задаче полуопределённого программирования (SDP):
 		%
 		\begin{equation}
 			\label{control_design}
@@ -81,44 +80,37 @@
 				& \text{subject to:} & & 
 				\begin{cases}
 					\bo{P}\bo{A}^\top + \bo{A}\bo{P} + \bo{L}^\top\bo{B}^\top + \bo{B}\bo{L} \prec 0, \\ 
-					 \bo{P} \succ 0
+					\bo{P} \succ 0
 				\end{cases}
 			\end{aligned}
 		\end{equation}
 		
-		Solving \eqref{control_design} gives us $\bo{P}$ and $\bo{L}$, from which we can compute $\bo{K} = \bo{L}\bo{P}^{-1}$ and $\bo{S} = \bo{P}^{-1}$, solving the original problem.
+		Решение \eqref{control_design} даёт нам $\bo{P}$ и $\bo{L}$, из которых мы можем вычислить $\bo{K} = \bo{L}\bo{P}^{-1}$ и $\bo{S} = \bo{P}^{-1}$, решая исходную задачу.
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-
-
-
-\begin{frame}{Discrete-time Lyapunov condition}
+\begin{frame}{Условие Ляпунова для дискретного времени}
 	\begin{flushleft}
 		
-		A discrete dynamical system $\bo{x}_{i+1} = \bo{f}(\bo{x}_i)$ is stable if there exists a Lyapunov function $V(\bo{x}_i)$, such that:
+		Дискретная динамическая система $\bo{x}_{i+1} = \bo{f}(\bo{x}_i)$ устойчива, если существует функция Ляпунова $V(\bo{x}_i)$, такая что:
 		
 		\begin{itemize}
 			\item $V(\bo{x}_{i+1}) - V(\bo{x}_i) < 0$;
-			\item $V(\bo{x}_i) > 0$ for all $\bo{x}_i \neq 0$.
+			\item $V(\bo{x}_i) > 0$ для всех $\bo{x}_i \neq 0$.
 		\end{itemize}
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-\begin{frame}{Control design (discrete-time), 1}
+\begin{frame}{Синтез управления (дискретное время), 1}
 	\begin{flushleft}
 		
-		Consider a system $\bo{x}_{i+1} = \bo{A}\bo{x}_i + \bo{B}\bo{u}_i$, control $\bo{u}_i = \bo{K}\bo{x}_i$ and a Lyapunov function $V(\bo{x}_i) = \bo{x}_i\T \bo{S} \bo{x}_i$, $\bo{S} \succ 0$.
+		Рассмотрим систему $\bo{x}_{i+1} = \bo{A}\bo{x}_i + \bo{B}\bo{u}_i$, управление $\bo{u}_i = \bo{K}\bo{x}_i$ и функцию Ляпунова $V(\bo{x}_i) = \bo{x}_i\T \bo{S} \bo{x}_i$, $\bo{S} \succ 0$.
 		
 		\bigskip
 		
-		Closed-loop system is $\bo{x}_{i+1} = (\bo{A} + \bo{B}\bo{K})\bo{x}_i$, and discrete dynamics of the Lyapunov function is:
+		Замкнутая система имеет вид $\bo{x}_{i+1} = (\bo{A} + \bo{B}\bo{K})\bo{x}_i$, а дискретная динамика функции Ляпунова:
 		
 		\begin{align}
 			V(\bo{x}_{i+1}) - V(\bo{x}_i) <0 
@@ -130,38 +122,35 @@
 			\bo{x}_i\T((\bo{A} + \bo{B}\bo{K})\T \bo{S} (\bo{A} + \bo{B}\bo{K}) - \bo{S})\bo{x}_i < 0
 		\end{align}
 		
-		The last equation is equivalent to the following matrix inequality:
+		Последнее уравнение эквивалентно следующему матричному неравенству:
 		%
 		\begin{align}
-		(\bo{A} + \bo{B}\bo{K})\T \bo{S} (\bo{A} + \bo{B}\bo{K}) - \bo{S} \prec 0
+			(\bo{A} + \bo{B}\bo{K})\T \bo{S} (\bo{A} + \bo{B}\bo{K}) - \bo{S} \prec 0
 		\end{align}
 		
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-
-\begin{frame}{Control design (discrete-time), 2}
+\begin{frame}{Синтез управления (дискретное время), 2}
 	\begin{flushleft}
 		
-		Matrix inequality $(\bo{A} + \bo{B}\bo{K})\T \bo{S} (\bo{A} + \bo{B}\bo{K}) - \bo{S} \prec 0$ can be re-written:
+		Матричное неравенство $(\bo{A} + \bo{B}\bo{K})\T \bo{S} (\bo{A} + \bo{B}\bo{K}) - \bo{S} \prec 0$ можно переписать:
 		%
 		\begin{align}
 			\label{discrete_LMI_1}
 			-\bo{S} - (\bo{A} + \bo{B}\bo{K})\T (-\bo{S}) (\bo{A} + \bo{B}\bo{K})  \prec 0
 		\end{align}
 		
-		Define $\bo{P}^{-1} = \bo{S} \succ 0$. We can  multiply \eqref{discrete_LMI_1} by $\bo{P}$ on both sides (congruence transformation):
+		Определим $\bo{P}^{-1} = \bo{S} \succ 0$. Мы можем умножить \eqref{discrete_LMI_1} на $\bo{P}$ с обеих сторон (конгруэнтное преобразование):
 		%
 		\begin{align}
 			-\bo{P} - \bo{P}(\bo{A} + \bo{B}\bo{K})\T (-\bo{P}^{-1}) (\bo{A} + \bo{B}\bo{K})\bo{P}  \prec 0
 			\\
 			-\bo{P} - (\bo{A}\bo{P} + \bo{B}\bo{K}\bo{P})\T (-\bo{P}^{-1}) (\bo{A}\bo{P} + \bo{B}\bo{K}\bo{P})  \prec 0
 		\end{align}
-	
-		We define $\bo{L} = \bo{K}\bo{P}$:
+		
+		Определим $\bo{L} = \bo{K}\bo{P}$:
 		%
 		\begin{align}
 			-\bo{P} - (\bo{A}\bo{P} + \bo{B}\bo{L})\T (-\bo{P}^{-1}) (\bo{A}\bo{P} + \bo{B}\bo{L})  \prec 0
@@ -171,16 +160,15 @@
 \end{frame}
 
 
-
-\begin{frame}{Schur complement}
+\begin{frame}{Дополнение Шура}
 	\begin{flushleft}
 		
-		\begin{theorem}[Schur complement]
-			Given matrix $\bo{M} = \begin{bmatrix}
+		\begin{theorem}[Дополнение Шура]
+			Пусть дана матрица $\bo{M} = \begin{bmatrix}
 				\bo{A} & \bo{B} \\
 				\bo{B}\T & \bo{C}
-			\end{bmatrix}$, where $\bo{C} \prec 0$, 
-			the following statements are equivalent:
+			\end{bmatrix}$, где $\bo{C} \prec 0$. 
+			Следующие утверждения эквивалентны:
 			\begin{enumerate}
 				\item $\bo{A} - \bo{B} \bo{C}^{-1}\bo{B}\T \prec 0$
 				\item $\bo{M} \prec 0$
@@ -193,11 +181,10 @@
 \end{frame}
 
 
-
-\begin{frame}{Control design (discrete-time), 3}
+\begin{frame}{Синтез управления (дискретное время), 3}
 	\begin{flushleft}
 		
-		Matrix inequality $-\bo{P} - (\bo{A}\bo{P} + \bo{B}\bo{L})\T (-\bo{P}^{-1}) (\bo{A}\bo{P} + \bo{B}\bo{L})  \prec 0$ can transformed with Schur:
+		Матричное неравенство $-\bo{P} - (\bo{A}\bo{P} + \bo{B}\bo{L})\T (-\bo{P}^{-1}) (\bo{A}\bo{P} + \bo{B}\bo{L})  \prec 0$ можно преобразовать с помощью дополнения Шура:
 		%
 		\begin{align}
 			\begin{bmatrix}
@@ -206,7 +193,7 @@
 			\end{bmatrix}  \prec 0
 		\end{align}
 		
-		This is a linear matrix inequality. The control design problem becomes:
+		Это линейное матричное неравенство. Задача синтеза управления принимает вид:
 		%
 		\begin{equation}
 			\label{control_design_discrete}
@@ -229,41 +216,36 @@
 	\end{flushleft}
 \end{frame}
 
-
-
-
-\begin{frame}{Robustness, 1}
+\begin{frame}{Робастность, 1}
 	\begin{flushleft}
 		
-		Consider a system $\dot{\bo{x}} = \bo{A}\bo{x}$, where you don't know $\bo{A}$ exactly. This is not to say that we know nothing about the model, but there is an uncertainty in our knowledge.
+		Рассмотрим систему $\dot{\bo{x}} = \bo{A}\bo{x}$, в которой матрица $\bo{A}$ известна неточно. Это не значит, что нам ничего не известно о модели, но в наших знаниях присутствует неопределённость.
 		
 		\bigskip
 		
-		This can be modeled as:
+		Это можно смоделировать следующим образом:
 		
 		\begin{equation}
 			\label{eq:uncertain}
 			\dot{\bo{x}} = (\bo{A} + \bo{F} \Delta \bo{E})\bo{x}
 		\end{equation}
 		%
-		where $\bo{F}$ and $\bo{E}$ are known matrices, and $\Delta$ is an uncertain \emph{norm-bounded} matrix: $||\Delta|| \leq 1$: the range of all possible models we can expect is bounded by the possible values of $\Delta$.
+		где $\bo{F}$ и $\bo{E}$ — известные матрицы, а $\Delta$ — неопределённая матрица с \emph{ограниченной нормой}: $||\Delta|| \leq 1$: множество всех возможных моделей, которые мы можем ожидать, ограничено возможными значениями $\Delta$.
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-\begin{frame}{Robustness, 2}
+\begin{frame}{Робастность, 2}
 	\begin{flushleft}
 		
-		Lets write the Lyapunov equation for the system \eqref{eq:uncertain}:
+		Запишем уравнение Ляпунова для системы \eqref{eq:uncertain}:
 		
 		\begin{equation}
 			\dot V = \bo{x}^\top 
 			(\bo{A} + \bo{F} \Delta \bo{E})^\top\bo{S}\bo{x} + \bo{x}^\top\bo{S} (\bo{A} + \bo{F} \Delta \bo{E}) \bo{x} < 0
 		\end{equation}
 		
-		Let us introduce a new variable $\bo{w} = \Delta \bo{E}\bo{x}$:
+		Введём новую переменную $\bo{w} = \Delta \bo{E}\bo{x}$:
 		
 		\begin{equation}
 			\label{eq:Lyapunov_xw}
@@ -273,7 +255,7 @@
 			\bo{x}^\top \bo{S}\bo{F} \bo{w} < 0
 		\end{equation}
 		
-		Let us consider $\bo{w}^\top \bo{w}$:
+		Рассмотрим $\bo{w}^\top \bo{w}$:
 		
 		\begin{equation}
 			\label{eq:Delta-inequality}
@@ -283,25 +265,23 @@
 			\bo{x}^\top\bo{E}^\top \bo{E}\bo{x}
 		\end{equation}		
 		%
-		which is true because $|| \Delta ||\leq 1$. In fact, the only property of the norm that we need here is that the delta inequality \eqref{eq:Delta-inequality} holds.
+		что выполняется, поскольку $|| \Delta ||\leq 1$. Фактически, единственное свойство нормы, которое нам здесь нужно, — это выполнение дельта-неравенства \eqref{eq:Delta-inequality}.
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-\begin{frame}{Robustness, 3}
+\begin{frame}{Робастность, 3}
 	\begin{flushleft}
 		
-		With $\bo{w}^\top \bo{w} 
+		Имея $\bo{w}^\top \bo{w} 
 		\leq
-		\bo{x}^\top\bo{E}^\top \bo{E}\bo{x}$ we can write:
+		\bo{x}^\top\bo{E}^\top \bo{E}\bo{x}$, мы можем записать:
 		
 		\begin{equation}
 			\bo{x}^\top\bo{E}^\top \bo{E}\bo{x} - \bo{w}^\top \bo{w} \geq 0
 		\end{equation}	
 		
-		Which is the same as:
+		Что эквивалентно:
 		
 		\begin{equation}
 			\label{eq:EEww}
@@ -318,7 +298,7 @@
 			\geq 0
 		\end{equation}	
 		
-		The same way we can rewrite \eqref{eq:Lyapunov_xw}:
+		Тем же способом мы можем переписать \eqref{eq:Lyapunov_xw}:
 		
 		\begin{equation}
 			\label{eq:xw_Lyapunov}
@@ -335,39 +315,35 @@
 			\leq 0
 		\end{equation}	
 		%
-		which only needs to hold while \eqref{eq:EEww} holds.
+		которая должна выполняться только тогда, когда выполняется \eqref{eq:EEww}.
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-
-\begin{frame}{S-procedure}
+\begin{frame}{S-процедура}
 	\begin{flushleft}
 		
-		There is a way to enforce constraint $\bo{z}^\top \bo{M}\bo{z} \leq 0$ for such $\bo{z}$ that $\bo{z}^\top \bo{N}\bo{z} \geq 0$. This is called \emph{S-procedure}.
+		Существует способ обеспечить выполнение ограничения $\bo{z}^\top \bo{M}\bo{z} \leq 0$ для тех $\bo{z}$, для которых $\bo{z}^\top \bo{N}\bo{z} \geq 0$. Это называется \emph{S-процедурой}.
 		
-		\begin{theorem}[S-procedure]
-			If $\exists \gamma \geq 0$ such that $\bo{M} + \gamma \bo{N} \preceq 0$ then $\bo{z}^\top \bo{N}\bo{z} \geq 0 \implies \bo{z}^\top \bo{M}\bo{z} \leq 0$ 
+		\begin{theorem}[S-процедура]
+			Если $\exists \gamma \geq 0$ такое, что $\bo{M} + \gamma \bo{N} \preceq 0$, то $\bo{z}^\top \bo{N}\bo{z} \geq 0 \implies \bo{z}^\top \bo{M}\bo{z} \leq 0$ 
 		\end{theorem}
 		
 		\bigskip
 		
-		Proof of sufficiency. Let us choose such $\bo{z}$ that $\bo{z}^\top \bo{N}\bo{z} \geq 0$. Then $0 \geq \bo{z}^\top (\bo{M} + \gamma \bo{N}) \bo{z} \geq \bo{z}^\top \bo{M}\bo{z}$. \textcolor{mygray}{(See more in the Appendix)}.
+		Доказательство достаточности. Выберем такой $\bo{z}$, что $\bo{z}^\top \bo{N}\bo{z} \geq 0$. Тогда $0 \geq \bo{z}^\top (\bo{M} + \gamma \bo{N}) \bo{z} \geq \bo{z}^\top \bo{M}\bo{z}$. \textcolor{mygray}{(Подробнее см. в Приложении)}.
 		
 		
 	\end{flushleft}
 \end{frame}
 
 
-
-\begin{frame}{Robustness, 4}
+\begin{frame}{Робастность, 4}
 	\begin{flushleft}
 		
 		
-		Using S-procedure we certify that \eqref{eq:xw_Lyapunov} holds when \eqref{eq:EEww} does:
-		
+		Используя S-процедуру, мы подтверждаем, что \eqref{eq:xw_Lyapunov} выполняется, когда выполняется \eqref{eq:EEww}:
+		%
 		\begin{equation}
 			\begin{bmatrix}
 				\bo{x} \\ \bo{w}
@@ -381,9 +357,9 @@
 			\end{bmatrix}
 			\leq 0
 		\end{equation}
-		
-		In LMI form this is:
-		
+		%
+		В форме ЛМН это выглядит так:
+		%
 		\begin{equation}
 			\begin{bmatrix}
 				\bo{A}^\top \bo{S} + \bo{S}\bo{A} + \gamma \bo{E}^\top \bo{E} & \bo{S}\bo{F} \\
@@ -391,9 +367,9 @@
 			\end{bmatrix}		
 			\preceq 0
 		\end{equation}	
-		
-		SDP that certifies robust stability for all admissible $\Delta$ is:
-		
+		%
+		Задача полуопределённого программирования (SDP), подтверждающая робастную устойчивость для всех допустимых $\Delta$, имеет вид:
+		%
 		%
 		\begin{equation}
 			\label{robust_stability_sdp}
@@ -411,34 +387,31 @@
 				\end{cases}
 			\end{aligned}
 		\end{equation}
-
+		
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-
-\begin{frame}{Robust Control Design, 1}
+\begin{frame}{Робастный синтез управления, 1}
 	\begin{flushleft}
 		
-		Consider a system: 
+		Рассмотрим систему: 
 		
 		\begin{equation}
 			\dot{\bo{x}}  = (\bo{A} + \bo{F} \Delta \bo{E})\bo{x} + \bo{B}\bo{u}
 		\end{equation}
 		%
-		Let us design control for this system that guarantees stability.
+		Синтезируем управление для этой системы, гарантирующее устойчивость.
 		
 		\bigskip
 		
-		We assume control to be linear $\bo{u} = \bo{K}\bo{x}$. The system takes the form:
+		Предположим, что управление линейно: $\bo{u} = \bo{K}\bo{x}$. Система принимает вид:
 		%
 		\begin{equation}
 			\dot{\bo{x}}  = (\bo{A} + \bo{B}\bo{K} + \bo{F} \Delta \bo{E})\bo{x}
 		\end{equation}
 		
-		Lyapunov inequality becomes:
+		Неравенство Ляпунова становится:
 		%
 		\begin{equation}
 			\bo{x}\T(\bo{A} + \bo{B}\bo{K} + \bo{F} \Delta \bo{E})\T\bo{S}\bo{x}
@@ -451,14 +424,10 @@
 	\end{flushleft}
 \end{frame}
 
-
-
-
-
-\begin{frame}{Robust Control Design, 2}
+\begin{frame}{Робастный синтез управления, 2}
 	\begin{flushleft}
 		
-		We introduce new variable $\bo{w} = \Delta \bo{E} \bo{x}$:
+		Введём новую переменную $\bo{w} = \Delta \bo{E} \bo{x}$:
 		
 		\begin{equation*}
 			\bo{x}\T(\bo{A} + \bo{B}\bo{K})\T\bo{S}\bo{x}
@@ -468,7 +437,7 @@
 			\bo{x}\T\bo{S}\bo{F}\bo{w} + \bo{w}\T\bo{F}\T\bo{S}\bo{x} < 0
 		\end{equation*}
 		
-		We re-write it as a matrix:
+		Перепишем это в матричной форме:
 		
 		\begin{equation}
 			\label{eq:quad_xw_1}
@@ -484,21 +453,18 @@
 			\end{bmatrix} < 0
 		\end{equation}		
 		
-		This equation needs to hold only for $\bo{w} = \Delta \bo{E} \bo{x}$.
+		Это уравнение должно выполняться только для $\bo{w} = \Delta \bo{E} \bo{x}$.
 		
 		
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-
-\begin{frame}{Robust Control Design, 3}
+\begin{frame}{Робастный синтез управления, 3}
 	\begin{flushleft}
 		
 		
-		Notice that $\bo{w}\T\bo{w} \leq \bo{x}\T \bo{E}\T \bo{E} \bo{x}$, since $|| \Delta || \leq 1$. In matrix form it is:
+		Заметим, что $\bo{w}\T\bo{w} \leq \bo{x}\T \bo{E}\T \bo{E} \bo{x}$, поскольку $|| \Delta || \leq 1$. В матричной форме это:
 		%
 		\begin{equation}
 			\begin{bmatrix}
@@ -513,7 +479,7 @@
 			\end{bmatrix} \geq 0
 		\end{equation}
 		
-		Using S-procedure we get:
+		Используя S-процедуру, получаем:
 		
 		\begin{equation}
 			\begin{bmatrix}
@@ -522,7 +488,7 @@
 			\end{bmatrix} \prec 0
 		\end{equation}		
 		
-		where $\gamma \geq 0$. Dividing the resulting LMI by $\gamma$ and defining $\bo{S}_\gamma = \frac{1}{\gamma}\bo{S}$ we get:
+		где $\gamma \geq 0$. Разделив полученное ЛМН на $\gamma$ и определив $\bo{S}_\gamma = \frac{1}{\gamma}\bo{S}$, получим:
 		
 		\begin{equation}
 			\begin{bmatrix}
@@ -537,20 +503,16 @@
 	\end{flushleft}
 \end{frame}
 
-
-
-
-
-\begin{frame}{Robust Control Design, 4}
+\begin{frame}{Робастный синтез управления, 4}
 	\begin{flushleft}
 		
-		The expression:
+		Выражение:
 		$$\begin{bmatrix}
 			(\bo{A} + \bo{B}\bo{K})\T\bo{S}_\gamma + \bo{S}_\gamma (\bo{A} + \bo{B}\bo{K}) + \bo{E}\T \bo{E} & \bo{S}_\gamma\bo{F} \\
 			\bo{F}\T\bo{S}_\gamma & -\bo{I}
 		\end{bmatrix} \prec 0$$ 
 		
-		can be re-written as:
+		можно переписать как:
 		
 		\begin{equation*}
 			\begin{bmatrix}
@@ -569,7 +531,7 @@
 			\prec 0
 		\end{equation*}		
 		
-		then using Schur complement we get:
+		затем, используя дополнение Шура, получаем:
 		
 		\begin{equation}
 			\begin{bmatrix}
@@ -584,19 +546,14 @@
 	\end{flushleft}
 \end{frame}
 
-
-
-
-
-
-\begin{frame}{Robust Control Design, 5}
+\begin{frame}{Робастный синтез управления, 5}
 	\begin{flushleft}
 		
-		We can introduce a new variable $\bo{P} = \bo{S}^{-1}_\gamma$ and multiply both sides (congruence transformation) of the previously found inequality by $\begin{bmatrix}
+		Введём новую переменную $\bo{P} = \bo{S}^{-1}_\gamma$ и умножим обе части (конгруэнтное преобразование) ранее найденного неравенства на $\begin{bmatrix}
 			\bo{P} & 0 & 0 \\
 			0 & \bo{I} & 0 \\
 			0 & 0 & \bo{I}
-		\end{bmatrix}$, to get:
+		\end{bmatrix}$, чтобы получить:
 		
 		\begin{equation}
 			\begin{bmatrix}
@@ -607,7 +564,7 @@
 			\prec 0
 		\end{equation}	
 		
-		Finally, introducing the last new variable $\bo{L} = \bo{K}\bo{P}$ we find an LMI that we can solve:
+		Наконец, вводя последнюю новую переменную $\bo{L} = \bo{K}\bo{P}$, находим ЛМН, которое можно решить:
 		
 		\begin{equation}
 			\begin{bmatrix}
@@ -622,81 +579,68 @@
 	\end{flushleft}
 \end{frame}
 
-
-
-
-
-
-
-\begin{frame}{Quadratic stability, 1}
+\begin{frame}{Квадратичная устойчивость, 1}
 	\begin{flushleft}
 		
-		Let us consider the following system:
+		Рассмотрим следующую систему:
 		
 		\begin{equation}
 			\dot{\bo{x}}  = \bo{A}\bo{x}
 		\end{equation}
 		%
-		where $\bo{A} = \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i$, $\alpha_i \geq 0$, $\sum\limits_{i=1}^{n} \alpha_i = 1$ with known $\bo{A}_i$ but unknown coefficients $\alpha_i$. Is it stable for all possible values of $\alpha_i$? Note that we can't use eigenvalue analysis in this case.
+		где $\bo{A} = \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i$, $\alpha_i \geq 0$, $\sum\limits_{i=1}^{n} \alpha_i = 1$ с известными $\bo{A}_i$, но неизвестными коэффициентами $\alpha_i$. Будет ли система устойчива при всех возможных значениях $\alpha_i$? Обратите внимание, что в этом случае мы не можем использовать анализ собственных значений.
 		
 		\bigskip
 		
-		Geometrically, this means $\bo{A}$ is in a polytope with vertices $\bo{A}_i$.
+		Геометрически это означает, что $\bo{A}$ находится в политопе с вершинами $\bo{A}_i$.
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-\begin{frame}{Quadratic stability, 2}
+\begin{frame}{Квадратичная устойчивость, 2}
 	\begin{flushleft}
 		
-		\begin{theorem}[Quadratic stability]
-			$\bo{A}_i^\top \bo{S} + \bo{S} \bo{A}_i \leq 0$ implies $\dot{\bo{x}}  = \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i \bo{x}$ is stable, where $\alpha_i \geq 0$, $\sum\limits_{i=1}^{n} \alpha_i = 1$
+		\begin{theorem}[Квадратичная устойчивость]
+			Если $\bo{A}_i^\top \bo{S} + \bo{S} \bo{A}_i \preceq 0$, то система $\dot{\bo{x}}  = \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i \bo{x}$ устойчива, где $\alpha_i \geq 0$, $\sum\limits_{i=1}^{n} \alpha_i = 1$
 		\end{theorem}
 		
 		\bigskip
 		
-		Proof: $\dot V = \left(\sum\limits_{i=1}^{n} \alpha_i \bo{A}_i \right)^\top \bo{S} + \bo{S} 
-		\left( \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i \right) \leq 0$ can be re-written as: 
-		$\dot V = \sum\limits_{i=1}^{n} \left( \alpha_i (\bo{A}_i^\top \bo{S} + \bo{S} \bo{A}_i) \right) $ and since $\bo{A}_i^\top \bo{S} + \bo{S} \bo{A}_i \leq 0$ and $\alpha_i \geq 0$, then $\dot V \leq 0$. \qed
+		Доказательство: $\dot V = \left(\sum\limits_{i=1}^{n} \alpha_i \bo{A}_i \right)^\top \bo{S} + \bo{S} 
+		\left( \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i \right) \preceq 0$ можно переписать как: 
+		$\dot V = \sum\limits_{i=1}^{n} \left( \alpha_i (\bo{A}_i^\top \bo{S} + \bo{S} \bo{A}_i) \right) $, и поскольку $\bo{A}_i^\top \bo{S} + \bo{S} \bo{A}_i \preceq 0$ и $\alpha_i \geq 0$, то $\dot V \leq 0$. \qed
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-
-\begin{frame}{Quadratic stability - Control design, 1}
-	%	\framesubtitle{Part 1}
+\begin{frame}{Квадратичная устойчивость - Синтез управления, 1}
+	%	\framesubtitle{Часть 1}
 	\begin{flushleft}
 		
-		Let us consider the following system:
+		Рассмотрим следующую систему:
 		
 		\begin{equation}
-			\dot{\bo{x}}  = \bo{A}\bo{x} + \bo{B}\bo{x}
+			\dot{\bo{x}}  = \bo{A}\bo{x} + \bo{B}\bo{u}
 		\end{equation}
 		%
-		where $\bo{A} = \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i$, $\alpha_i \geq 0$, $\sum\limits_{i=1}^{n} \alpha_i = 1$ with known $\bo{A}_i$ but unknown coefficients $\alpha_i$. How to design control law $\bo{u} = \bo{K}\bo{x}$ making the system stable for all possible values of $\alpha_i$? 
+		где $\bo{A} = \sum\limits_{i=1}^{n} \alpha_i \bo{A}_i$, $\alpha_i \geq 0$, $\sum\limits_{i=1}^{n} \alpha_i = 1$ с известными $\bo{A}_i$, но неизвестными коэффициентами $\alpha_i$. Как синтезировать закон управления $\bo{u} = \bo{K}\bo{x}$, делающий систему устойчивой при всех возможных значениях $\alpha_i$? 
 		
 		\bigskip
 		
-		The closed-loop form of the system is:
+		Замкнутая форма системы имеет вид:
 		
 		\begin{equation}
-			\dot{\bo{x}}  = (\sum\limits_{i=1}^{n} \alpha_i \bo{A}_i + \bo{B}\bo{K})\bo{x}
+			\dot{\bo{x}}  = \left(\sum\limits_{i=1}^{n} \alpha_i \bo{A}_i + \bo{B}\bo{K}\right)\bo{x}
 		\end{equation}
 		
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-\begin{frame}{Quadratic stability - Control design, 2}
+\begin{frame}{Квадратичная устойчивость - Синтез управления, 2}
 	\begin{flushleft}
 		
-		Let us write Lyapunov eq. for the system:
+		Запишем уравнение Ляпунова для системы:
 		
 		\begin{equation}
 			\left(
@@ -710,7 +654,7 @@
 			\prec 0
 		\end{equation}
 		
-		We can re-write it as:
+		Мы можем переписать его как:
 		
 		\begin{equation}
 			\sum\limits_{i=1}^{n} \alpha_i 
@@ -721,37 +665,34 @@
 			\prec 0
 		\end{equation}
 		
-		Hence if $(\bo{A}_i + \bo{B}\bo{K})^\top \bo{S} +
-		\bo{S} (\bo{A}_i + \bo{B}\bo{K}) \prec 0$, the original system is stable.
+		Следовательно, если $(\bo{A}_i + \bo{B}\bo{K})^\top \bo{S} +
+		\bo{S} (\bo{A}_i + \bo{B}\bo{K}) \prec 0$, то исходная система устойчива.
 		
 	\end{flushleft}
 \end{frame}
 
-
-
-\begin{frame}{Quadratic stability - Control design, 3}
+\begin{frame}{Квадратичная устойчивость - Синтез управления, 3}
 	\begin{flushleft}
 		
-		From $(\bo{A}_i + \bo{B}\bo{K})^\top \bo{S} +
-		\bo{S} (\bo{A}_i + \bo{B}\bo{K}) \prec 0$, we can go on to do control design. Introducing $\bo{P} = \bo{S}^{-1}$, we use congruence transformation multiplying by $\bo{P}$ on both sides:
+		Исходя из $(\bo{A}_i + \bo{B}\bo{K})^\top \bo{S} +
+		\bo{S} (\bo{A}_i + \bo{B}\bo{K}) \prec 0$, можно перейти к синтезу управления. Вводя $\bo{P} = \bo{S}^{-1}$, используем конгруэнтное преобразование, умножая на $\bo{P}$ с обеих сторон:
 		
 		\begin{equation}
 			\bo{P}(\bo{A}_i + \bo{B}\bo{K})^\top  +
 			(\bo{A}_i + \bo{B}\bo{K})\bo{P} \prec 0
 		\end{equation}
 		
-		Introducing new variable $\bo{L} = \bo{K} \bo{P}$ we get a problem linear in decision variables:
+		Вводя новую переменную $\bo{L} = \bo{K} \bo{P}$, получаем задачу, линейную относительно переменных решения:
 		
 		\begin{equation}
 			\bo{P}\bo{A}_i^\top + \bo{A}_i \bo{P} +
 			\bo{L}^\top\bo{B}^\top + \bo{B}\bo{L} \prec 0
 		\end{equation}		
 		%
-		where the decision variables are $\bo{P}$ and $\bo{L}$. The control gain matrix is found as $\bo{K} = \bo{L} \bo{P}^{-1}$.
+		где переменными решения являются $\bo{P}$ и $\bo{L}$. Матрица коэффициентов усиления управления находится как $\bo{K} = \bo{L} \bo{P}^{-1}$.
 		
 	\end{flushleft}
 \end{frame}
-
 
 
 \myqrframe

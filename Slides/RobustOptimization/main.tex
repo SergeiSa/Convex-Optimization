@@ -32,7 +32,6 @@
 
 
 \begin{frame}{Robust convex programming problems, 1}
-%\framesubtitle{Example}
 \begin{flushleft}
 
 Consider the following problem: 
@@ -43,10 +42,8 @@ Find smallest $x \in \R$, such that $x + y \geq 1$, where $|y| \leq 2$.
 
 \bigskip
 
-In that example we need to find optimal value of $x$ subject to a constraint where another unknown variable is present; the solution we find has to satisfy the constraint for any allowed value of $y$. The solution here is $x = 3$
+In that example we need to find optimal value of $x$ subject to a constraint where an unknown parameter (an adversarial variable) is present; the solution we find has to satisfy the constraint for any allowed value of $y$. The solution here is $x = 3$
 
-%\bigskip
-%This is closely related to \emph{minimax optimization}
  
 \end{flushleft}
 \end{frame}
@@ -56,7 +53,6 @@ In that example we need to find optimal value of $x$ subject to a constraint whe
 
 
 \begin{frame}{Robust convex programming problems, 2}
-	%\framesubtitle{Example}
 	\begin{flushleft}
 		
 		Consider the following problem: 
@@ -65,7 +61,24 @@ In that example we need to find optimal value of $x$ subject to a constraint whe
 			(\bo{a} + \delta)\T \bo{x} \leq b
 		\end{align}
 		
-		where $\delta$ is bounded unknown: $||\delta|| \leq p$. It is equivalent to a linear constraint with uncertianty.
+		where $\delta$ is a bounded unknown: $||\delta|| \leq p$. It is an uncertain linear constraint.
+		
+		\bigskip
+		
+		A general form of robust convex programming problems can be written as:
+		
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & f(\bo{x}), \\
+				& \text{subject to}
+				& & \bo{h}(\bo{x}) = 0 \\
+				& & & \bo{g}(\bo{x}, \bo{y}) \leq 0, \ 
+				\textcolor{blue}{
+					\forall \bo{y}  \in \mathcal{Y}.} 
+			\end{aligned}
+		\end{equation}
+		
 		
 		\bigskip
 		
@@ -79,40 +92,48 @@ In that example we need to find optimal value of $x$ subject to a constraint whe
 
 
 
-\begin{frame}{Robust CP: Linear constraint}
-%\framesubtitle{Part 1}
+\begin{frame}{Robust CP: Linear constraint, 1}
 \begin{flushleft}
 
 Consider the following problem:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}} \ \underset{\bo{y}}{\text{any}}
+& \underset{\bo{x}}{\text{minimize}} 
 & & ||\bo{x}||, \\
 & \text{subject to}
-& & \bo{c}^\top \bo{x} + \bo{d}^\top \bo{y} \leq h, \\
-& & & ||\bo{y}|| \leq p
+& & \bo{c}^\top \bo{x} + \bo{d}^\top \bo{y} \leq h, \ 
+\textcolor{blue}{
+ \forall \bo{y} :  ||\bo{y}|| \leq p.} 
 \end{aligned}
 \end{equation}
 
-It is clear that worst-case scenario corresponds to the largest value of $\bo{d}^\top \bo{y}$. We note that $\text{max}(\bo{d}^\top \bo{y}) = \text{max}(||\bo{d}|| \cdot ||\bo{y}|| \cdot \text{cos}(\bo{d}^\wedge \bo{y})) =  ||\bo{d}|| p$; hence $\bo{y} =  p \frac{\bo{d}}{|| \bo{d} ||} $.
+It is clear that worst-case scenario corresponds to the largest value of $\bo{d}^\top \bo{y}$. We note that $\text{max}(\bo{d}^\top \bo{y}) = \text{max}(||\bo{d}|| \cdot ||\bo{y}|| \cdot \text{cos}(\bo{d}^\wedge \bo{y})) =  p||\bo{d}||$; hence $\bo{y} =  p \frac{\bo{d}}{|| \bo{d} ||} $.
 
-%$\bo{y}$ should align with $\bo{d}$ and have its maximum possible length $p$. From that we conclude th/at 
+\bigskip
+
+\textcolor{mygray}{
+Equivalently, from Cauchy-Schwarz inequality $\bo{d}^\top \bo{y} \leq ||\bo{d}|| \cdot ||\bo{y}|| \leq p||\bo{d}||$.
+}
  
 \end{flushleft}
 \end{frame}
 
 
 
-\begin{frame}{Robust CP: Linear constraint}
-%\framesubtitle{Part 2}
+\begin{frame}{Robust CP: Linear constraint, 2}
 \begin{flushleft}
 
 Therefore $\bo{c}^\top \bo{x} + \bo{d}^\top \bo{y} \leq h$ becomes:
 
 \begin{align}
-%    \bo{c}^\top \bo{x} + p  \frac{\bo{d}^\top\bo{d}}{|| \bo{d} ||} \leq h \\
     \bo{c}^\top \bo{x} + p || \bo{d} || \leq h 
+\end{align}
+%
+or
+%
+\begin{align}
+	\bo{c}^\top \bo{x} \leq h - p \sqrt{ \bo{d}\T  \bo{d}  } 
 \end{align}
 
 \bigskip
@@ -121,31 +142,35 @@ Thus our problem becomes:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}}
+& \underset{\bo{x}}{\text{minimize}}
 & & ||\bo{x}||, \\
 & \text{subject to}
-& & \bo{c}^\top \bo{x} \leq h - p || \bo{d} ||
+& & \bo{c}^\top \bo{x} \leq h - p \sqrt{ \bo{d}\T  \bo{d}  } 
 \end{aligned}
 \end{equation}
+ 
+ \bigskip
+ 
+ The uncertain constraint is replaced by a deterministic constraint with a robustness margin $p \sqrt{ \bo{d}\T  \bo{d}  } $.
  
 \end{flushleft}
 \end{frame}
 
 
 
-\begin{frame}{Quadratic constraint, type 1}
-%\framesubtitle{Part 1}
+\begin{frame}{Bilinear constraint, type 1}
 \begin{flushleft}
 
 Consider the following problem, where $\bo{x}^*$ is the desired value of $\bo{x}$:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}} \ \underset{\bo{y}}{\text{any}}
+& \underset{\bo{x}}{\text{minimize}}
 & & ||\bo{x} - \bo{x}^*||, \\
 & \text{subject to}
-& & \bo{y}^\top \bo{D} \bo{x} \leq h, \\
-& & & ||\bo{y}|| \leq p
+& & \bo{y}^\top \bo{D} \bo{x} \leq h, \ 
+\textcolor{blue}{
+	\forall \bo{y} :  ||\bo{y}|| \leq p.} 
 \end{aligned}
 \end{equation}
 
@@ -157,21 +182,21 @@ This time worst-case scenario corresponds to $\bo{y}$ aligned with $\bo{D} \bo{x
     p \frac{|| \bo{D} \bo{x} ||^2}{|| \bo{D} \bo{x} ||} = 
     p || \bo{D} \bo{x} ||
 \end{equation}
+
  
 \end{flushleft}
 \end{frame}
 
 
 
-\begin{frame}{Quadratic constraint, type 1}
-%\framesubtitle{Part 2}
+\begin{frame}{Bilinear constraint, type 1}
 \begin{flushleft}
 
 Thus our problem becomes:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}}
+& \underset{\bo{x}}{\text{minimize}}
 & & ||\bo{x} - \bo{x}^*||, \\
 & \text{subject to}
 & & || \bo{D} \bo{x} || \leq \frac{h}{p}
@@ -185,19 +210,19 @@ which is an SOCP.
 
 
 
-\begin{frame}{Quadratic constraint, type 2}
-%\framesubtitle{Part 1}
+\begin{frame}{Bilinear constraint, type 2}
 \begin{flushleft}
 
 A more general case of the previous problem is:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}} \ \underset{\bo{y}}{\text{any}}
+& \underset{\bo{x}}{\text{minimize}} 
 & & ||\bo{x} - \bo{x}^*||, \\
 & \text{subject to}
-& & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h, \\
-& & & ||\bo{y}|| \leq p
+& & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h, \ 
+\textcolor{blue}{
+	\forall \bo{y} :  ||\bo{y}|| \leq p.} 
 \end{aligned}
 \end{equation}
 %
@@ -208,7 +233,7 @@ We can rewrite $(\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h$ as:
     \bo{y}^\top \bo{D} (\bo{x} - \bo{b}) - \bo{a}^\top \bo{D} (\bo{x} - \bo{b}) \leq h
 \end{equation}
 
-With that we see that the worse case scenario is $\bo{y}$ is aligned with $\bo{D} (\bo{x} - \bo{b})$ and has length $p$:
+With that we see that the worse case scenario $\bo{y}$ is aligned with $\bo{D} (\bo{x} - \bo{b})$ and has length $p$:
 
 \begin{equation}
     \bo{y} = p \frac{\bo{D} (\bo{x} - \bo{b})}{|| \bo{D} (\bo{x} - \bo{b}) ||}
@@ -221,8 +246,7 @@ With that we see that the worse case scenario is $\bo{y}$ is aligned with $\bo{D
 
 
 
-\begin{frame}{Quadratic constraint, type 2}
-%\framesubtitle{Part 2}
+\begin{frame}{Bilinear constraint, type 2}
 \begin{flushleft}
 
 Then $\bo{y}^\top \bo{D} (\bo{x} - \bo{b}) - \bo{a}^\top \bo{D} (\bo{x} - \bo{b}) \leq h$ becomes:
@@ -247,15 +271,14 @@ which is an SOCP constraint.
 
 
 
-\begin{frame}{Quadratic constraint, type 2}
-%\framesubtitle{Part 2}
+\begin{frame}{Bilinear constraint, type 2}
 \begin{flushleft}
 
 And thus we get:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}}
+& \underset{\bo{x}}{\text{minimize}}
 & & ||\bo{x} - \bo{x}^*||, \\
 & \text{subject to}
 & & || \bo{D} (\bo{x} - \bo{b}) ||  \leq \frac{1}{p}\bo{a}^\top \bo{D} (\bo{x} - \bo{b}) + \frac{h}{p}
@@ -272,24 +295,23 @@ which is SOCP.
 
 
 
-\begin{frame}{Quadratic constraint, type 3}
-%\framesubtitle{Part 1}
+\begin{frame}{Bilinear constraint, type 3}
 \begin{flushleft}
 
 A more general case of the previous problem is:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}} \ \underset{\bo{y}}{\text{any}}
+& \underset{\bo{x}}{\text{minimize}} 
 & & ||\bo{x} - \bo{x}^*||, \\
 & \text{subject to}
-& & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h, \\
-& & & ||\bo{H}\bo{y} + \bo{f}|| \leq p
+& & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h, \ 
+\textcolor{blue}{
+	\forall \bo{y} : ||\bo{H}\bo{y} + \bo{f}|| \leq p.} 
 \end{aligned}
 \end{equation}
 %
 where $\bo{H}$ is has an inverse. We start by making substitution:
-%and allows decomposition $\bo{H} = \bo{W}^\top \bo{W}$
 
 \begin{equation}
     \bo{v} = \bo{H}\bo{y} + \bo{f}
@@ -299,8 +321,15 @@ meaning $\bo{y} = \bo{H}^{-1}(\bo{v} -\bo{f})$:
 
 \begin{align}
     (\bo{H}^{-1}(\bo{v} -\bo{f}) - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h \\
-    \bo{v}^\top \bo{H}^{-\top} \bo{D} (\bo{x} - \bo{b}) - (\bo{H}^{-1}\bo{f} + \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h\\
-    \bo{v}^\top \bo{H}^{-\top} \bo{D} (\bo{x} - \bo{b}) - (\bo{H}\bo{a} + \bo{f})^\top \bo{H}^{-\top}\bo{D} (\bo{x} - \bo{b}) \leq h
+    \bo{v}^\top \bo{H}^{-\top} \bo{D} (\bo{x} - \bo{b}) - \textcolor{myred}{(\bo{H}^{-1}\bo{f} + \bo{a})^\top} \bo{D} (\bo{x} - \bo{b}) \leq h
+\end{align}
+
+
+{\small
+since $\textcolor{myred}{(\bo{H}\bo{a} + \bo{f})^\top \bo{H}^{-\top}} = (\bo{a}^\top\bo{H}^\top \bo{H}^{-\top}   + \bo{f}^\top \bo{H}^{-\top})  = \textcolor{myred}{(\bo{H}^{-1}\bo{f} + \bo{a})^\top}$:}
+
+\begin{align}
+\bo{v}^\top \bo{H}^{-\top} \bo{D} (\bo{x} - \bo{b}) - \textcolor{myred}{(\bo{H}\bo{a} + \bo{f})^\top \bo{H}^{-\top}}\bo{D} (\bo{x} - \bo{b}) \leq h
 \end{align}
 
  
@@ -309,8 +338,7 @@ meaning $\bo{y} = \bo{H}^{-1}(\bo{v} -\bo{f})$:
 
 
 
-\begin{frame}{Quadratic constraint, type 3}
-%\framesubtitle{Part 2}
+\begin{frame}{Bilinear constraint, type 3}
 \begin{flushleft}
 
 We can introduce notation:
@@ -331,11 +359,13 @@ And now we formulated type 3 problem as type 2:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}} \ \underset{\bo{v}}{\text{any}}
+& \underset{\bo{x}}{\text{minimize}} 
 & & ||\bo{x} - \bo{x}^*||, \\
 & \text{subject to}
-& & (\bo{v} - \bo{g})^\top \bo{M} (\bo{x} - \bo{b}) \leq h, \\
-& & & ||\bo{v}|| \leq p
+& & (\bo{v} - \bo{g})^\top \bo{M} (\bo{x} - \bo{b}) \leq h, \ 
+\textcolor{blue}{
+	\forall \bo{v} : ||\bo{v}|| \leq p.} 
+& & & 
 \end{aligned}
 \end{equation}
 
@@ -345,20 +375,20 @@ And now we formulated type 3 problem as type 2:
 
 
 
-\begin{frame}{Quadratic constraint, type 4}
-% \framesubtitle{Part 2}
+\begin{frame}{Bilinear constraint, type 4}
 \begin{flushleft}
 
 Try solving this problem on your own:
 %
 \begin{equation}
 \begin{aligned}
-& \underset{\bo{x}}{\text{min}} \ \underset{\bo{y}}{\text{any}}
+& \underset{\bo{x}}{\text{minimize}} 
 & & ||\bo{x} - \bo{x}^*||, \\
 & \text{subject to}
 & & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b})  + 
 \bo{s}^\top \bo{y} + \bo{q}^\top \bo{x} \leq h, \\
-& & & ||\bo{H}\bo{y} + \bo{f}|| \leq p
+& & &	\textcolor{blue}{
+\forall \bo{y} :  ||\bo{H}\bo{y} + \bo{f}|| \leq p.} 
 \end{aligned}
 \end{equation}
  
@@ -367,301 +397,11 @@ Try solving this problem on your own:
 
 
 
-%
-%\begin{frame}{Control with parameter uncertainty}
-%\framesubtitle{Part 1}
-%\begin{flushleft}
-%
-%Consider the system:
-%%
-%\begin{equation}
-%    \dot{\bo{x}} = \bo{A}_p\bo{x} + \bo{B}_p\bo{u}
-%\end{equation}
-%%
-%where $\bo{A}_p$ and $\bo{B}_p$ are linear functions of parameters $\bo{p}$. We want to stabilize the origin.
-%
-%\bigskip
-%
-%Assume we use control law:
-%%
-%\begin{equation}
-%    \bo{u} = -\bo{K}\bo{x} + \bo{u}^*
-%\end{equation}
-%
-%With that we get:
-%%
-%\begin{equation}
-%   \dot{\bo{x}} = (\bo{A}_p - \bo{B}_p\bo{K})\bo{x} + \bo{B}_p\bo{u}^*
-%\end{equation}
-%
-%
-%% \begin{equation}
-%%     \bo{u}^* = -\bo{B}^+(\bo{A}\bo{x}^* + \bo{c})
-%% \end{equation}
-% 
-%\end{flushleft}
-%\end{frame}
-%
-%
-%
-%\begin{frame}{Control with parameter uncertainty}
-%\framesubtitle{Part 2}
-%\begin{flushleft}
-%
-%Let us write Lyapunov function for the system:
-%%
-%\begin{align}
-%    & V = \bo{x}^\top \bo{S} \bo{x} \\
-%    & \dot{V} = \dot{\bo{x}}^\top \bo{S} \bo{x} + \bo{x}^\top \bo{S} \dot{\bo{x}} 
-%    = \\
-%    & = \bo{x}^\top \bo{S}(\bo{A}_p - \bo{B}_p\bo{K})\bo{x}
-%    + \bo{x}^\top (\bo{A}_p - \bo{B}_p\bo{K})^\top
-%    \bo{S} \bo{x}
-%    + \\
-%    & + \bo{x}^\top \bo{S} \bo{B}_p \bo{u}^*
-%    +
-%    \bo{u}^{*\top} \bo{B}_p^\top \bo{S} \bo{x}
-%\end{align}
-%%
-%Let us define:
-%%
-%\begin{align}
-%    & a = 2\bo{x}^\top \bo{S}(\bo{A}_p - \bo{B}_p\bo{K})\bo{x} \\
-%    & \bo{b} = 2\bo{x}^\top \bo{S} \bo{B}_p
-%\end{align}
-%%
-%With that we can find Jacobians:
-%%
-%\begin{align}
-%    & \bo{a}_x = \frac{\partial a}{\partial \bo{p}} &
-%    & \bo{B}_x = \frac{\partial \bo{b}}{\partial \bo{p}}
-%\end{align}
-%
-%\end{flushleft}
-%\end{frame}
-%
-%
-%
-%
-%\begin{frame}{Control with parameter uncertainty}
-%\framesubtitle{Part 3}
-%\begin{flushleft}
-%
-%Thus we get minimax constraint on the Lyapunov function
-%%
-%\begin{align}
-%\dot{V} = \bo{a}_x^\top \bo{p}_t + 
-%\bo{u}^{*\top} \bo{B}_x \bo{p}_t
-%\end{align}
-%%
-%where $\bo{p}_t$ are true values of parameters $\bo{p}$. Assuming:
-%%
-%\begin{align}
-%& \bo{p}_t = \bo{p} + \bo{p}_0
-%\end{align}
-%%
-%we get:
-%
-%\begin{align}
-%& \dot{V} = \bo{a}_x^\top (\bo{p} + \bo{p}_0) + 
-%\bo{u}^{*\top} \bo{B}_x (\bo{p} + \bo{p}_0)
-%\end{align}
-%%
-%which is a minimax constraint. Let's solve it for the case $||\bo{p}|| \leq 1$.
-%%and $||\bo{G}\bo{p}|| \leq 1$
-%
-%\end{flushleft}
-%\end{frame}
-%
-%
-%
-%\begin{frame}{Control with parameter uncertainty}
-%\framesubtitle{Part 4}
-%\begin{flushleft}
-%Taking derivative of $\dot{V}$ with respect to $\bo{p}$ we get 
-%%
-%\begin{align}
-%& \frac{\partial \dot{V}}{\partial  \bo{p}}  = \bo{a}_x^\top  + 
-%\bo{u}^{*\top} \bo{B}_x
-%\end{align}
-%%
-%this is the direction where the function grow the most. But we know its length is 1, so we conclude that:
-%
-%\begin{align}
-%& \bo{p}  = \frac{\bo{a}_x^\top  + 
-%\bo{u}^{*\top} \bo{B}_x}{|| \bo{a}_x^\top  + 
-%\bo{u}^{*\top} \bo{B}_x ||}
-%\end{align}
-%
-%So:
-%%
-%\begin{align}
-%& \dot{V} = 
-%|| \bo{a}_x^\top  + 
-%\bo{u}^{*\top} \bo{B}_x ||
-%+
-%(\bo{a}_x^\top + 
-%\bo{u}^{*\top} \bo{B}_x) \bo{p}_0
-%\end{align}
-%
-%\end{flushleft}
-%\end{frame}
-%
-%
-%
-%
-%\begin{frame}{Elliptical parameter uncertainty}
-%\framesubtitle{Part 1}
-%\begin{flushleft}
-%
-%Let's do the same, but for the case when $||\bo{G}\bo{p}|| \leq 1$:
-%
-%\begin{equation}
-%    \begin{cases}
-%\dot{V} = \bo{a}_x^\top (\bo{p} + \bo{p}_0) + 
-%\bo{u}^{*\top} \bo{B}_x (\bo{p} + \bo{p}_0) \leq 0 \\
-%||\bo{G}\bo{p}|| \leq 1
-%    \end{cases}
-%\end{equation}
-%
-%First step is to introduce new variable:
-%
-%\begin{align}
-%& \rho = \bo{G}\bo{p}
-%\end{align}
-%%
-%from which it follows that $\bo{p} = \bo{G}^{-1} \rho$ ($\bo{G}$ should be invertible for the parameters to be bounded). Hence we get:
-%
-%\begin{equation}
-%    \begin{cases}
-%\dot{V} = \bo{a}_x^\top (\bo{G}^{-1} \rho + \bo{p}_0) + 
-%\bo{u}^{*\top} \bo{B}_x (\bo{G}^{-1} \rho + \bo{p}_0) \leq 0 \\
-%||\rho|| \leq 1
-%    \end{cases}
-%\end{equation}
-%
-%\end{flushleft}
-%\end{frame}
-%
-%
-%
-%\begin{frame}{Elliptical parameter uncertainty}
-%\framesubtitle{Part 2}
-%\begin{flushleft}
-%
-%We can find gradient:
-%
-%\begin{align}
-%& \frac{\partial \dot{V}}{\partial  \bo{p}}  = 
-%\bo{a}_x^\top \bo{G}^{-1}  + 
-%\bo{u}^{*\top} \bo{B}_x \bo{G}^{-1}
-%\end{align}
-%
-%We know that length of $\rho$ is bounded, so:
-%
-%\begin{align}
-%& \rho  = 
-%\frac{\bo{a}_x^\top \bo{G}^{-1}  + 
-%\bo{u}^{*\top} \bo{B}_x \bo{G}^{-1}}{|| \bo{a}_x^\top \bo{G}^{-1}  + 
-%\bo{u}^{*\top} \bo{B}_x \bo{G}^{-1} ||}
-%\end{align}
-%
-%And thus we get SOCP constraint:
-%
-%\begin{equation}
-%\dot{V} = 
-%|| \bo{a}_x^\top \bo{G}^{-1}  + 
-%\bo{u}^{*\top} \bo{B}_x \bo{G}^{-1} ||
-%+ 
-%\bo{a}_x^\top \bo{p}_0 + 
-%\bo{u}^{*\top} \bo{B}_x \bo{p}_0 \leq 0 
-%\end{equation}
-%
-%
-%\end{flushleft}
-%\end{frame}
-
-
-% \begin{frame}{Control with parameter uncertainty}
-% \framesubtitle{Part 2}
-% \begin{flushleft}
-
-% Assume the model depends on parameters $\bo{p}$:
-% %
-% \begin{equation}
-%     \bo{c} = \bo{C}\bo{p}
-% \end{equation}
- 
-% Then feed-forward component also depends on $\bo{p}$:
- 
-% \begin{equation}
-%     \bo{B}\bo{u}^* = -(\bo{A}\bo{x}^* + \bo{C}\bo{p})
-% \end{equation}
-
-% Now, assume we don't know $\bo{p}$, but only have an estimate $\Bar{\bo{p}} = \bo{p} + \Tilde{\bo{p}}$, where $\Tilde{\bo{p}}$ is parameter estimation error:
-
-% \begin{align}
-%     \bo{B}\Bar{\bo{u}}^* = -(\bo{A}\bo{x}^* + \bo{C}\bo{p} + \bo{C}\Tilde{\bo{p}}) \\
-%     \bo{B}\Bar{\bo{u}}^* = \bo{B}\bo{u}^* - \bo{C}\Tilde{\bo{p}}
-% \end{align}
-
-% \end{flushleft}
-% \end{frame}
-
-
-
-
-% \begin{frame}{Control with parameter uncertainty}
-% \framesubtitle{Part 3}
-% \begin{flushleft}
-
-% Let us use control law $\bo{u} = -\bo{K} (\bo{x} - \bo{x}^*) + \Bar{\bo{u}}^*$. We get:
-
-% \begin{align}
-%     & \dot{\bo{x}} = \bo{A}\bo{x} - \bo{B}(\bo{K} (\bo{x} - \bo{x}^*) + \Bar{\bo{u}}^*) + \bo{c} \\
-%     & \dot{\bo{x}} = \bo{A}\bo{x} - \bo{B} \bo{K} (\bo{x} - \bo{x}^*) + \bo{B}\Bar{\bo{u}}^* + \bo{c}
-% \end{align}
- 
-% Let us define control error: $\bo{e} = \bo{x} - \bo{x}^*$ and write error dynamics by subtracting $\bo{A}\bo{x}^* + \bo{B}\bo{u}^* + \bo{c}$ from the closed-loop equation:
-
-% \begin{align}
-%     & \dot{\bo{e}} = \bo{A}\bo{e} - \bo{B} \bo{K} (\bo{x} - \bo{x}^*) + \bo{B}(\Bar{\bo{u}}^* - \bo{u}^*) \\
-%     & \dot{\bo{e}} = \bo{A}\bo{e} - \bo{B} \bo{K} \bo{e} + \bo{B}\bo{u}^* - \bo{C}\Tilde{\bo{p}} - \bo{B}\bo{u}^* \\
-%     & \dot{\bo{e}} = (\bo{A} - \bo{B}\bo{K}) \bo{e} - \bo{C}\Tilde{\bo{p}}
-% \end{align}
-
-
-
-% \end{flushleft}
-% \end{frame}
-
-
-
-% \begin{frame}{Control with parameter uncertainty}
-% \framesubtitle{Part 4}
-% \begin{flushleft}
-
-% Next steps:
-
-% \begin{enumerate}
-%     \item Expand brackets.
-%     \item Write Lyapunov
-%     \item Write MiniMax
-% \end{enumerate}
-
-
-
-% \end{flushleft}
-% \end{frame}
-
-
-
 
 \begin{frame}{Max over norm of a sum of vectors}
-%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
-		Consider the problem $\underset{\bo{x}}{\text{max}}(|| \bo{a} + \bo{x}||)$ and $|| \bo{x} || \leq p$. Let us open the norm:
+		Consider the problem $\underset{\bo{x}}{\text{max}}(|| \bo{a} + \bo{x}||)$ and $|| \bo{x} || \leq p$. Let us expand the norm:
 		
 		\begin{equation}
 			|| \bo{a} + \bo{x} || = 
@@ -685,18 +425,18 @@ Try solving this problem on your own:
 
 
 \begin{frame}{Robust CP: Conic constraint}
-%	\framesubtitle{Part 1}
 	\begin{flushleft}
 		
 		Consider the following problem:
 		%
 		\begin{equation}
 			\begin{aligned}
-				& \underset{\bo{x}}{\text{min}} \ \underset{\bo{y}}{\text{any}}
+				& \underset{\bo{x}}{\text{minimize}} 
 				& & ||\bo{x} - \bo{x}^*||, \\
 				& \text{subject to}
-				& & || \bo{A}\bo{x} + \bo{b} + \bo{y} || \leq \bo{c}^\top \bo{x} + d, \\
-				& & & ||\bo{y}|| \leq p
+				& & || \bo{A}\bo{x} + \bo{b} + \bo{y} || \leq \bo{c}^\top \bo{x} + d, \ 
+				\textcolor{blue}{
+					\forall \bo{y} : ||\bo{y}|| \leq p.} 
 			\end{aligned}
 		\end{equation}
 		%
@@ -717,7 +457,6 @@ Try solving this problem on your own:
 
 
 \begin{frame}{Robust CP: Conic constraint}
-%	\framesubtitle{Part 2}
 	\begin{flushleft}
 		
 		Continue the derivation:
@@ -733,7 +472,7 @@ Try solving this problem on your own:
 		%
 		\begin{equation}
 			\begin{aligned}
-				& \underset{\bo{x}}{\text{min}}
+				& \underset{\bo{x}}{\text{minimize}}
 				& & ||\bo{x} - \bo{x}^*||, \\
 				& \text{subject to}
 				& & || \bo{A}\bo{x} + \bo{b}|| \leq \bo{c}^\top \bo{x} + d - p
@@ -742,6 +481,74 @@ Try solving this problem on your own:
 		
 	\end{flushleft}
 \end{frame}
+
+\begin{frame}{Robust Quadratic Constraint with Spectral Uncertainty}
+	\begin{flushleft}
+		
+		Consider the robust constraint:
+		\[
+		\mathbf{x}^\top (\mathbf{A} + \mathbf{\Delta}) \mathbf{x} \le t, \quad \forall \|\mathbf{\Delta}\|_2 \le \rho
+		\]
+		
+		
+		Equivalently, in worst-case form:
+		\[
+		\sup_{\|\mathbf{\Delta}\|_2 \le \rho} \; \mathbf{x}^\top (\mathbf{A} + \mathbf{\Delta})\mathbf{x} \le t
+		\]
+		
+		Focus on the uncertain part $\mathbf{x}^\top \mathbf{\Delta} \mathbf{x}$. Using the norm inequality:
+		\[
+		\|\mathbf{\Delta} \mathbf{x}\| \le \|\mathbf{\Delta}\|_2 \|\mathbf{x}\|
+		\]
+		
+		we obtain: $\mathbf{x}^\top \mathbf{\Delta} \mathbf{x} \le \|\mathbf{x}\| \cdot \|\mathbf{\Delta} \mathbf{x}\|
+		\le \|\mathbf{x}\| \cdot (\|\mathbf{\Delta}\|_2 \|\mathbf{x}\|)$. 
+		Since \( \|\mathbf{\Delta}\|_2 \le \rho \), it follows that:
+		\[
+		\mathbf{x}^\top \mathbf{\Delta} \mathbf{x} \le \rho \, \mathbf{x}^\top \mathbf{x}
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Tightness and Robust Reformulation}
+	\begin{flushleft}
+		
+		We now show the bound is tight. Choose:
+		\[
+		\mathbf{\Delta} = \rho \, \frac{\mathbf{x}\mathbf{x}^\top}{\mathbf{x}^\top \mathbf{x}}
+		\]
+		
+		Then: $		\|\mathbf{\Delta}\|_2 = \rho
+		\quad \text{(rank-1 projector scaled by } \rho \text{)}$. Evaluate:
+		\[
+		\mathbf{x}^\top \mathbf{\Delta} \mathbf{x}
+		= \rho \, \frac{\mathbf{x}^\top \mathbf{x} \, \mathbf{x}^\top \mathbf{x}}{\mathbf{x}^\top \mathbf{x}}
+		= \rho \, \mathbf{x}^\top \mathbf{x}
+		\]
+		
+		
+		Thus:
+		\[
+		\sup_{\|\mathbf{\Delta}\|_2 \le \rho} \mathbf{x}^\top \mathbf{\Delta} \mathbf{x} = \rho \, \mathbf{x}^\top \mathbf{x
+		}
+		\]
+		
+		
+		Final robust constraint:
+		\[
+		\mathbf{x}^\top \mathbf{A} \mathbf{x} + \rho \, \mathbf{x}^\top \mathbf{x} \le t
+		\]
+		
+		
+		Equivalently:
+		\[
+		\mathbf{x}^\top (\mathbf{A} + \rho \mathbf{I})\mathbf{x} \le t
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
 
 
 \myqrframe

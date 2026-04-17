@@ -1,9 +1,11 @@
 \beamer@slide {eq:vdot}{3}
 \beamer@slide {control_design}{4}
 \beamer@slide {discrete_LMI_1}{7}
+\beamer@slide {control_design_discrete}{9}
 \beamer@slide {eq:uncertain}{10}
 \beamer@slide {eq:Lyapunov_xw}{11}
 \beamer@slide {eq:Delta-inequality}{11}
 \beamer@slide {eq:EEww}{12}
 \beamer@slide {eq:xw_Lyapunov}{12}
+\beamer@slide {robust_stability_sdp}{14}
 \beamer@slide {eq:quad_xw_1}{16}

@@ -407,16 +407,59 @@ yielding the closed-loop system:
 \begin{frame}{Conclusion}
 	\begin{flushleft}
 		
-		The condition is linear in decision variables:
-		\[
-		Q \succ 0, \quad U, \quad \alpha  > 0, \quad \gamma>0,
-		\]
+		{\small 
+		The resulting SDP:
+		
+		
+		\begin{equation}
+			\label{robust_stability_sdp}
+			\hspace*{-0.5cm} 
+			\begin{aligned}
+				& \underset{Q, U, \gamma, \alpha}{\text{minimize}} 
+				& &  0, \\
+				& \text{subject to:} & & 
+				\begin{cases}
+					\begin{bmatrix}
+						QA^\top + AQ + BU + U^\top B^\top
+						& D
+						& QC^\top
+						& \alpha N
+						& Q M^\top \\
+						D^\top
+						& -\gamma I
+						& 0
+						& 0
+						& 0 \\
+						CQ
+						& 0
+						& -\gamma I
+						& 0
+						& 0 \\
+						\alpha N^\top
+						& 0
+						& 0
+						& -\alpha I
+						& 0 \\
+						M Q
+						& 0
+						& 0
+						& 0
+						& -\alpha I
+					\end{bmatrix}
+					\prec 0, \\ 
+					Q \succ 0, 
+					\gamma \geq 0, \alpha \geq 0
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		
 		with controller recovered as:
 		\[
 		K = U Q^{-1}.
 		\]
 		
-		
+	}
 	\end{flushleft}
 \end{frame}
 

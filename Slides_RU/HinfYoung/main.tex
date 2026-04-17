@@ -1,0 +1,467 @@
+\documentclass{beamer}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\input{settings.tex}
+
+
+\title{$H_\infty$, Юнг}
+\subtitle{Вычислительный интеллект, Лекция 10}
+\author{Сергей Савин}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{\texorpdfstring{$\mathcal{H}_\infty$}{} управление, функции накопления и KYP}
+	\begin{flushleft}
+		
+		{\small
+			\textbf{Система:}
+			\[
+			\dot{x} = Ax + Bw, \quad y = Cx + Dw
+			\]
+			
+			
+			\textbf{$\mathcal{H}_\infty$ критерий:} обеспечить
+			\[
+			\|y\|_2 \le \gamma \|w\|_2 \quad \text{для всех } w \in \mathcal{L}_2
+			\]
+			
+			
+			\textbf{Функция накопления (неравенство диссипации):} \\
+			Найти $V(x) = x^\top P x$, $P \succ 0$, такую что
+			\[
+			\dot{V}(x) + y^\top y - \gamma^2 w^\top w \le 0
+			\]
+			
+			\textbf{KYP (Лемма об ограниченной вещественности):} \\
+			Вышеуказанное выполняется тогда и только тогда, когда $\exists P \succ 0$ такое что
+			\[
+			\begin{bmatrix}
+				A^\top P + PA & PB & C^\top \\
+				B^\top P & -\gamma^2 I & D^\top \\
+				C & D & -I
+			\end{bmatrix} \prec 0
+			\]
+			
+			
+			\textbf{Вывод:} $\Rightarrow \|G(s)\|_\infty < \gamma$}
+		
+	\end{flushleft}
+	
+\end{frame}
+
+
+\begin{frame}{H бесконечность}
+	\begin{flushleft}
+		
+		Рассмотрим неопределённую систему:
+		\begin{align*}
+			\dot{x} &= (A + \Delta A)x + Bu + Dw, \\
+			y &= Cx,
+		\end{align*}
+		со структурированной неопределённостью
+		\[
+		\Delta A = N \Delta M, \quad \|\Delta\| < 1.
+		\]
+		
+		Применим обратную связь по состоянию:
+		\[
+		u = Kx,
+		\]
+		что приводит к замкнутой системе:
+		\[
+		\dot{x} = (A + BK + \Delta A)x + Dw.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Шаг 1: Лемма KYP}
+	\begin{flushleft}
+		
+		Условие $\mathcal{H}_\infty$ выполняется, если существует $P \succ 0$ такое что:
+		\[
+		\begin{bmatrix}
+			(A + BK + \Delta A)^\top P + P(A + BK + \Delta A) & PD & C^\top \\
+			D^\top P & -\gamma I & 0 \\
+			C & 0 & -\gamma I
+		\end{bmatrix} \prec 0.
+		\]
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Шаг 2: Разделение номинальной и неопределённой частей}
+	\begin{flushleft}
+		
+		
+		Обозначим:
+		\[
+		W_1 =
+		\begin{bmatrix}
+			(A + BK)^\top P + P(A + BK) & PD & C^\top \\
+			D^\top P & -\gamma I & 0 \\
+			C & 0 & -\gamma I
+		\end{bmatrix},
+		\]
+		\[
+		W_2 =
+		\begin{bmatrix}
+			(\Delta A)^\top P + P(\Delta A) & 0 & 0 \\
+			0 & 0 & 0 \\
+			0 & 0 & 0
+		\end{bmatrix}.
+		\]
+		
+		Используя $\Delta A = N \Delta M$, получаем:
+		\[
+		W_2 =
+		\begin{bmatrix}
+			M^\top \Delta^\top N^\top P + PN \Delta M & 0 & 0 \\
+			0 & 0 & 0 \\
+			0 & 0 & 0
+		\end{bmatrix}.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Неравенство Юнга (матричная форма)}
+	
+	\begin{flushleft}
+		
+		\textbf{Формулировка:} Для любых матриц $X, Y$ согласованных размерностей и любого $\varepsilon > 0$,
+		\[
+		X^\top Y + Y^\top X \;\preceq\; \varepsilon X^\top X + \varepsilon^{-1} Y^\top Y
+		\]
+		
+		
+		\medskip
+		
+		\textbf{Эквивалентная форма (используется в робастном управлении):}
+		\[
+		X \Delta Y + (X \Delta Y)^\top
+		\;\preceq\;
+		\varepsilon XX^\top + \varepsilon^{-1} Y^\top Y,
+		\quad \|\Delta\| \le 1
+		\]
+		
+		\medskip
+		
+		\textbf{Роль в LMI:}
+		\begin{itemize}
+			\item Заменяет неопределённые члены \emph{выпуклыми оценками}
+			\item Вводит скалярный множитель $\varepsilon$
+		\end{itemize}
+		
+	\end{flushleft}
+	
+\end{frame}
+
+
+
+\begin{frame}{Факторизация неопределённого члена}
+	\begin{flushleft}
+		
+		
+		
+		\textbf{Неопределённый блок:}
+		\[
+		W_2 =
+		\begin{bmatrix}
+			M^\top \Delta^\top N^\top P + PN \Delta M & 0 & 0 \\
+			0 & 0 & 0 \\
+			0 & 0 & 0
+		\end{bmatrix}
+		\]
+		
+		\medskip
+		
+		\textbf{Определим:}
+		\[
+		V_1 =
+		\begin{bmatrix}
+			PN \\ 0 \\ 0
+		\end{bmatrix},
+		\quad
+		V_2 =
+		\begin{bmatrix}
+			M^\top \\ 0 \\ 0
+		\end{bmatrix}
+		\]
+		
+		\medskip
+		
+		\textbf{Компактная факторизация:}
+		\[
+		W_2 = V_1 \Delta V_2^\top + V_2 \Delta^\top V_1^\top
+		\]
+		
+		\medskip
+		
+		\textbf{Развёрнутая форма:}
+		\[
+		W_2 =
+		\begin{bmatrix}
+			PN \\ 0 \\ 0
+		\end{bmatrix}
+		\Delta
+		\begin{bmatrix}
+			M & 0 & 0
+		\end{bmatrix}
+		+
+		\begin{bmatrix}
+			M^\top \\ 0 \\ 0
+		\end{bmatrix}
+		\Delta^\top
+		\begin{bmatrix}
+			N^\top P & 0 & 0
+		\end{bmatrix}
+		\]
+		
+	\end{flushleft}
+	
+\end{frame}
+
+\begin{frame}{Шаг 3: Неравенство Юнга}
+	\begin{flushleft}
+		
+		
+		Используя неравенство Юнга:
+		\[
+		W_2 = V_1 \Delta V_2^\top + V_2 \Delta^\top V_1^\top \preceq \frac{1}{\varepsilon} V_1 V_1^\top + \varepsilon V_2 V_2^\top,
+		\]
+		заменяем условие на:
+		\[
+		W_1 + \frac{1}{\varepsilon} V_1 V_1^\top + \varepsilon V_2 V_2^\top \prec 0.
+		\]
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Шаг 4: Первое дополнение Шура}
+	\begin{flushleft}
+		
+		Применяя дополнение Шура к $\frac{1}{\varepsilon} V_1 V_1^\top$:
+		\[
+		\begin{bmatrix}
+			W_1 + \varepsilon V_2 V_2^\top & V_1 \\
+			V_1^\top & -\varepsilon I
+		\end{bmatrix}
+		\prec 0.
+		\]
+		
+		Раскрывая:
+		\[
+		\begin{bmatrix}
+			(A + BK)^\top P + P(A + BK) + \varepsilon M^\top M & PD & C^\top & PN \\
+			D^\top P & -\gamma I & 0 & 0 \\
+			C & 0 & -\gamma I & 0 \\
+			N^\top P & 0 & 0 & -\varepsilon I
+		\end{bmatrix}
+		\prec 0.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Шаг 5: Замена переменных}
+	\begin{flushleft}
+		
+		Пусть:
+		\[
+		Q = P^{-1}, \quad U = KQ.
+		\]
+		
+		Применим конгруэнтное преобразование $\mathrm{diag}(Q, I, I, I)$:
+		\[
+		\begin{bmatrix}
+			QA^\top + AQ + BU + U^\top B^\top + \varepsilon Q M^\top M Q
+			& D & QC^\top & N \\
+			D^\top & -\gamma I & 0 & 0 \\
+			CQ & 0 & -\gamma I & 0 \\
+			N^\top & 0 & 0 & -\varepsilon I
+		\end{bmatrix}
+		\prec 0.
+		\]
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Шаг 6: Второе дополнение Шура}
+	\begin{flushleft}
+		
+		\[
+		\varepsilon Q M^\top M Q
+		=
+		(Q M^\top)(\varepsilon I)(M Q).
+		\]
+		
+		Теперь применим дополнение Шура:
+		\[
+		\begin{bmatrix}
+			QA^\top + AQ + BU + U^\top B^\top
+			& D
+			& QC^\top
+			& N
+			& Q M^\top \\
+			D^\top
+			& -\gamma I
+			& 0
+			& 0
+			& 0 \\
+			CQ
+			& 0
+			& -\gamma I
+			& 0
+			& 0 \\
+			N^\top
+			& 0
+			& 0
+			& -\varepsilon I
+			& 0 \\
+			M Q
+			& 0
+			& 0
+			& 0
+			& -\varepsilon^{-1} I
+		\end{bmatrix}
+		\prec 0.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Шаг 7: Замена переменных}
+	\begin{flushleft}
+		
+		Определим:
+		\[
+		\alpha = \varepsilon^{-1}.
+		\]
+		
+		Затем умножим LMI на конгруэнтное преобразование:
+		\[
+		\mathrm{diag}(I, I, I, \alpha I, I),
+		\]
+		чтобы получить:
+		
+		\[
+		\begin{bmatrix}
+			QA^\top + AQ + BU + U^\top B^\top
+			& D
+			& QC^\top
+			& \alpha N
+			& Q M^\top \\
+			D^\top
+			& -\gamma I
+			& 0
+			& 0
+			& 0 \\
+			CQ
+			& 0
+			& -\gamma I
+			& 0
+			& 0 \\
+			\alpha N^\top
+			& 0
+			& 0
+			& -\alpha I
+			& 0 \\
+			M Q
+			& 0
+			& 0
+			& 0
+			& -\alpha I
+		\end{bmatrix}
+		\prec 0.
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+clusion}
+\begin{flushleft}
+
+{\small 
+	The resulting SDP:
+	
+	
+	\begin{equation}
+		\label{robust_stability_sdp}
+		\hspace*{-0.5cm} 
+		\begin{aligned}
+			& \underset{Q, U, \gamma, \alpha}{\text{minimize}} 
+			& &  0, \\
+			& \text{subject to:} & & 
+			\begin{cases}
+				\begin{bmatrix}
+					QA^\top + AQ + BU + U^\top B^\top
+					& D
+					& QC^\top
+					& \alpha N
+					& Q M^\top \\
+					D^\top
+					& -\gamma I
+					& 0
+					& 0
+					& 0 \\
+					CQ
+					& 0
+					& -\gamma I
+					& 0
+					& 0 \\
+					\alpha N^\top
+					& 0
+					& 0
+					& -\alpha I
+					& 0 \\
+					M Q
+					& 0
+					& 0
+					& 0
+					& -\alpha I
+				\end{bmatrix}
+				\prec 0, \\ 
+				Q \succ 0, 
+				\gamma \geq 0, \alpha \geq 0
+			\end{cases}
+		\end{aligned}
+	\end{equation}
+	
+	
+	with controller recovered as:
+	\[
+	K = U Q^{-1}.
+	\]
+	
+}
+\end{flushleft}
+\end{frame}
+
+
+\myqrframe
+
+
+\end{document}
