@@ -1,0 +1,523 @@
+\documentclass{beamer}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\input{settings.tex}
+
+
+\title{ Робастная выпуклая оптимизация }
+\subtitle{Вычислительный интеллект, Лекция  11}
+\author{Сергей Савин}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+
+%\begin{frame}{Content}
+%
+%\begin{itemize}
+% \item Robust convex programming problems
+% \item Robust convex programming: Linear constraint
+% \item Robust convex programming: Quadratic constraint
+% \item Max over norm of a sum of vectors
+% \item Robust convex programming: Conic constraint
+%\item Homework
+%\end{itemize}
+%
+%\end{frame}
+
+
+
+\begin{frame}{Задачи робастного выпуклого программирования, 1}
+	\begin{flushleft}
+		
+		Рассмотрим следующую задачу:
+		
+		\begin{example}
+			Найдите наименьший $x \in \R$, такой что $x + y \geq 1$, где $|y| \leq 2$.
+		\end{example}
+		
+		\bigskip
+		
+		В этом примере нам нужно найти оптимальное значение $x$ при ограничении, содержащем неизвестный параметр (неопределенную переменную); найденное решение должно удовлетворять ограничению для любого допустимого значения $y$. Решение здесь: $x = 3$
+		
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Задачи робастного выпуклого программирования, 2}
+	\begin{flushleft}
+		
+		Рассмотрим следующую задачу: 
+		
+		\begin{align}
+			(\bo{a} + \delta)\T \bo{x} \leq b
+		\end{align}
+		
+		где $\delta$ — ограниченная неопределенность: $||\delta|| \leq p$. Это неопределенное линейное ограничение.
+		
+		\bigskip
+		
+		Общий вид задач робастного выпуклого программирования можно записать как:
+		
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & f(\bo{x}), \\
+				& \text{subject to}
+				& & \bo{h}(\bo{x}) = 0 \\
+				& & & \bo{g}(\bo{x}, \bo{y}) \leq 0, \ 
+				\textcolor{blue}{
+					\forall \bo{y}  \in \mathcal{Y}.} 
+			\end{aligned}
+		\end{equation}
+		
+		
+		\bigskip
+		
+		В следующих слайдах мы узнаем, как решать такие задачи.
+		
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Робастное ВП: Линейное ограничение, 1}
+	\begin{flushleft}
+		
+		Рассмотрим следующую задачу:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & ||\bo{x}||, \\
+				& \text{subject to}
+				& & \bo{c}^\top \bo{x} + \bo{d}^\top \bo{y} \leq h, \ 
+				\textcolor{blue}{
+					\forall \bo{y} :  ||\bo{y}|| \leq p.} 
+			\end{aligned}
+		\end{equation}
+		
+		Ясно, что наихудший сценарий соответствует наибольшему значению $\bo{d}^\top \bo{y}$. Заметим, что $\text{max}(\bo{d}^\top \bo{y}) = \text{max}(||\bo{d}|| \cdot ||\bo{y}|| \cdot \text{cos}(\bo{d}^\wedge \bo{y})) =  p||\bo{d}||$; следовательно, $\bo{y} =  p \frac{\bo{d}}{|| \bo{d} ||} $.
+		
+		\bigskip
+		
+		\textcolor{mygray}{
+			Или, из неравенства Коши–Буняковского $\bo{d}^\top \bo{y} \leq ||\bo{d}|| \cdot ||\bo{y}|| \leq p||\bo{d}||$.
+		}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Робастное ВП: Линейное ограничение, 2}
+	\begin{flushleft}
+		
+		Таким образом, $\bo{c}^\top \bo{x} + \bo{d}^\top \bo{y} \leq h$ превращается в:
+		
+		\begin{align}
+			\bo{c}^\top \bo{x} + p || \bo{d} || \leq h 
+		\end{align}
+		%
+		или
+		%
+		\begin{align}
+			\bo{c}^\top \bo{x} \leq h - p \sqrt{ \bo{d}\T  \bo{d}  } 
+		\end{align}
+		
+		\bigskip
+		
+		Итак, наша задача принимает вид:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & ||\bo{x}||, \\
+				& \text{subject to}
+				& & \bo{c}^\top \bo{x} \leq h - p \sqrt{ \bo{d}\T  \bo{d}  } 
+			\end{aligned}
+		\end{equation}
+		
+		\bigskip
+		
+		Неопределенное ограничение заменяется детерминированным ограничением с запасом робастности $p \sqrt{ \bo{d}\T  \bo{d}  } $.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Билинейное ограничение, тип 1}
+	\begin{flushleft}
+		
+		Рассмотрим следующую задачу, где $\bo{x}^*$ — желаемое значение $\bo{x}$:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & \bo{y}^\top \bo{D} \bo{x} \leq h, \ 
+				\textcolor{blue}{
+					\forall \bo{y} :  ||\bo{y}|| \leq p.} 
+			\end{aligned}
+		\end{equation}
+		
+		На этот раз наихудший сценарий соответствует $\bo{y}$, сонаправленному с $\bo{D} \bo{x}$, и имеющему максимально возможную длину $p$. Отсюда заключаем, что $\bo{y} = p \frac{\bo{D} \bo{x}}{|| \bo{D} \bo{x} ||} $. Подставим это в $\bo{y}^\top \bo{D} \bo{x}$:
+		
+		\begin{equation}
+			p \left( \frac{\bo{D} \bo{x}}{|| \bo{D} \bo{x} ||} \right)^\top \bo{D} \bo{x} =
+			p \frac{\bo{x}^\top \bo{D}^\top \bo{D} \bo{x}}{|| \bo{D} \bo{x} ||} = 
+			p \frac{|| \bo{D} \bo{x} ||^2}{|| \bo{D} \bo{x} ||} = 
+			p || \bo{D} \bo{x} ||
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Билинейное ограничение, тип 1}
+	\begin{flushleft}
+		
+		Таким образом, наша задача принимает вид:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & || \bo{D} \bo{x} || \leq \frac{h}{p}
+			\end{aligned}
+		\end{equation}
+		
+		что является задачей SOCP.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Билинейное ограничение, тип 2}
+	\begin{flushleft}
+		
+		Более общий случай предыдущей задачи:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h, \ 
+				\textcolor{blue}{
+					\forall \bo{y} :  ||\bo{y}|| \leq p.} 
+			\end{aligned}
+		\end{equation}
+		%
+		
+		Мы можем переписать $(\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h$ как:
+		
+		\begin{equation}
+			\bo{y}^\top \bo{D} (\bo{x} - \bo{b}) - \bo{a}^\top \bo{D} (\bo{x} - \bo{b}) \leq h
+		\end{equation}
+		
+		Отсюда видно, что наихудший сценарий $\bo{y}$ сонаправлен с $\bo{D} (\bo{x} - \bo{b})$ и имеет длину $p$:
+		
+		\begin{equation}
+			\bo{y} = p \frac{\bo{D} (\bo{x} - \bo{b})}{|| \bo{D} (\bo{x} - \bo{b}) ||}
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Билинейное ограничение, тип 2}
+	\begin{flushleft}
+		
+		Тогда $\bo{y}^\top \bo{D} (\bo{x} - \bo{b}) - \bo{a}^\top \bo{D} (\bo{x} - \bo{b}) \leq h$ превращается в:
+		
+		\begin{equation}
+			p \frac{ (\bo{x} - \bo{b})^\top \bo{D}^\top \bo{D} (\bo{x} - \bo{b}) }{|| \bo{D} (\bo{x} - \bo{b}) ||}  - \bo{a}^\top \bo{D} (\bo{x} - \bo{b}) \leq h
+		\end{equation}
+		%
+		что эквивалентно:
+		
+		\begin{equation}
+			p || \bo{D} (\bo{x} - \bo{b}) || - \bo{a}^\top \bo{D} (\bo{x} - \bo{b}) \leq h
+		\end{equation}
+		\begin{equation}
+			|| \bo{D} (\bo{x} - \bo{b}) ||  \leq \frac{1}{p}\bo{a}^\top \bo{D} (\bo{x} - \bo{b}) + \frac{h}{p}
+		\end{equation}
+		
+		что является ограничением типа SOCP.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Билинейное ограничение, тип 2}
+	\begin{flushleft}
+		
+		И таким образом мы получаем:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & || \bo{D} (\bo{x} - \bo{b}) ||  \leq \frac{1}{p}\bo{a}^\top \bo{D} (\bo{x} - \bo{b}) + \frac{h}{p}
+			\end{aligned}
+		\end{equation}
+		%
+		что является SOCP. 
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Билинейное ограничение, тип 3}
+	\begin{flushleft}
+		
+		Более общий случай предыдущей задачи:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h, \ 
+				\textcolor{blue}{
+					\forall \bo{y} : ||\bo{H}\bo{y} + \bo{f}|| \leq p.} 
+			\end{aligned}
+		\end{equation}
+		%
+		где $\bo{H}$ обратим. Начнем с замены:
+		
+		\begin{equation}
+			\bo{v} = \bo{H}\bo{y} + \bo{f}
+		\end{equation}
+		%
+		то есть $\bo{y} = \bo{H}^{-1}(\bo{v} -\bo{f})$:
+		
+		\begin{align}
+			(\bo{H}^{-1}(\bo{v} -\bo{f}) - \bo{a})^\top \bo{D} (\bo{x} - \bo{b}) \leq h \\
+			\bo{v}^\top \bo{H}^{-\top} \bo{D} (\bo{x} - \bo{b}) - \textcolor{myred}{(\bo{H}^{-1}\bo{f} + \bo{a})^\top} \bo{D} (\bo{x} - \bo{b}) \leq h
+		\end{align}
+		
+		{\small
+			поскольку $\textcolor{myred}{(\bo{H}\bo{a} + \bo{f})^\top \bo{H}^{-\top}} = (\bo{a}^\top\bo{H}^\top \bo{H}^{-\top}   + \bo{f}^\top \bo{H}^{-\top})  = \textcolor{myred}{(\bo{H}^{-1}\bo{f} + \bo{a})^\top}$:}
+		
+		\begin{align}
+			\bo{v}^\top \bo{H}^{-\top} \bo{D} (\bo{x} - \bo{b}) - \textcolor{myred}{(\bo{H}\bo{a} + \bo{f})^\top \bo{H}^{-\top}}\bo{D} (\bo{x} - \bo{b}) \leq h
+		\end{align}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Билинейное ограничение, тип 3}
+	\begin{flushleft}
+		
+		Введем обозначения:
+		%
+		\begin{align}
+			& \bo{M} = \bo{H}^{-\top} \bo{D} \\
+			& \bo{g} = \bo{H}\bo{a} + \bo{f}
+		\end{align}
+		%
+		С их помощью можно переписать наше ограничение:
+		%
+		\begin{align}
+			\bo{v}^\top \bo{M} (\bo{x} - \bo{b}) - \bo{g}^\top \bo{M} (\bo{x} - \bo{b}) \leq h \\
+			(\bo{v} - \bo{g})^\top \bo{M} (\bo{x} - \bo{b}) \leq h 
+		\end{align}
+		%
+		И теперь мы свели задачу типа 3 к задаче типа 2:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & (\bo{v} - \bo{g})^\top \bo{M} (\bo{x} - \bo{b}) \leq h, \ 
+				\textcolor{blue}{
+					\forall \bo{v} : ||\bo{v}|| \leq p.} 
+				& & & 
+			\end{aligned}
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Билинейное ограничение, тип 4}
+	\begin{flushleft}
+		
+		Попробуйте решить эту задачу самостоятельно:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & (\bo{y} - \bo{a})^\top \bo{D} (\bo{x} - \bo{b})  + 
+				\bo{s}^\top \bo{y} + \bo{q}^\top \bo{x} \leq h, \\
+				& & &	\textcolor{blue}{
+					\forall \bo{y} :  ||\bo{H}\bo{y} + \bo{f}|| \leq p.} 
+			\end{aligned}
+		\end{equation}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Максимум нормы суммы векторов}
+	\begin{flushleft}
+		
+		Рассмотрим задачу $\underset{\bo{x}}{\text{max}}(|| \bo{a} + \bo{x}||)$ при условии $|| \bo{x} || \leq p$. Раскроем норму:
+		
+		\begin{equation}
+			|| \bo{a} + \bo{x} || = 
+			\sqrt{(\bo{a} + \bo{x})^\top (\bo{a} + \bo{x})} = 
+			\sqrt{\bo{a}^\top\bo{a} + 2\bo{a}^\top\bo{x} + \bo{x}^\top\bo{x}}
+		\end{equation}
+		
+		Если $\bo{a}$ — константа, то выражение $\bo{a}^\top\bo{a} + 2\bo{a}^\top\bo{x} + \bo{x}^\top\bo{x}$ достигает максимума, когда $\bo{x}^\top\bo{x} = p^2$ и $\bo{a}^\top\bo{x} = ||\bo{a}||p$. Отсюда следует, что:
+		
+		\begin{equation}
+			\bo{x} = p\frac{\bo{a}}{|| \bo{a} ||}
+		\end{equation}
+		
+		И таким образом: $\underset{\bo{x}}{\text{max}}(|| \bo{a} + \bo{x}||) = 
+		|| \bo{a} + p\frac{\bo{a}}{|| \bo{a} ||}|| = 
+		|| \bo{a} || \left( 1 + \frac{p}{|| \bo{a} ||} \right) = 
+		|| \bo{a} || + p $	
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Робастное ВП: Коническое ограничение}
+	\begin{flushleft}
+		
+		Рассмотрим следующую задачу:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}} 
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & || \bo{A}\bo{x} + \bo{b} + \bo{y} || \leq \bo{c}^\top \bo{x} + d, \ 
+				\textcolor{blue}{
+					\forall \bo{y} : ||\bo{y}|| \leq p.} 
+			\end{aligned}
+		\end{equation}
+		%
+		Как мы обсуждали на предыдущем слайде, выражение $|| \bo{A}\bo{x} + \bo{b} + \bo{y} ||$ максимально, когда $\bo{y} = p \frac{\bo{A}\bo{x} + \bo{b}}{|| \bo{A}\bo{x} + \bo{b} ||}$, и коническое ограничение принимает вид:
+		
+		\begin{equation}
+			|| \bo{A}\bo{x} + \bo{b} + p \frac{\bo{A}\bo{x} + \bo{b}}{|| \bo{A}\bo{x} + \bo{b} ||} || \leq \bo{c}^\top \bo{x} + d
+		\end{equation}
+		\begin{equation}
+			|| \bo{A}\bo{x} + \bo{b}|| \left( 1 + \frac{p}{|| \bo{A}\bo{x} + \bo{b}||} \right) \leq \bo{c}^\top \bo{x} + d
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Робастное ВП: Коническое ограничение}
+	\begin{flushleft}
+		
+		Продолжим вывод:
+		
+		\begin{equation}
+			|| \bo{A}\bo{x} + \bo{b}|| \left( 1 + \frac{p}{|| \bo{A}\bo{x} + \bo{b}||} \right) \leq \bo{c}^\top \bo{x} + d
+		\end{equation}
+		\begin{equation}
+			|| \bo{A}\bo{x} + \bo{b}|| + p \leq \bo{c}^\top \bo{x} + d
+		\end{equation}
+		
+		Окончательно задача принимает вид:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & ||\bo{x} - \bo{x}^*||, \\
+				& \text{subject to}
+				& & || \bo{A}\bo{x} + \bo{b}|| \leq \bo{c}^\top \bo{x} + d - p
+			\end{aligned}
+		\end{equation}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Робастное квадратичное ограничение со спектральной неопределенностью}
+	\begin{flushleft}
+		
+		Рассмотрим робастное ограничение:
+		\[
+		\mathbf{x}^\top (\mathbf{A} + \mathbf{\Delta}) \mathbf{x} \le t, \quad \forall \|\mathbf{\Delta}\|_2 \le \rho
+		\]
+		
+		
+		Эквивалентно, в форме наихудшего случая:
+		\[
+		\sup_{\|\mathbf{\Delta}\|_2 \le \rho} \; \mathbf{x}^\top (\mathbf{A} + \mathbf{\Delta})\mathbf{x} \le t
+		\]
+		
+		Сосредоточимся на неопределенной части $\mathbf{x}^\top \mathbf{\Delta} \mathbf{x}$. Используя неравенство нормы:
+		\[
+		\|\mathbf{\Delta} \mathbf{x}\| \le \|\mathbf{\Delta}\|_2 \|\mathbf{x}\|
+		\]
+		
+		получаем: $\mathbf{x}^\top \mathbf{\Delta} \mathbf{x} \le \|\mathbf{x}\| \cdot \|\mathbf{\Delta} \mathbf{x}\|
+		\le \|\mathbf{x}\| \cdot (\|\mathbf{\Delta}\|_2 \|\mathbf{x}\|)$. 
+		Поскольку \( \|\mathbf{\Delta}\|_2 \le \rho \), отсюда следует, что:
+		\[
+		\mathbf{x}^\top \mathbf{\Delta} \mathbf{x} \le \rho \, \mathbf{x}^\top \mathbf{x}
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Достижимость границы и робастная переформулировка}
+	\begin{flushleft}
+		
+		Покажем, что оценка достижима. Выберем:
+		\[
+		\mathbf{\Delta} = \rho \, \frac{\mathbf{x}\mathbf{x}^\top}{\mathbf{x}^\top \mathbf{x}}
+		\]
+		
+		Тогда: $\|\mathbf{\Delta}\|_2 = \rho
+		\quad \text{(проектор ранга 1, масштабированный на } \rho \text{)}$. Вычислим:
+		\[
+		\mathbf{x}^\top \mathbf{\Delta} \mathbf{x}
+		= \rho \, \frac{\mathbf{x}^\top \mathbf{x} \, \mathbf{x}^\top \mathbf{x}}{\mathbf{x}^\top \mathbf{x}}
+		= \rho \, \mathbf{x}^\top \mathbf{x}
+		\]
+		
+		
+		Таким образом:
+		\[
+		\sup_{\|\mathbf{\Delta}\|_2 \le \rho} \mathbf{x}^\top \mathbf{\Delta} \mathbf{x} = \rho \, \mathbf{x}^\top \mathbf{x}
+		\]
+		
+		
+		Итоговое робастное ограничение:
+		\[
+		\mathbf{x}^\top \mathbf{A} \mathbf{x} + \rho \, \mathbf{x}^\top \mathbf{x} \le t
+		\]
+		
+		
+		Эквивалентно:
+		\[
+		\mathbf{x}^\top (\mathbf{A} + \rho \mathbf{I})\mathbf{x} \le t
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+
+\myqrframe
+
+
+\end{document}

@@ -62,6 +62,12 @@ jobs:
         with:
           root_file: main.tex
           working_directory: Slides_RU/HinfYoung/
+      - name: Compile LaTeX document RobustOptimization
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: Slides_RU/RobustOptimization/
+
       - name: Save Introduction artifact
         uses: actions/upload-artifact@v4
         with:
@@ -112,6 +118,11 @@ jobs:
         with:
           name: HinfYoung.pdf
           path: Slides_RU/HinfYoung/main.pdf
+      - name: Save RobustOptimization artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RobustOptimization.pdf
+          path: Slides_RU/RobustOptimization/main.pdf
       - name: Update compiled PDFs in git repository
         if: github.event.pull_request.merged == true || github.event_name == 'push'
         run: |
@@ -125,6 +136,7 @@ jobs:
           mv Slides_RU/SDP/main.pdf Slides_RU/SDP.pdf
           mv Slides_RU/LMI_Control/main.pdf Slides_RU/LMI_Control.pdf
           mv Slides_RU/HinfYoung/main.pdf Slides_RU/HinfYoung.pdf
+          mv Slides_RU/RobustOptimization/main.pdf Slides_RU/RobustOptimization.pdf
           git config --global user.name 'CI PDF compiler'
           git config --global user.email '<>'
           git add Slides_RU/Introduction.pdf
@@ -137,5 +149,6 @@ jobs:
           git add Slides_RU/SDP.pdf
           git add Slides_RU/LMI_Control.pdf
           git add Slides_RU/HinfYoung.pdf
+          git add Slides_RU/RobustOptimization.pdf
           git commit -m "Update compiled PDFs"
           git push
