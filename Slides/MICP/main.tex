@@ -15,23 +15,22 @@
 \maketitle
 
 
-\begin{frame}{Content}
-
-\begin{itemize}
-\item Mixed Integer Linear Programming (MILP)
-\item Mixed Integer Quadratic Programming (MIQP)
-\item Example: Footstep planning
-\item Big-M method relaxation
-\item Example: switching control
-\item Homework
-\end{itemize}
-
-\end{frame}
+%\begin{frame}{Content}
+%
+%\begin{itemize}
+%\item Mixed Integer Linear Programming (MILP)
+%\item Mixed Integer Quadratic Programming (MIQP)
+%\item Example: Footstep planning
+%\item Big-M method relaxation
+%\item Example: switching control
+%\item Homework
+%\end{itemize}
+%
+%\end{frame}
 
 
 
 \begin{frame}{Mixed Integer Linear Programming (MILP)}
-%\framesubtitle{General form}
 \begin{flushleft}
 
 A general form of a mixed-integer linear program is:
@@ -49,7 +48,7 @@ A general form of a mixed-integer linear program is:
 \mathbf{C}\mathbf{x} = 
 \mathbf{d},  \\
 \mathbf{x}_1, ..., \mathbf{x}_m \in \mathbb{R},\\
-\mathbf{x}_{m+1}, ..., \mathbf{x}_n \in \mathbb{N}.
+\mathbf{x}_{m+1}, ..., \mathbf{x}_n \in \mathbb{Z}.
 \end{cases}
 %
 \end{aligned}
@@ -63,7 +62,6 @@ In other words, the only difference is that some of the variables are only allow
 
 
 \begin{frame}{Mixed Integer Convex Programming (MICP)}
-%\framesubtitle{General form}
 \begin{flushleft}
 
 A general form of a mixed-integer convex program is:
@@ -80,7 +78,7 @@ g(\mathbf{x}) \leq 0, &\ \ \ \ \textcolor{mylightgray}{\text{convex domain}} \\
 \mathbf{C}\mathbf{x} = 
 \mathbf{d},  &\\
 x_1, ..., x_m \in \mathbb{R}, &\ \ \ \ \textcolor{mylightgray}{\text{continuous variables}}\\
-x_{m+1}, ..., x_n \in \mathbb{N}. &\ \ \ \ \textcolor{mylightgray}{\text{integer variables}}
+x_{m+1}, ..., x_n \in \mathbb{Z}. &\ \ \ \ \textcolor{mylightgray}{\text{integer variables}}
 \end{cases}
 %
 \end{aligned}
@@ -92,14 +90,13 @@ x_{m+1}, ..., x_n \in \mathbb{N}. &\ \ \ \ \textcolor{mylightgray}{\text{integer
 
 
 \begin{frame}{Remarks}
-% \framesubtitle{General form}
 \begin{flushleft}
 
 \begin{itemize}
     \item Mixed-integer convex programs are not convex, even if the name seems to suggest otherwise. 
-    \item The "convex program" in the phrase "mixed-integer convex program" should be understood as "if we fix values of the integer variables, or relax them into reals, the result will be a convex program".
-    \item Mixed integer programs are usually solved using \emph{branch and bound algorithms}; in worse case scenario, the algorithms performs exhaustive search.
-    \item In robotics applications, integer variables in mixed integer programs are often restricted to binary values, i.e. $\mathbf{y} \in \{0, 1\}^n.$. It is still called "mixed-integer" in the literature, although phrases such as "mixed-binary" or "binary constraints" are not rare.
+    \item The ``convex program" in the phrase ``mixed-integer convex program" should be understood as ``if we fix values of the integer variables, or relax them into reals, the program becomes convex".
+    \item Mixed integer programs are usually solved using \emph{branch and bound algorithms}; in worst-case scenario, the algorithms performs exhaustive search.
+    \item In robotics applications, integer variables in mixed integer programs are often restricted to binary values, i.e. $\mathbf{y} \in \{0, 1\}^n.$. It is still called ``mixed-integer" in the literature, although phrases such as ``mixed-binary" or "binary constraints" are not rare.
 \end{itemize}
  
 \end{flushleft}
@@ -110,10 +107,9 @@ x_{m+1}, ..., x_n \in \mathbb{N}. &\ \ \ \ \textcolor{mylightgray}{\text{integer
 
 
 \begin{frame}{Branch and bound}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
-		Branch and bound is searches for the nest solution by solving a series of convex optimization problems.
+		Branch and bound searches for the best solution by solving a series of convex optimization problems.
 		
 		{\small
 		\begin{enumerate}
@@ -159,7 +155,6 @@ where $\Omega = \{ \{ \mathbf{A}_1, \mathbf{b}_1\}, \ \{ \mathbf{A}_2, \mathbf{b
 
 
 \begin{frame}{Big-M method, 1}
-%\framesubtitle{Basic idea}
 \begin{flushleft}
 
 
@@ -183,7 +178,6 @@ Assume you have two inequalities, $\mathbf{a}_1^\top \mathbf{x} \leq b_1$ and $\
 
 
 \begin{frame}{Big-M method, 2}
-	%\framesubtitle{Basic idea}
 	\begin{flushleft}
 		
 		Let us put the following constraint on the variables $c_1$, $c_2$:
@@ -234,7 +228,6 @@ Assume you have two inequalities, $\mathbf{a}_1^\top \mathbf{x} \leq b_1$ and $\
 
 
 \begin{frame}{Big-M method, 3}
-	%\framesubtitle{Basic idea}
 	\begin{flushleft}
 		
 		With that, we propose the following constraint:
@@ -262,7 +255,6 @@ Assume you have two inequalities, $\mathbf{a}_1^\top \mathbf{x} \leq b_1$ and $\
 
 
 \begin{frame}{Choosing between polytopes, 1}
-%\framesubtitle{Systems of inequalities}
 \begin{flushleft}
 
 It works the same way for the case when you have three (or two or more) systems of inequalities $\mathbf{A}_1 \mathbf{x} \leq \mathbf{b}_1$, $\mathbf{A}_2 \mathbf{x} \leq \mathbf{b}_2$, $\mathbf{A}_3 \mathbf{x} \leq \mathbf{b}_3$ and are happy if at least one holds:
@@ -285,7 +277,6 @@ where $\mathbf{1}$ is a vector of all ones. Notice that constraint $c_1 + c_2 + 
 
 
 \begin{frame}{Choosing between polytopes, 2}
-%\framesubtitle{Illustration, part 1}
 \begin{flushleft}
 
 Below are two H-polytops (convex regions represented by systems of inequalities):
@@ -294,7 +285,6 @@ Below are two H-polytops (convex regions represented by systems of inequalities)
 \begin{center}
 \includegraphics[width=2.6in]{fig1.png}
 \end{center} 
-% \caption{AR 601 bipedal robot, Innopolis University}
 \end{figure}
 
 As we can see, their union represents a non-convex domain, and they have no intersection.
@@ -304,7 +294,6 @@ As we can see, their union represents a non-convex domain, and they have no inte
 
 
 \begin{frame}{Choosing between polytopes, 3}
-%\framesubtitle{Illustration, part 2}
 \begin{flushleft}
 
 Now, one of them is relaxed as described above. Notice that the intersection of the two polytopes is non-relaxed polytope. 
@@ -314,12 +303,10 @@ Now, one of them is relaxed as described above. Notice that the intersection of 
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=1.1\linewidth]{fig2.png}
-%   \caption{Simplified model}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=1.1\linewidth]{fig3.png}
-%   \caption{Simplified model}
 \end{subfigure}
 \end{figure}
 
@@ -433,7 +420,6 @@ where $w$ is a weight, a coefficient we can tune to adjust relative importance o
 
 
 \begin{frame}{Example: switching control}
-	\framesubtitle{Multiple variables}
 	\begin{flushleft}
 		
 		Consider the case when you have a control system $\dot{\bo{x}} =\bo{A}\bo{x} + \bo{B}_1\bo{u}_1 + \bo{B}_2\bo{u}_2$, but you are required to use either $\bo{B}_1\bo{u}_1$ or $\bo{B}_2\bo{u}_2$ at any time, not both.
@@ -456,14 +442,72 @@ where $w$ is a weight, a coefficient we can tune to adjust relative importance o
 
 
 
-\begin{frame}{Homework}
-% \framesubtitle{Parameter estimation}
-\begin{flushleft}
 
-Implement footstep planning for a biped, making sure every pair of steps lands in the same H-polytope.
-
-\end{flushleft}
+\begin{frame}{Example: cable robot, 1}
+	\begin{flushleft}
+		
+		Earlier we formulated the problem of finding the forces $\bo{f}_i  = \bo{p}_i \alpha_i$ that achive acceleration $\bo{a}$ as close to $\bo{a}^*$ as possible:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\alpha_i, \bo{a}}{\text{minimize}}
+				& & (\bo{a}^* - \bo{a})\T (\bo{a}^* - \bo{a}), 
+				\\
+				& \text{subject to}
+				& & \begin{cases}
+					m \bo{a} = \bo{f}_0 + \sum\limits_{i = 1}^{n} \bo{p}_i \alpha_i,
+					\\
+					0 = [\bo{r}_0]_\times \bo{f}_0 + \sum\limits_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i,
+					\\
+					\alpha_i \geq 0.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		We can reformulate it, requiring the robot to \textcolor{blue}{choose only $K$ cables} to achieve this goal. To do that, we need to introduce binary variables $c_i$ indicating that the cable is switched on ($c_i = 1$) and the corresponding condition:
+		%
+		 \begin{align}
+		 	| \alpha_i | \leq M c_i 
+		 \end{align}
+		 %
+		 Since $\alpha_i \geq 0$, the condition simplifies to $\alpha_i \leq M c_i$. We further require that $\sum\limits_i c_i = K$.
+		
+	\end{flushleft}
 \end{frame}
+
+
+
+\begin{frame}{Example: cable robot, 2}
+	\begin{flushleft}
+		
+		Then, the problem takes the following form:
+		%
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\alpha_i, \textcolor{blue}{c_i} , \bo{a}}{\text{minimize}}
+				& & (\bo{a}^* - \bo{a})\T (\bo{a}^* - \bo{a}), 
+				\\
+				& \text{subject to}
+				& & \begin{cases}
+					m \bo{a} = \bo{f}_0 + \sum\limits_{i = 1}^{n} \bo{p}_i \alpha_i,
+					\\
+					0 = [\bo{r}_0]_\times \bo{f}_0 + \sum\limits_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i,
+					\\
+					\textcolor{blue}{\alpha_i \leq M c_i},
+					\\
+					\textcolor{blue}{\sum\limits_i c_i = K}
+					\\
+					\alpha_i \geq 0,
+					\\
+					\textcolor{blue}{c_i \in \{0, 1\}}
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		
+	\end{flushleft}
+\end{frame}
+
 
 
 

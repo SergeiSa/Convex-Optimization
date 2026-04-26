@@ -1,0 +1,532 @@
+\documentclass{beamer}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\input{settings.tex}
+
+
+
+\title{Смешанное целочисленное программирование}
+\subtitle{Вычислительный интеллект, Лекция  12}
+\author{Сергей Савин}
+\centering
+\date{\mydate}
+
+
+\begin{document}
+	\maketitle
+	
+	
+	%\begin{frame}{Content}
+	%
+	%\begin{itemize}
+	%\item Mixed Integer Linear Programming (MILP)
+	%\item Mixed Integer Quadratic Programming (MIQP)
+	%\item Example: Footstep planning
+	%\item Big-M method relaxation
+	%\item Example: switching control
+	%\item Homework
+	%\end{itemize}
+	%
+	%\end{frame}
+	
+	
+	\begin{frame}{Смешанно-целочисленное линейное программирование (MILP)}
+		\begin{flushleft}
+			
+			Общая форма смешанно-целочисленной линейной программы:
+			
+			%
+			\begin{equation} \label{LP}
+				\begin{aligned}
+					& \underset{\mathbf{x}}{\text{minimize}}
+					& & \mathbf{f}^\top \mathbf{x}, \\
+					& \text{subject to}
+					& & \begin{cases} 
+						\mathbf{A} \mathbf{x}
+						\leq 
+						\mathbf{b}, \\ 
+						\mathbf{C}\mathbf{x} = 
+						\mathbf{d},  \\
+						\mathbf{x}_1, ..., \mathbf{x}_m \in \mathbb{R},\\
+						\mathbf{x}_{m+1}, ..., \mathbf{x}_n \in \mathbb{Z}.
+					\end{cases}
+					%
+				\end{aligned}
+			\end{equation}
+			
+			Иными словами, единственное отличие заключается в том, что некоторые переменные могут принимать только целочисленные значения.
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	\begin{frame}{Смешанно-целочисленное выпуклое программирование (MICP)}
+		\begin{flushleft}
+			
+			Общая форма смешанно-целочисленной выпуклой программы:
+			
+			%
+			\begin{equation} \label{QP}
+				\begin{aligned}
+					& \underset{\mathbf{x}}{\text{minimize}}
+					& & 
+					l(\mathbf{x}) \ \ \ \ \textcolor{mylightgray}{\text{выпуклая стоимость}} \\
+					& \text{subject to}
+					& & \begin{cases} 
+						g(\mathbf{x}) \leq 0, &\ \ \ \ \textcolor{mylightgray}{\text{выпуклая область}} \\ 
+						\mathbf{C}\mathbf{x} = 
+						\mathbf{d},  &\\
+						x_1, ..., x_m \in \mathbb{R}, &\ \ \ \ \textcolor{mylightgray}{\text{непрерывные переменные}}\\
+						x_{m+1}, ..., x_n \in \mathbb{Z}. &\ \ \ \ \textcolor{mylightgray}{\text{целочисленные переменные}}
+					\end{cases}
+					%
+				\end{aligned}
+			\end{equation}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	\begin{frame}{Замечания}
+		\begin{flushleft}
+			
+			\begin{itemize}
+				\item Смешанно-целочисленные выпуклые программы не являются выпуклыми, даже если название может намекать на обратное. 
+				\item ``Выпуклая программа" во фразе ``смешанно-целочисленная выпуклая программа" должна пониматься как ``если мы зафиксируем значения целочисленных переменных или ослабим их до вещественных, программа станет выпуклой".
+				\item Смешанно-целочисленные программы обычно решаются с помощью \emph{алгоритмов ветвей и границ}; в худшем случае алгоритм выполняет полный перебор.
+				\item В приложениях робототехники целочисленные переменные в смешанно-целочисленных программах часто ограничены бинарными значениями, то есть $\mathbf{y} \in \{0, 1\}^n.$ В литературе это по-прежнему называется ``смешанно-целочисленным", хотя такие фразы, как ``смешанно-бинарный" или ``бинарные ограничения", встречаются нередко.
+			\end{itemize}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	
+	\begin{frame}{Метод ветвей и границ}
+		\begin{flushleft}
+			
+			Метод ветвей и границ ищет наилучшее решение, решая серию задач выпуклой оптимизации.
+			
+			{\small
+				\begin{enumerate}
+					\item Мы начинаем с ослабления всех бинарных переменных $z_1$, $z_2$, ... до вещественных чисел на интервале $0 \leq z_i \leq 1$. Мы решаем полученную выпуклую задачу и получаем стоимость узла $c$.
+					
+					\item Мы строим 2 ветви, фиксируя одну из переменных $z_i$ как $z_i = 0$ для одной ветви и $z_i = 1$ для другой. Для каждой допустимой ветви мы находим стоимость узла.
+					
+					\item Минимальная стоимость узла среди узлов, не имеющих ветвей, является текущей нижней границей оптимальной стоимости (мы не можем получить результат лучше, продолжая ветвление / фиксируя больше $z_i$).
+					
+			\end{enumerate}}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	\begin{frame}{Метод ветвей и границ}
+		\begin{flushleft}
+			
+			{\small
+				\begin{enumerate}
+					
+					\item Минимальная стоимость узла среди узлов, где все $z_i$ фиксированы, является текущей верхней границей (оптимальное решение должно быть по крайней мере не хуже этого).
+					
+					\item Разрыв (gap) между нижней и верхней границами уменьшается по ходу работы алгоритма; он может использоваться для завершения процедуры.
+			\end{enumerate}}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	\begin{frame}{Пример: Планирование шагов (Footstep planning)}
+		\framesubtitle{Постановка задачи}
+		\begin{flushleft}
+			
+			Дано $N$ выпуклых областей, заданных линейными неравенствами $\{ \mathbf{x}: \  \mathbf{A}_i \mathbf{x} \leq \mathbf{b}_i \}$ (это называется H-политопным представлением). Требуется найти последовательность из $K$ точек (шагов) от заданной начальной точки до заданной целевой точки, такую, что все шаги лежат в одной из выпуклых областей.
+			
+			\begin{equation}
+				\begin{aligned}
+					& \underset{\mathbf{x}_1, \ ..., \ \mathbf{x}_K}{\text{minimize}}
+					& & ||\mathbf{x}_1 - \mathbf{x}_{\text{start}}|| + ||\mathbf{x}_K - \mathbf{x}_{\text{goal}}||, \\
+					& \text{subject to}
+					& & \exists \{ \mathbf{A}_j, \mathbf{b}_j\} \in \Omega \ \text{s.t.} \ \mathbf{A}_j\mathbf{x}_i \leq \mathbf{b}_j
+				\end{aligned}
+			\end{equation}
+			
+			\bigskip
+			
+			где $\Omega = \{ \{ \mathbf{A}_1, \mathbf{b}_1\}, \ \{ \mathbf{A}_2, \mathbf{b}_2\}, \ ..., \ \{ \mathbf{A}_N, \mathbf{b}_N\} \}$. Это не является выпуклой программой.
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	
+	\begin{frame}{Mетод большой M (Big-M), 1}
+		\begin{flushleft}
+			
+			
+			Одним из ключевых методов, связанных с использованием смешанно-целочисленного программирования в робототехнике, является метод большой M. 
+			
+			\bigskip
+			
+			Предположим, у вас есть два неравенства: $\mathbf{a}_1^\top \mathbf{x} \leq b_1$ и $\mathbf{a}_2^\top \mathbf{x} \leq b_2$, и вас устраивает, если выполняется хотя бы одно из них. Введите новые бинарные переменные $c_1, c_2 \in \{0, \ 1 \}$ и найдите достаточно большую константу $M$, такую, что $\mathbf{a}_1^\top \mathbf{x} \leq b_1 + M$ и $\mathbf{a}_2^\top \mathbf{x} \leq b_2 + M$ выполняются для всей вашей области (той её части, которая вас интересует).
+			
+			
+			
+			\begin{figure} [h!]
+				\begin{center}
+					\input{illustration_1.tex}
+				\end{center} 
+			\end{figure}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	\begin{frame}{Mетод большой M (Big-M), 2}
+		\begin{flushleft}
+			{\small
+			Наложим следующее ограничение на переменные $c_1$, $c_2$:
+			%
+			\begin{equation}
+				c_1 + c_2 = 1
+			\end{equation}
+			
+			Пара переменных $(c_1, c_2)$ вместе может принимать только два значения: (1, 0) и (0, 1). Мы можем модифицировать неравенства $\mathbf{a}_1\T \mathbf{x} \leq b_1$ и $\mathbf{a}_2\T \mathbf{x} \leq b_2$:
+			%
+			\begin{equation}
+				\begin{cases}
+					\mathbf{a}_1^\top \mathbf{x} \leq b_1 + M \cdot c_1 \\
+					\mathbf{a}_2^\top \mathbf{x} \leq b_2 + M \cdot c_2
+				\end{cases}
+			\end{equation}
+			
+			Если $(c_1, c_2) = (1, 0)$, то модифицированные неравенства становятся:
+			%
+			\begin{equation}
+				\begin{cases}
+					\textcolor{mydarkgray}{ \mathbf{a}_1\T \mathbf{x} \leq b_1 + M }  
+					\ & \textcolor{mygray}{\text{- верно для всех }  \mathbf{x}}
+					\\
+					\mathbf{a}_2^\top \mathbf{x} \leq b_2 
+					\ & \textcolor{mygray}{\text{- исходное ограничение } }
+				\end{cases}
+			\end{equation}
+			
+			
+			Если $(c_1, c_2) = (0, 1)$, то модифицированные неравенства становятся:
+			%
+			\begin{equation}
+				\begin{cases}
+					\mathbf{a}_1\T \mathbf{x} \leq b_1  
+					\ & \textcolor{mygray}{\text{- исходное ограничение } }
+					\\
+					\textcolor{mydarkgray}{\mathbf{a}_2^\top \mathbf{x} \leq b_2  + M}
+					\ & \textcolor{mygray}{\text{- верно для всех }  \mathbf{x}}
+				\end{cases}
+			\end{equation}}
+			
+			
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	\begin{frame}{Метод большой M (Big-M), 3}
+		\begin{flushleft}
+			
+			Таким образом, мы предлагаем следующее ограничение:
+			
+			\begin{equation}
+				\begin{cases}
+					\mathbf{a}_1^\top \mathbf{x} \leq b_1 + M \cdot c_1 \\
+					\mathbf{a}_2^\top \mathbf{x} \leq b_2 + M \cdot c_2 \\
+					c_1 + c_2 = 1  \\
+					c_i  \in \{0, \ 1 \}
+				\end{cases}
+			\end{equation}
+			
+			
+			\begin{figure} [h!]
+				\begin{center}
+					\input{illustration_2.tex}
+				\end{center} 
+			\end{figure}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	\begin{frame}{Выбор между политопами, 1}
+		\begin{flushleft}
+			
+			Это работает аналогично для случая, когда у вас есть три (или более) системы неравенств $\mathbf{A}_1 \mathbf{x} \leq \mathbf{b}_1$, $\mathbf{A}_2 \mathbf{x} \leq \mathbf{b}_2$, $\mathbf{A}_3 \mathbf{x} \leq \mathbf{b}_3$, и вас устраивает, если выполняется хотя бы одна из них:
+			
+			\begin{equation}
+				\begin{cases}
+					\mathbf{A}_1 \mathbf{x} \leq \mathbf{b}_1 + M \cdot \mathbf{1} \cdot (1 - c_1) \\
+					\mathbf{A}_2 \mathbf{x} \leq \mathbf{b}_2 + M \cdot \mathbf{1} \cdot (1 - c_2) \\
+					\mathbf{A}_3 \mathbf{x} \leq \mathbf{b}_3 + M \cdot \mathbf{1} \cdot (1 - c_3) \\
+					c_1 + c_2 + c_3 = 1 \\
+					c_i  \in \{0, \ 1 \}
+				\end{cases}
+			\end{equation}
+			
+			где $\mathbf{1}$ — вектор из единиц. Обратите внимание, что ограничение $c_1 + c_2 + c_3 = 1$ можно заменить на $c_1 + c_2 + c_3 \geq 1$, что позволяет избежать релаксации более чем одной области.
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	\begin{frame}{Выбор между политопами, 2}
+		\begin{flushleft}
+			
+			Ниже показаны два H-политопа (выпуклые области, представленные системами неравенств):
+			
+			\begin{figure} [h!]
+				\begin{center}
+					\includegraphics[width=2.6in]{fig1.png}
+				\end{center} 
+			\end{figure}
+			
+			Как мы видим, их объединение представляет собой невыпуклую область, и они не пересекаются.
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	\begin{frame}{Выбор между политопами, 3}
+		\begin{flushleft}
+			
+			Теперь один из них релаксирован, как описано выше. Обратите внимание, что пересечение двух политопов является нерелаксированным политопом. 
+			
+			\begin{figure}
+				\centering
+				\begin{subfigure}{.5\textwidth}
+					\centering
+					\includegraphics[width=1.1\linewidth]{fig2.png}
+				\end{subfigure}%
+				\begin{subfigure}{.5\textwidth}
+					\centering
+					\includegraphics[width=1.1\linewidth]{fig3.png}
+				\end{subfigure}
+			\end{figure}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	\begin{frame}{Выбор между политопами, 4}
+		\framesubtitle{Несколько переменных}
+		\begin{flushleft}
+			
+			Если у вас есть несколько переменных $\mathbf{x}_1$, ..., $\mathbf{x}_K$, и каждая должна принадлежать хотя бы одному из H-политопов $\{ \mathbf{A}_i, \mathbf{b}_i\}$, это также может быть представлено с помощью метода большой M:
+			
+			\begin{equation}
+				\begin{cases}
+					\mathbf{A}_1 \mathbf{x}_k \leq \mathbf{b}_1 + M \cdot \mathbf{1} \cdot (1 - c_{1, k}) \\
+					\mathbf{A}_2 \mathbf{x}_k \leq \mathbf{b}_2 + M \cdot \mathbf{1} \cdot (1 - c_{2, k}) \\
+					\mathbf{A}_3 \mathbf{x}_k \leq \mathbf{b}_3 + M \cdot \mathbf{1} \cdot (1 - c_{3, k}) \\
+					c_{1, k} + c_{2, k} + c_{3, k} = 1 \\
+					c_{i, k}  \in \{0, \ 1 \} \\
+					k = 1,...,K
+				\end{cases}
+			\end{equation}
+			
+			Обратите внимание, что единственное отличие от предыдущего примера заключается в том, что теперь у нас есть $K$ наборов бинарных переменных $c_{1, k}$, $c_{2, k}$ и $c_{3, k}$.
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	
+	
+	
+	\begin{frame}{Пример: Планирование шагов (Footstep planning)}
+		\framesubtitle{Формулировка как MIQP}
+		\begin{flushleft}
+			
+			Используя M-релаксацию (Big-M relaxation), мы можем теперь сформулировать задачу следующим образом:
+			
+			\begin{equation}
+				\begin{aligned}
+					& \underset{\mathbf{x}_k, \ \mathbf{c}_{i,k}}{\text{minimize}}
+					& & ||\mathbf{x}_1 - \mathbf{x}_{\text{start}}|| + ||\mathbf{x}_K - \mathbf{x}_{\text{goal}}||, \\
+					& \text{subject to}
+					& & \begin{cases}
+						\mathbf{A}_i \mathbf{x}_k \leq \mathbf{b}_i + M \cdot \mathbf{1} \cdot (1 - c_{i, k}), \ i = 1,...,N \\
+						\sum_{i=1}^N c_{i, k} = 1 \\
+						c  \in \{0, \ 1 \}^{N, \ K} \\
+						k = 1,...,K
+					\end{cases}
+				\end{aligned}
+			\end{equation}
+			
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	
+	\begin{frame}{Пример: Планирование шагов (Footstep planning)}
+		\begin{flushleft}
+			
+			Для того чтобы сделать шаги равномерно распределёнными, мы добавляем стоимость, основанную на расстоянии между последовательными шагами:
+			
+			\begin{equation*}
+				\begin{aligned}
+					& \underset{\mathbf{x}_k, \ \mathbf{c}_{i,k}}{\text{minimize}}
+					& & ||\mathbf{x}_1 - \mathbf{x}_{\text{start}}||^2 + ||\mathbf{x}_K - \mathbf{x}_{\text{goal}}||^2 + w \cdot \sum_{k=1}^{K-1} ||\mathbf{x}_{i+1} - \mathbf{x}_i||^2, \\
+					& \text{subject to}
+					& & \begin{cases}
+						\mathbf{A}_i \mathbf{x}_k \leq \mathbf{b}_i + M \cdot \mathbf{1} \cdot (1 - c_{i, k}), \ i = 1,...,N \\
+						\sum_{i=1}^N c_{i, k} = 1 \\
+						c  \in \{0, \ 1 \}^{N, \ K} \\
+						k = 1,...,K
+					\end{cases}
+				\end{aligned}
+			\end{equation*}
+			
+			где $w$ — это вес, коэффициент, который можно настроить для регулировки относительной важности нашей основной цели (начать в точке $\mathbf{x}_{\text{start}}$ и закончить в точке $\mathbf{x}_{\text{goal}}$) и нашей второстепенной цели (сделать шаги равномерно распределёнными).  
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	\begin{frame}{Пример: Планирование шагов (Footstep planning)}
+		\framesubtitle{Код, часть 1}
+		\begin{flushleft}
+			
+			\input{code1.tex}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	\begin{frame}{Пример: Планирование шагов (Footstep planning)}
+		\framesubtitle{Код, часть 2}
+		\begin{flushleft}
+			
+			\input{code2.tex}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	\begin{frame}{Пример: Переключение управления (switching control)}
+		\begin{flushleft}
+			
+			Рассмотрим случай, когда у нас есть система управления $\dot{\bo{x}} =\bo{A}\bo{x} + \bo{B}_1\bo{u}_1 + \bo{B}_2\bo{u}_2$, но в каждый момент времени требуется использовать либо $\bo{B}_1\bo{u}_1$, либо $\bo{B}_2\bo{u}_2$, но не оба одновременно.
+			
+			\bigskip
+			
+			Это может быть сформулировано как смешанно-целочисленное ограничение:
+			
+			\begin{equation}
+				\begin{cases}
+					||\bo{u}_1|| \leq M (1 - c_1) \\
+					||\bo{u}_2|| \leq M (1 - c_2) \\
+					c_1 + c_2 = 1
+				\end{cases}
+			\end{equation}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	
+	
+	\begin{frame}{Пример: Кабельный робот, 1}
+		\begin{flushleft}
+			{\small
+			Ранее мы сформулировали задачу поиска сил $\bo{f}_i  = \bo{p}_i \alpha_i$, обеспечивающих ускорение $\bo{a}$ как можно более близкое к $\bo{a}^*$:
+			%
+			\begin{equation}
+				\begin{aligned}
+					& \underset{\alpha_i, \bo{a}}{\text{minimize}}
+					& & (\bo{a}^* - \bo{a})\T (\bo{a}^* - \bo{a}), 
+					\\
+					& \text{subject to}
+					& & \begin{cases}
+						m \bo{a} = \bo{f}_0 + \sum\limits_{i = 1}^{n} \bo{p}_i \alpha_i,
+						\\
+						0 = [\bo{r}_0]_\times \bo{f}_0 + \sum\limits_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i,
+						\\
+						\alpha_i \geq 0.
+					\end{cases}
+				\end{aligned}
+			\end{equation}
+			
+			Мы можем переформулировать эту задачу, потребовав, чтобы робот \textcolor{blue}{выбирал только $K$ тросов} для достижения этой цели. Для этого нам нужно ввести бинарные переменные $c_i$, указывающие, что трос включен ($c_i = 1$), и соответствующее условие:
+			%
+			\begin{align}
+				| \alpha_i | \leq M c_i 
+			\end{align}
+			%
+			Поскольку $\alpha_i \geq 0$, условие упрощается до $\alpha_i \leq M c_i$. Далее мы требуем, чтобы $\sum\limits_i c_i = K$.}
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	\begin{frame}{Пример: Кабельный робот, 2}
+		\begin{flushleft}
+			
+			Тогда задача принимает следующий вид:
+			%
+			\begin{equation}
+				\begin{aligned}
+					& \underset{\alpha_i, \textcolor{blue}{c_i} , \bo{a}}{\text{minimize}}
+					& & (\bo{a}^* - \bo{a})\T (\bo{a}^* - \bo{a}), 
+					\\
+					& \text{subject to}
+					& & \begin{cases}
+						m \bo{a} = \bo{f}_0 + \sum\limits_{i = 1}^{n} \bo{p}_i \alpha_i,
+						\\
+						0 = [\bo{r}_0]_\times \bo{f}_0 + \sum\limits_{i = 1}^{n} [\bo{r}_i]_\times \bo{p}_i \alpha_i,
+						\\
+						\textcolor{blue}{\alpha_i \leq M c_i},
+						\\
+						\textcolor{blue}{\sum\limits_i c_i = K}
+						\\
+						\alpha_i \geq 0,
+						\\
+						\textcolor{blue}{c_i \in \{0, 1\}}
+					\end{cases}
+				\end{aligned}
+			\end{equation}
+			
+			
+		\end{flushleft}
+	\end{frame}
+	
+	
+	
+	
+	\myqrframe
+	
+\end{document}
