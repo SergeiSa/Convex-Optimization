@@ -15,16 +15,16 @@
 \maketitle
 
 
-\begin{frame}{Content}
-
-\begin{itemize}
-\item Lagrange dual function
-\item Duality gap, strong and weak duality
-\item KKT conditions
-\item Sensitivity
-\end{itemize}
-
-\end{frame}
+%\begin{frame}{Content}
+%
+%\begin{itemize}
+%\item Lagrange dual function
+%\item Duality gap, strong and weak duality
+%\item KKT conditions
+%\item Sensitivity
+%\end{itemize}
+%
+%\end{frame}
 
 
 
@@ -33,7 +33,6 @@
 
 
 \begin{frame}{Lagrangian}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		Consider an optimization problem:
@@ -66,8 +65,44 @@
 
 
 
+
+\begin{frame}{KKT conditions}
+	\begin{flushleft}
+		
+		Karush-Kuhn-Tucker (KKT) conditions certify optimality of an optimization problem:
+		
+		\begin{equation}
+			\begin{aligned}
+				& \underset{\bo{x}}{\text{minimize}}
+				& & f_0(\bo{x}), \\
+				& \text{subject to}
+				& & \begin{cases}
+					f_i(\bo{x}) \leq 0, \\
+					h_j(\bo{x}) = 0.
+				\end{cases}
+			\end{aligned}
+		\end{equation}
+		
+		\begin{enumerate}
+			\item Primal feasibility: $f_i(\bo{x}) \leq 0$ and $h_j(\bo{x}) = 0$.
+			
+			\item Dual feasibility: $\lambda_i \geq 0$.
+			
+			\item Complementarity slackness: $\lambda_i f_i(\bo{x}) = 0$.
+			
+			\item Lagrangian stationarity: $\frac{\partial}{\partial \bo{x}} 
+			\left ( f_0(\bo{x}) + 
+			\sum\limits_i \lambda_i f_i(\bo{x}) +
+			\sum\limits_j \nu_j h_j(\bo{x}) \right ) = 0$.
+		\end{enumerate}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
 \begin{frame}{Lagrange dual function}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 	Given \emph{Lagrangian} $L(\bo{x}, \lambda_i, \nu_j) = 
@@ -81,11 +116,13 @@
 			\ L(\bo{x}, \lambda_i, \nu_j).
 		\end{equation}
 		
-		Lagrange dual function is \textbf{always concave}. If $p^*$ is the optimal value of the cost function of the original problem, then $g(\lambda_i, \nu_j)$ gives as a \emph{lower bound} on its possible values. 
+		Lagrange dual function is \textbf{always concave}. If $p^*$ is the optimal value of the cost function of the original problem, then $g(\lambda_i, \nu_j)$ gives as a \emph{lower bound} on its possible values:
 		
-		\bigskip
+		\begin{equation}
+			g(\lambda_i, \nu_j)  \leq L(\bo{x}^*, \lambda_i, \nu_j)  \leq f_0(\bo{x}^*)
+		\end{equation}
 		
-		In fact, substituting any $\nu_j$ and $\lambda_i > 0$ gives us a valid lower bound on the cost. Maximum of $g(\lambda_i, \nu_j)$ over the domain given by $\lambda_i > 0$ provides us optimal (largest) lower bound of the problem, denoted as $g^*$. 
+		In fact, substituting any $\nu_j$ and $\lambda_i \geq 0$ gives us a valid lower bound on the cost. Maximum of $g(\lambda_i, \nu_j)$ over the domain given by $\lambda_i \geq 0$ provides us the optimal (largest) lower bound of the problem, denoted as $g^*$. 
 		
 	\end{flushleft}
 \end{frame}
@@ -93,7 +130,6 @@
 
 
 \begin{frame}{Duality gap, strong and weak duality}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		If $p^*$ is the optimal value of the cost function of the original problem and $g^*$ is the optimal lower bound of the problem, then $p^* - g^*$ is called optimal \emph{duality gap}.
@@ -108,7 +144,6 @@
 
 
 \begin{frame}{Lagrange dual function for a QP, 1}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		Consider the following QP:
@@ -146,7 +181,6 @@
 
 
 \begin{frame}{Lagrange dual function for a QP, 2}
-	% \framesubtitle{General form}
 	\begin{flushleft}
 		
 		Knowing that $\bo{x} = -0.5\bo{H}^{-1}\bo{A}^\top \lambda$ we can compute $g(\lambda)$ by substituting the $\bo{x}$ we found into the Lagrangian:
@@ -178,36 +212,28 @@
 
 
 
-\begin{frame}{KKT conditions}
-	% \framesubtitle{General form}
+\begin{frame}{Sensitivity}
 	\begin{flushleft}
 		
-		Karush-Kuhn-Tucker (KKT) conditions certify optimality of an optimization problem:
-		
+		Consider the parametric optimization problem
 		\begin{equation}
 			\begin{aligned}
-				& \underset{\bo{x}}{\text{minimize}}
-				& & f_0(\bo{x}), \\
-				& \text{subject to}
-				& & \begin{cases}
-					f_i(\bo{x}) \leq 0, \\
-					h_j(\bo{x}) = 0.
-				\end{cases}
+				\min_{x} \quad & f(x,u) \\
+				\text{s.t.} \quad & g(x,u) \leq 0,
 			\end{aligned}
 		\end{equation}
+		where $x \in \mathbb{R}^n$ is the decision variable and $u \in \mathbb{R}^p$ is a parameter.
 		
-		\begin{enumerate}
-			\item Primal feasibility: $f_i(\bo{x}) \leq 0$ and $h_j(\bo{x}) = 0$.
-			
-			\item Dual feasibility: $\lambda_i \geq 0$.
-			
-			\item Complementarity slackness: $\lambda_i f_i(\bo{x}) = 0$.
-			
-			\item Lagrangian stationarity: $\frac{\partial}{\partial \bo{x}} 
-			\left ( f_0(\bo{x}) + 
-			\sum\limits_i \lambda_i f_i(\bo{x}) +
-			\sum\limits_j \nu_j h_j(\bo{x}) \right ) = 0$.
-		\end{enumerate}
+		Let $x^*(u)$ denote an optimal solution. The \textbf{value function} is defined as
+		\begin{equation}
+			v(u) := f(x^*(u), u).
+		\end{equation}
+		
+		
+		Sensitivity analysis studies how the optimal value changes with respect to perturbations in the parameter $u$, i.e.,
+		\begin{equation}
+			\text{sensitivity w.r.t. } u = \frac{dv}{du}.
+		\end{equation}
 		
 	\end{flushleft}
 \end{frame}
@@ -215,34 +241,89 @@
 
 
 
-
-
-
-\begin{frame}{Sensitivity, 1}
-	% \framesubtitle{General form}
+\begin{frame}{Envelope theorem, 1}
 	\begin{flushleft}
 		
+		Define the Lagrangian:
+		\begin{equation}
+			\mathcal{L}(x,\lambda,u) = f(x,u) + \lambda^\top g(x,u).
+		\end{equation}
 		
-		Optimal values of Lagrange variables $\lambda$ determine local sensitivity of the system with respect to small perturbations of constraints.
+		Then the derivative of the value function is
+		\begin{equation*}
+			\boxed{
+			\frac{dv}{du}
+			=
+			\frac{\partial \mathcal{L}(u)}{\partial u}.}
+		\end{equation*}
 		
-		\bigskip
+		By definition,
+		\begin{equation}
+			v(u) = f(x^*(u), u).
+		\end{equation}
+		Applying the chain rule,
+		\begin{equation}
+			\frac{dv}{du}
+			=
+			\frac{\partial f}{\partial x} \frac{dx^*}{du}
+			+
+			\frac{\partial f}{\partial u}.
+		\end{equation}
 		
-		Consider perturbed optimization problem:
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Envelope theorem, 2}
+	\begin{flushleft}
 		
 		\begin{equation}
-			\begin{aligned}
-				& \underset{\bo{x}}{\text{minimize}}
-				& & f_0(\bo{x}), \\
-				& \text{subject to}
-				& & \begin{cases}
-					f_i(\bo{x}) \leq u_i, \\
-					h_j(\bo{x}) = v_j.
-				\end{cases}
-			\end{aligned}
+			\frac{dv}{du}
+			=
+			\textcolor{mygreen}{\frac{\partial f}{\partial x}} \frac{dx^*}{du}
+			+
+			\frac{\partial f}{\partial u}.
 		\end{equation}
 		
-		where $u_i$ and $v_j$ - perturbations of the constraints. Let $p(\bo{u}, \bo{v})$ be optimal value of the cost function for given values of $u_i$ and $v_j$. Then $p(0, 0)$ is the optimal value of the unperturbed problem.
+		At optimality, the stationarity condition gives
+		\begin{equation}
+			\textcolor{mygreen}{\frac{\partial f}{\partial x}} 
+			+
+			\left( \frac{\partial g}{\partial x} \right)^\top \lambda^*
+			=
+			0. 
+			\quad \rightarrow \quad
+			%
+			\textcolor{mygreen}{\frac{\partial f}{\partial x}} 
+			=
+			- \lambda^{*\top} \frac{\partial g}{\partial x}.
+		\end{equation}
 		
+		Substitute into $\frac{dv}{du}$:
+		\begin{equation}
+			\frac{dv}{du}
+			=
+			- \lambda^{*\top} 
+			\textcolor{myblue}{ \frac{\partial g}{\partial x} \frac{dx^*}{du}}
+			+
+			\frac{\partial f}{\partial u}.
+		\end{equation}
+		
+		For active constraints $g(x^*(u), u) = 0.$
+		Differentiating,
+		\begin{equation}
+			\textcolor{myblue}{\frac{\partial g}{\partial x} \frac{dx^*}{du}}
+			+
+			\frac{\partial g}{\partial u}
+			=
+			0.
+			\quad \rightarrow \quad
+			%
+			\textcolor{myblue}{\frac{\partial g}{\partial x} \frac{dx^*}{du}}
+			=
+			- \frac{\partial g}{\partial u}.
+		\end{equation}
 		
 	\end{flushleft}
 \end{frame}
@@ -250,26 +331,128 @@
 
 
 
-
-
-\begin{frame}{Sensitivity, 2}
-	% \framesubtitle{General form}
+\begin{frame}{Envelope theorem, 3}
 	\begin{flushleft}
 		
-		Sensitivity of the optimal value of the cost function to the constraint perturbation is given as:
+		Substitute into the expression for $\frac{dv}{du}$:
+		\begin{equation}
+			\frac{dv}{du}
+			=
+			\lambda^{*\top} \frac{\partial g}{\partial u}
+			+
+			\frac{\partial f}{\partial u}.
+		\end{equation}
 		
-		\begin{align}
-			\left. \frac{\partial p(\bo{u}, \bo{v})}{\partial \bo{u}} \right\vert_{\bo{u}=0, \bo{v}=0} =
-			- \lambda^*;
-		\end{align}
-		\begin{align}
-		\left. \frac{\partial p(\bo{u}, \bo{v})}{\partial \bo{v}} \right\vert_{\bo{u}=0, \bo{v}=0}  =
-		- \nu^*.
-		\end{align}
 		
-		\bigskip
+		\begin{equation}
+			\boxed{
+				\frac{dv}{du}
+				=
+				\frac{\partial f}{\partial u}
+				+
+				\lambda^{*\top} \frac{\partial g}{\partial u}
+				=
+				\frac{\partial \mathcal{L}}{\partial u}
+			}
+		\end{equation}
 		
-		Thus, analysing values of lagrange variables allows us to assess local sensitivity to constraint perturbation.
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Sensitivity: Linear RHS Perturbation, 2}
+	\begin{flushleft}
+		
+		Consider the problem with perturbed constraint:
+		
+		\begin{equation*}
+			\begin{aligned}
+				\min_x \quad & f(x) \\
+				\text{s.t.} \quad & a^\top x \le b + u.
+			\end{aligned}
+		\end{equation*}
+		
+		Define the value function $v(u) = f(x^*(u))$ and Lagrangian
+		\begin{equation*}
+			\mathcal{L}(x,\lambda,u) = f(x) + \lambda (a^\top x - b - u).
+		\end{equation*}
+		
+		From the envelope theorem:
+		\begin{equation*}
+			\frac{dv}{du} = \frac{\partial \mathcal{L}}{\partial u}(x^*, \lambda^*, u) = -\lambda.
+		\end{equation*}
+		
+		The multiplier $\lambda^*$ measures the marginal value of relaxing the constraint. Increasing $u$ (loosening the constraint) decreases the optimal cost at rate $\lambda^*$.
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Sensitivity: Linear RHS Perturbation, 2}
+	\begin{flushleft}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.9\linewidth]{illustration}
+			\caption{Sensitivity w.r.t. linear constraint r.h.s. perturbation}
+			\label{fig:illustration}
+		\end{figure}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Sensitivity: Perturbation in Constraint Normal}
+	\begin{flushleft}
+		
+		Consider the problem with perturbed constraint direction:
+		\begin{equation*}
+			\begin{aligned}
+				\min_x \quad & f(x) \\
+				\text{s.t.} \quad & (a + u)^\top x \le b.
+			\end{aligned}
+		\end{equation*}
+		
+		Define the value function $v(u) = f(x^*(u))$ and Lagrangian
+		\begin{equation*}
+			\mathcal{L}(x,\lambda,u) = f(x) + \lambda \big((a+u)^\top x - b\big).
+		\end{equation*}
+		
+		From the envelope theorem:
+		\begin{equation*}
+			\frac{dv}{du} = \frac{\partial \mathcal{L}}{\partial u}(x^*, \lambda^*, u) = \lambda^* x^*.
+		\end{equation*}
+		
+		
+	\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Sensitivity: Perturbation in Cost}
+	\begin{flushleft}
+		
+		Consider the problem with perturbed cost:
+		\begin{equation*}
+			\begin{aligned}
+				\min_x \quad & \tfrac{1}{2} x^\top Q x + (q+u)^\top x \\
+				\text{s.t.} \quad & a^\top x \le b.
+			\end{aligned}
+		\end{equation*}
+		
+		Define the value function $v(u) = f(x^*(u), u)$ and Lagrangian
+		\begin{equation*}
+			\mathcal{L}(x,\lambda,u) = \tfrac{1}{2} x^\top Q x + (q+u)^\top x + \lambda (a^\top x - b).
+		\end{equation*}
+		
+		From the envelope theorem:
+		\begin{equation*}
+			\frac{dv}{du} = \frac{\partial \mathcal{L}}{\partial u}(x^*, \lambda^*, u) = x^*.
+		\end{equation*}
+		
+		The sensitivity equals the optimal solution: perturbing the linear cost shifts the optimal value at a rate given directly by $x^*$.
 		
 	\end{flushleft}
 \end{frame}
@@ -277,52 +460,9 @@
 
 
 
-%
-%\begin{frame}{Sensitivity, 3}
-%	% \framesubtitle{General form}
-%	\begin{flushleft}
-%		
-%	Consider a perturbed problem:
-%		
-%		\begin{equation}
-%			\begin{aligned}
-%				& \underset{\bo{x}}{\text{minimize}}
-%				& & f_0(\bo{x}), \\
-%				& \text{subject to}
-%				& & \begin{cases}
-%					f_1(\bo{x}) \leq u, \\
-%					f_i(\bo{x}) \leq 0,  \ i \geq 2 \\
-%					h_j(\bo{x}) = 0.
-%				\end{cases}
-%			\end{aligned}
-%		\end{equation}
-%		
-%		The optimal cost to the unperturbed problem is $f_0$, of the perturbed problem - $f_0 + \delta f$.
-%		
-%		This means that one of the complementarity slackness constraints takes form:
-%		%
-%		\begin{align}
-%			\lambda_1 (f_1(\bo{x}) - u) = 0
-%		\end{align}
-%		
-%		Consider Lagrangian:
-%		%
-%		\begin{align*}
-%		L = f_0 + \delta f + 
-%		\lambda_1 (f_1-u )+
-%			\sum\limits_{i=2}^N \lambda_i f_i+
-%			\sum\limits_j \nu_j h_j
-%		\end{align*}
-%		
-%	\end{flushleft}
-%\end{frame}
 
 
-
-
-
-\begin{frame}{Read more}
-	% \framesubtitle{Parameter estimation}
+\begin{frame}{Further reading}
 	\begin{flushleft}
 		
 		\begin{itemize}
