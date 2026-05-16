@@ -1,0 +1,196 @@
+\documentclass{beamer}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\input{settings.tex}
+
+
+\title{Метод внутренней точки}
+\subtitle{Вычислительный интеллект, Лекция  14}
+\author{Сергей Савин}
+\centering
+\date{\mydate}
+
+
+
+\begin{document}
+\maketitle
+
+
+%\begin{frame}{Content}
+%
+%\begin{itemize}
+%	\item Newton method
+%	\item Barrier functions
+%	\item Interior point method
+%	\item Analytic center of linear inequalities
+%\end{itemize}
+%
+%\end{frame}
+
+\begin{frame}{Квадратичная программа с одним неравенством}
+	\begin{flushleft}
+		
+		Рассматриваем:
+		\begin{align*}
+			\min_{\bo{x}} \quad & \tfrac{1}{2} \bo{x}^\top \bo{Q} \bo{x} + \bo{q}^\top \bo{x} \\
+			\text{s.t.} \quad & \bo{A}\bo{x} = \bo{b} \\
+			& \bo{c}^\top \bo{x} \le d
+		\end{align*}
+		
+		\vspace{0.5em}
+		
+		Вводим:
+		\begin{itemize}
+			\item Переменная ослабления: $z \ge 0$, такая что $\bo{c}^\top \bo{x} + z = d$
+			\item Двойственные переменные:
+			\begin{itemize}
+				\item $\bo{y}$ для ограничения-равенства
+				\item $s \ge 0$ для ограничения-неравенства
+			\end{itemize}
+		\end{itemize}
+		
+		\vspace{0.5em}
+		
+		Переменные решения: $(\bo{x}, \bo{y}, z, s)$
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Условия ККТ (Релаксированные)}
+	\begin{flushleft}
+		
+		Условия Каруша-Куна-Таккера (KKT):
+		
+		\vspace{0.5em}
+		
+		\textbf{Стационарность:}
+		\[
+		\bo{Q}\bo{x} + \bo{q} + \bo{A}^\top \bo{y} + s \bo{c} = 0
+		\]
+		
+		\textbf{Прямая допустимость:}
+		\[
+		\bo{A}\bo{x} = \bo{b}, \quad \bo{c}^\top \bo{x} + z = d
+		\]
+		
+		\textbf{Релаксированная дополняющая нежесткость:}
+		\[
+		z s = \mu
+		\]
+		
+		\textbf{Положительность:}
+		\[
+		z > 0, \quad s > 0
+		\]
+		
+		\vspace{0.5em}
+		
+		$\mu > 0$ — параметр барьера.
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Нелинейная система}
+	\begin{flushleft}
+		
+		Определяем невязки:
+		\begin{align*}
+			\bo{r}_d &= \bo{Q}\bo{x} + \bo{q} + \bo{A}^\top \bo{y} + s \bo{c} \\
+			\bo{r}_p^{(1)} &= \bo{A}\bo{x} - \bo{b} \\
+			\bo{r}_p^{(2)} &= \bo{c}^\top \bo{x} + z - d \\
+			r_c &= z s - \mu
+		\end{align*}
+		
+		\vspace{0.5em}
+		
+		Решаем нелинейную систему:
+		\[
+		\bo{r}_d = 0, \quad \bo{r}_p^{(1)} = 0, \quad \bo{r}_p^{(2)} = 0, \quad r_c = 0
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Линеаризация Ньютона}
+	\begin{flushleft}
+		
+		Пусть $(\Delta \bo{x}, \Delta \bo{y}, \Delta z, \Delta s)$ — шаг Ньютона.
+		
+		\vspace{0.5em}
+		
+		Линеаризуя систему:
+		
+		\vspace{0.5em}
+		
+		\begin{align*}
+			\bo{Q} \Delta \bo{x} + \bo{A}^\top \Delta \bo{y} + \bo{c} \, \Delta s &= -\bo{r}_d \\
+			\bo{A} \Delta \bo{x} &= -\bo{r}_p^{(1)} \\
+			\bo{c}^\top \Delta \bo{x} + \Delta z &= -\bo{r}_p^{(2)} \\
+			s \, \Delta z + z \, \Delta s &= -r_c
+		\end{align*}
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Выбор длины шага}
+	\begin{flushleft}
+		
+		Обновление:
+		\[
+		z^+ = z + \alpha \Delta z, \quad s^+ = s + \alpha \Delta s
+		\]
+		
+		\vspace{0.5em}
+		
+		Выбираем длину шага для сохранения положительности:
+		\[
+		z^+ > 0, \quad s^+ > 0
+		\]
+		
+	\end{flushleft}
+\end{frame}
+
+\begin{frame}{Обновление барьера и остановка}
+	\begin{flushleft}
+		
+		Обновление параметра барьера:
+		\[
+		\mu = \sigma (z s), \quad \sigma \in (0,1)
+		\]
+		
+		\vspace{0.5em}
+		
+		Интерпретация:
+		\begin{itemize}
+			\item $zs$ измеряет зазор дополняющей нежесткости
+			\item $\mu \to 0$ обеспечивает оптимальность
+		\end{itemize}
+		
+		\vspace{0.5em}
+		
+		Условия остановки:
+		\begin{itemize}
+			\item Прямая допустимость: $\|\bo{A}\bo{x} - \bo{b}\|$ мала
+			\item Допустимость неравенства: $|\bo{c}^\top \bo{x} + z - d|$ мала
+			\item Двойственная допустимость: $\|\bo{Q}\bo{x} + \bo{q} + \bo{A}^\top \bo{y} + s\bo{c}\|$ мала
+			\item Дополняющая нежесткость: $zs$ мала
+		\end{itemize}
+		
+	\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+
+
+
+\myqrframe
+
+
+
+\end{document}

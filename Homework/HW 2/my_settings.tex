@@ -1,0 +1,102 @@
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{mathrsfs}  
+\usepackage{cancel}
+\usepackage{leftindex}  
+
+\usepackage{xcolor}
+\setcounter{MaxMatrixCols}{20}
+% \usepackage{lscape}
+
+\newcommand{\bo}[1] {\mathbf{#1}}
+\newcommand{\R} {\mathbb{R}}
+\newcommand{\norm}[1] {\left|\left|{#1}\right|\right|}
+\newcommand{\T}{^\top}
+
+
+
+% \newcommand{\cos}[1] {\text{cos}\left(#1\right)}
+% \newcommand{\sin}[1] {\text{cos}\left(#1\right)}
+
+
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+\newtheorem{theorem}{Theorem}
+
+
+\definecolor{myhotpink}{RGB}{255, 80, 200}
+\definecolor{mywarmpink}{RGB}{255, 60, 160}
+\definecolor{mylightpink}{RGB}{255, 80, 200}
+\definecolor{mypalepink}{RGB}{255, 200, 230}
+\definecolor{mypink}{RGB}{255, 30, 80}
+\definecolor{mydarkpink}{RGB}{155, 25, 60}
+
+\definecolor{mypaleblue}{RGB}{240, 240, 255}
+\definecolor{mylightblue}{RGB}{120, 150, 255}
+\definecolor{myblue}{RGB}{90, 90, 255}
+\definecolor{mygblue}{RGB}{70, 110, 240}
+\definecolor{mydarkblue}{RGB}{0, 0, 180}
+\definecolor{myblackblue}{RGB}{40, 40, 120}
+
+\definecolor{mygreen}{RGB}{0, 200, 0}
+\definecolor{mygreen2}{RGB}{245, 255, 230}
+
+\definecolor{mygray}{gray}{0.8}
+\definecolor{mydarkgray}{RGB}{80, 80, 160}
+\definecolor{mylightgray}{RGB}{160, 160, 160}
+\definecolor{mylightgreyred}{RGB}{210, 160, 160}
+
+
+
+\definecolor{mydarkred}{RGB}{160, 30, 30}
+\definecolor{mylightred}{RGB}{255, 150, 150}
+\definecolor{myred}{RGB}{200, 110, 110}
+\definecolor{myblackred}{RGB}{120, 40, 40}
+
+\definecolor{myred1}{RGB}{100, 0, 0}
+\definecolor{myred2}{RGB}{160, 60, 60}
+\definecolor{myred3}{RGB}{220, 90, 120}
+\definecolor{myred4}{RGB}{250, 120, 120}
+\definecolor{myred5}{RGB}{255, 150, 150}
+
+\definecolor{mygreen}{RGB}{0, 200, 0}
+\definecolor{mygreen2}{RGB}{205, 255, 200}
+\definecolor{mydarkgreen}{RGB}{0, 100, 0}
+
+\definecolor{mydarkcolor}{RGB}{60, 25, 155}
+\definecolor{mylightcolor}{RGB}{130, 180, 250}
+
+
+
+\newcommand{\re}[1] {\textcolor{mydarkpink}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=mylightgreygreen,colframe=myblackgreen,%
+    colbacklower=mylime!75!mylightgreygreen,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=mylightgreyred,colframe=myblackred,%
+    colbacklower=myred!75!mylightgreyred,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=mylightblue,colframe=myblackblue,%
+    colbacklower=myblackblue!75!myblue,%
+    title=#1]}%
+    {\endtcolorbox}
